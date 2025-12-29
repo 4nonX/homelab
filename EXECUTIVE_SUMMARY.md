@@ -236,9 +236,7 @@ Annual per service: €147 ÷ 45 = €3.27/service/year
 ## Project Links
 
 **Live Demo:** Available upon request (sanitized demo environment)  
-**Documentation:** https://github.com/[username]/homelab-infrastructure  
-**Blog Post:** [Optional - detailed writeup]  
-**Video Tour:** [Optional - walkthrough]
+**Documentation:** https://github.com/4nonX/homelab-infrastructure
 
 ---
 
@@ -246,13 +244,13 @@ Annual per service: €147 ÷ 45 = €3.27/service/year
 
 For technical discussions about this implementation or consultation on similar deployments:
 
-**GitHub:** [Your Profile]  
-**LinkedIn:** [Your Profile]  
-**Email:** [Professional Email]
+**GitHub:** https://github.com/4nonX/  
+**LinkedIn:** https://www.linkedin.com/in/dan-dreßen-b83b1839a/  
+**Email:** dan@d-net.me
 
 ---
 
-**Last Updated:** December 2024  
+**Last Updated:** December 2025  
 **Status:** ✅ Production, Actively Maintained  
 **License:** Documentation available for educational purposes
 
