@@ -244,7 +244,7 @@ Annual per service: €147 ÷ 45 = €3.27/service/year
 
 For technical discussions about this implementation or consultation on similar deployments:
 
-**GitHub:** https://github.com/4nonX/  
+**GitHub:** [https://github.com/4nonX/](https://github.com/4nonX/homelab/blob/main/homelab-complete-journey.md)  
 **LinkedIn:** https://www.linkedin.com/in/dan-dreßen-b83b1839a/  
 **Email:** dan@d-net.me
 
