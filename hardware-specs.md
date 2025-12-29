@@ -46,7 +46,7 @@ Detailed hardware configuration and capabilities of the homelab server.
 **Total Memory:** 32 GB DDR4
 
 **Configuration:**
-- **Type:** DDR4 (likely dual-channel)
+- **Type:** DDR4 (dual-channel)
 - **Speed:** ~3200 MHz (estimated)
 - **ECC:** Non-ECC (standard desktop RAM)
 
