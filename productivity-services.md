@@ -6,7 +6,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 ### Cloud Storage & File Management
 
-**Nextcloud** (Port: 10081)
+**Nextcloud**
 - Version: Latest
 - Features:
   - File sync and share
@@ -21,7 +21,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 ### Photo Management
 
-**Immich** (Port: 2283)
+**Immich**
 - Google Photos alternative
 - Features:
   - AI-powered photo organization
@@ -55,7 +55,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 ### Password Management
 
-**Vaultwarden** (Port: 10330)
+**Vaultwarden**
 - Bitwarden-compatible server
 - Features:
   - End-to-end encryption
@@ -68,7 +68,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 ### Note-Taking
 
-**Joplin Server** (Port: 22300)
+**Joplin Server**
 - Self-hosted sync server for Joplin
 - Features:
   - End-to-end encryption
@@ -80,7 +80,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
   - PostgreSQL 14.2
 - Desktop/mobile clients supported
 
-**Memos** (Port: 5230)
+**Memos**
 - Lightweight note-taking service
 - Features:
   - Quick note capture
@@ -91,7 +91,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 ### Bookmarks & Reading
 
-**Linkwarden** (Port: [configured])
+**Linkwarden**
 - Bookmark manager with archival
 - Features:
   - Full-page archival
@@ -117,7 +117,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 ### Reading & Media
 
-**Kavita** (Port: 5000)
+**Kavita**
 - eBook and manga server
 - Features:
   - EPUB, PDF, CBZ/CBR support
@@ -126,7 +126,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
   - Responsive web reader
 - Storage: Organized by series/authors
 
-**Audiobookshelf** ([if configured])
+**Audiobookshelf**
 - Audiobook and podcast server
 - Features:
   - Chapter support
