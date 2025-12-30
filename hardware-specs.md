@@ -126,7 +126,7 @@ Total: 32 GB
 ### Network Interfaces
 
 **Primary Interface:** Gigabit Ethernet (1 Gbps)
-- **Interface:** eth0 or similar
+- **Interface:** eth0
 - **Speed:** 1000 Mbps
 - **Duplex:** Full
 - **MTU:** 1500 (standard)
