@@ -209,9 +209,9 @@ This project demonstrates proficiency in:
 
 This portfolio demonstrates practical DevOps and infrastructure skills. For professional inquiries or technical discussions about this implementation, please connect via:
 
-- **GitHub:** [Your GitHub Profile]
-- **LinkedIn:** [Your LinkedIn Profile]
-- **Email:** [Your Professional Email]
+- **GitHub:** (https://github.com/4nonX/)
+- **LinkedIn:** (https://www.linkedin.com/in/dan-dreßen-b83b1839a/)
+- **Email:** [dan.dressen@d-net.me]
 
 ## 📄 License
 
