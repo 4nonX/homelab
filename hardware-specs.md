@@ -47,7 +47,7 @@ Detailed hardware configuration and capabilities of the homelab server.
 
 **Configuration:**
 - **Type:** DDR4 (dual-channel)
-- **Speed:** ~3200 MHz (estimated)
+- **Speed:** ~3200 MHz
 - **ECC:** Non-ECC (standard desktop RAM)
 
 **Current Usage:**
