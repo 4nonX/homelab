@@ -34,9 +34,8 @@ This repository documents my personal homelab infrastructure, showcasing practic
 ### Service Categories
 
 #### 📺 Media Management
-Complete automated media pipeline with VPN-secured downloads:
-- Arr Suite (Sonarr, Radarr, Lidarr, Prowlarr, Bazarr)
-- qBittorrent with Gluetun VPN kill-switch
+Complete automated media pipeline with user-request sharing of personal media:
+- Arr Suite (Sonarr, Radarr, Lidarr, Prowlarr, Bazarr) for metadata acquisition
 - Emby media server with hardware transcoding
 - Request management via Ombi
 
