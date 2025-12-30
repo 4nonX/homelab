@@ -33,11 +33,11 @@ This repository documents my personal homelab infrastructure, showcasing practic
 
 ### Service Categories
 
-#### 📺 Media Management
-Complete automated media pipeline with user-request sharing of personal media:
-- Arr Suite (Sonarr, Radarr, Lidarr, Prowlarr, Bazarr) for metadata acquisition
-- Emby media server with hardware transcoding
-- Request management via Ombi
+####📺 Media Library & Streaming
+Personal media server infrastructure with organized library management:
+* Library organization tools (metadata, quality profiles, automation)
+* Emby streaming server with Intel Quick Sync transcoding
+* Household request and sharing workflow
 
 #### 🛠️ Productivity Suite
 Self-hosted alternatives to cloud services:
