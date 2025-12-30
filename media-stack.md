@@ -24,40 +24,40 @@ Devices (TV, Mobile, Desktop)
 
 ### Media Organization & Metadata
 
-**Sonarr** (Port: 8989)
+**Sonarr**
 - TV show library organization
 - Automated metadata fetching
 - Episode tracking and monitoring
 - Quality profile management
 - Rename and organize existing media files
 
-**Radarr** (Port: 7878)
+**Radarr**
 - Movie library organization
 - Automated metadata and poster fetching
 - Collection management
 - Quality profiling
 - File organization and renaming
 
-**Lidarr** (Port: 8686)
+**Lidarr**
 - Music library organization
 - Album and artist metadata
 - Quality management
 - Automated tagging and organization
 
-**Bazarr** (Port: 6767)
+**Bazarr**
 - Subtitle management for personal media
 - Multi-language subtitle search
 - Automatic subtitle downloads for accessibility
 - Integration with movie/TV libraries
 
-**Prowlarr** (Port: 9696)
+**Prowlarr**
 - Centralized search and indexer management
 - Metadata source aggregation
 - Integration hub for media management tools
 
 ### Content Sources & Archival
 
-**Pinchflat** (Port: 8945)
+**Pinchflat**
 - YouTube content archival
 - Educational content preservation
 - Podcast downloading
@@ -72,7 +72,7 @@ Devices (TV, Mobile, Desktop)
 
 ### Streaming & Playback
 
-**Emby Server** (Port: 8096)
+**Emby Server**
 - Personal media server
 - Hardware-accelerated transcoding (Intel Quick Sync)
 - Multi-device streaming
@@ -86,13 +86,13 @@ Devices (TV, Mobile, Desktop)
 - Educational content
 - Creative commons media
 
-**SwingMusic** (Port: 1970)
+**SwingMusic**
 - Music streaming server
 - Personal music collection playback
 - Modern web interface
 - Album and artist organization
 
-**Kavita** (Port: 5000)
+**Kavita**
 - Digital library reader (eBooks, PDFs, comics)
 - Reading progress tracking
 - Library organization
@@ -100,7 +100,7 @@ Devices (TV, Mobile, Desktop)
 
 ### Request Management
 
-**Ombi** (Port: 3579)
+**Ombi**
 - Family media request interface
 - Approval workflow for new additions
 - User management for household
