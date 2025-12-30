@@ -200,7 +200,8 @@ Grand Total:        €1,150-1,850
 - AMD Ryzen 5 5600G: No Quick Sync
 - Xeon E-2xxx: Overkill and expensive
 
-#### Motherboard: [Model from Memory]
+#### Motherboard:**
+- GigabytenH610I
 
 **Requirements:**
 - Multiple SATA ports (6+)
