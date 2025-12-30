@@ -6,7 +6,7 @@ Core network services providing DNS, ad-blocking, VPN access, and security monit
 
 ### Core Network Services
 
-**Pi-hole** (Port: 53 DNS, 8800 Web)
+**Pi-hole**
 - Version: 2025.07.1
 - Functions:
   - DNS server for entire network
@@ -95,7 +95,7 @@ Internet → VPS (IONOS Berlin)
 
 ### File Synchronization
 
-**Syncthing** (Port: 8384)
+**Syncthing**
 - Version: 1.29.7 (LinuxServer.io)
 - Features:
   - Decentralized file sync
@@ -280,7 +280,7 @@ Switch
 
 ## 🔧 Management Tools
 
-**Dockge** (Port: 5001)
+**Dockge**
 - Docker Compose stack management
 - Web-based interface
 - Features:
