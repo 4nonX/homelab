@@ -193,8 +193,8 @@ Total: 32 GB
 - Storage controller expansion
 
 **Drive Bays:**
-- Multiple SATA bays
-- Hot-swap capable (depending on model)
+- 4x 3.5" SATA drive bays
+- Hot-swap capable
 
 ## 📊 Performance Benchmarks
 
