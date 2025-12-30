@@ -84,21 +84,21 @@ Explore specific technical implementations:
 Internet
     │
     ├─── VPS (Public IP: Berlin, Germany)
-    │      ├─ Traefik (HTTPS Proxy) :80, :443
-    │      ├─ Pangolin (API Server) :3001
-    │      ├─ Gerbil (Wireguard) :51820
+    │      ├─ Traefik (HTTPS Proxy)
+    │      ├─ Pangolin (API Server)
+    │      ├─ Gerbil (Wireguard)
     │      └─ CrowdSec (Security)
     │           ↓
     │      [Wireguard Tunnel - Encrypted]
     │           ↓
-    └─── Home Network (10.243.0.0/24)
+    └─── Home Network (10.XXX.0.0/24)
            │
-           ├─ NAS Server (10.243.0.1)
+           ├─ NAS Server (10.XXX.0.1)
            │   ├─ Newt Client (Tunnel)
            │   ├─ Docker (40+ containers)
            │   └─ Storage (33TB RAID5)
            │
-           ├─ Pi-hole (10.243.0.2)
+           ├─ Pi-hole (10.XXX.0.2)
            │   └─ DNS + Ad-blocking
            │
            └─ Client Devices
