@@ -166,8 +166,8 @@ Grand Total:        €1,150-1,850
 
 | Option | Pros | Cons | Cost |
 |--------|------|------|------|
-| **Synology DS920+** | Easy setup, official support | Limited CPU, expensive expansion | €600 base |
-| **QNAP TS-464** | Good specs, PCIe expansion | Complex UI, security concerns | €500 base |
+| **Synology DS920+** | Easy setup, official support | Limited CPU, limited and expensive expansion, vendor lock-in | €600 base |
+| **QNAP TS-464** | Good specs, PCIe expansion | Unintuituve UI, limited upgradeability | €500 base |
 | **DIY Build** | Full control, better specs, upgradeable | Requires assembly, no warranty | €1,500 |
 | **Repurposed PC** | Cheap, immediate | Power hungry, limited SATA | €500 |
 
