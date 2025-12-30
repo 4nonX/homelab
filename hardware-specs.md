@@ -132,9 +132,9 @@ Total: 32 GB
 - **MTU:** 1500 (standard)
 
 **IP Configuration:**
-- **IPv4:** 10.243.0.1/24
-- **Gateway:** 10.243.0.254
-- **DNS:** 10.243.0.2 (Pi-hole)
+- **IPv4:** 10.XXX.X.X/24
+- **Gateway:** 10.XXX.X.XXX
+- **DNS:** 10.XXX.X.X (Pi-hole)
 
 **Docker Networks:**
 - Multiple virtual networks (bridge mode)
@@ -250,7 +250,7 @@ Total: 32 GB
 **Near-term (optional):**
 - Additional storage drives
 - UPS for power redundancy
-- 10GbE network card (if needed)
+- 10GbE network card
 
 **Long-term (future-proofing):**
 - CPU upgrade (i5/i7 13th gen)
@@ -259,7 +259,7 @@ Total: 32 GB
 - Dedicated GPU (AI/ML workloads)
 
 ### Capacity Limits
-- **Max RAM:** 64 GB (likely)
+- **Max RAM:** 64 GB
 - **Max Cores:** Current platform limit
 - **Storage:** Limited by available SATA ports
 - **Network:** 1 Gbps (upgradeable to 10G)
