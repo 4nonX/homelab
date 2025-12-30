@@ -33,7 +33,7 @@ This repository documents my personal homelab infrastructure, showcasing practic
 
 ### Service Categories
 
-####📺 Media Library & Streaming
+#### 📺 Media Library & Streaming
 Personal media server infrastructure with organized library management:
 * Library organization tools (metadata, quality profiles, automation)
 * Emby streaming server with Intel Quick Sync transcoding
