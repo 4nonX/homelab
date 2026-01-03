@@ -376,7 +376,7 @@ This documentation is available for **educational purposes**.
 ## 📞 Connect
 
 [![GitHub](https://img.shields.io/badge/GitHub-4nonX-181717?style=for-the-badge&logo=github)](https://github.com/4nonX)
-[![LinkedIn]([https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/dan-dressen)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/dan-dressen)
 
 ---
 
