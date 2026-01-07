@@ -9,6 +9,26 @@
 
 ---
 
+## 🚧 Current Major Project: NixOS Migration (2025)
+
+I'm currently planning and executing a **complete infrastructure migration** 
+from ZimaOS (Debian-based) to NixOS for my entire production homelab.
+
+**Why NixOS?**
+- 🔧 Declarative system configuration (Infrastructure as Code at OS level)
+- ♻️ Atomic rollbacks and reproducible builds
+- 📦 Better separation of system state and configuration
+- 🔄 Simplified disaster recovery through "system as code"
+
+**Migration Strategy:**
+- Zero-downtime target for critical services
+- Service-by-service migration with rollback capability  
+- Data migration strategy for 33TB BTRFS RAID5
+- Comprehensive documentation of process and learnings
+
+**Current Status:** Planning Phase | Target: Q1-Q2 2025
+---
+
 ## 📋 Table of Contents
 
 - [Overview](#-overview)
