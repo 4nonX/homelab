@@ -10,7 +10,7 @@
 
 ---
 
-## 🚧 Current Major Project: NixOS Migration (2025)
+## 🚧 Current Major Project: NixOS Migration (2026)
 
 I'm currently planning and executing a **complete infrastructure migration** 
 from ZimaOS (Debian-based) to NixOS for my entire production homelab.
@@ -27,7 +27,7 @@ from ZimaOS (Debian-based) to NixOS for my entire production homelab.
 - Data migration strategy for 33TB BTRFS RAID5
 - Comprehensive documentation of process and learnings
 
-**Current Status:** Planning Phase | Target: Q2-Q3 2025
+**Current Status:** Planning Phase | Target: Q2-Q3 2026
 ---
 
 ## 📋 Table of Contents
