@@ -7,13 +7,18 @@
    - Key achievements
    - Business value
    - Quick stats
+  
+   **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Ongoing Project showcase
+   - NixOS-Migration - reasoning
+   - NixOS - features
+   - NixOS - migration steps
 
-2. **[PORTFOLIO.md](PORTFOLIO.md)** - Portfolio showcase
+3. **[PORTFOLIO.md](PORTFOLIO.md)** - Portfolio showcase
    - Skills demonstration
    - Technical implementation
    - GitHub-optimized presentation
 
-3. **[README.md](README.md)** - Project overview
+4. **[README.md](README.md)** - Project overview
    - Infrastructure highlights
    - Service categories
    - Repository structure
