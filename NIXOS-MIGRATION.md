@@ -4,7 +4,7 @@
 
 Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS, encompassing 40+ containerized services and 33TB storage, with zero-downtime target for critical services.
 
-**Timeline:** Q1-Q2 2025  
+**Timeline:** Q1-Q2 2026  
 **Current Phase:** Planning & Testing  
 **Complexity:** High (Production environment, 2+ years uptime, 99.9% SLA)  
 **Public Documentation:** [github.com/4nonX/homelab](https://github.com/4nonX/homelab)
