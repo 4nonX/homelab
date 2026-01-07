@@ -19,6 +19,33 @@ This repository documents my personal homelab infrastructure, showcasing practic
 **Storage:** BTRFS on RAID5 (33TB) with compression and checksumming  
 **External Access:** Self-hosted Pangolin tunnel with Traefik reverse proxy (VPS-based)
 
+## 🚧 Current Major Project: NixOS Migration (2026)
+
+I'm planning and executing a **complete infrastructure migration** from ZimaOS (Debian) to NixOS for my entire 40+-service production environment.
+
+**Why NixOS?**
+- 🔧 Declarative system configuration (Infrastructure as Code at OS level)
+- ♻️ Atomic rollbacks and reproducible builds  
+- 📦 Separation of system state and configuration
+- 🔄 Simplified disaster recovery through "system as code"
+
+**Migration Strategy:**
+- Zero-downtime target for critical services
+- Service-by-service migration with rollback capability
+- Data migration for 33TB BTRFS RAID5 storage
+- Comprehensive documentation of entire process
+
+**Current Phase:** Planning & Testing | **Target:** Q2-Q3 2025
+
+📖 **[Read Full Migration Plan →](NIXOS-MIGRATION.md)**
+
+**What This Demonstrates:**
+- Production change management and risk assessment
+- Modern Infrastructure-as-Code practices beyond containers
+- Complex project planning and execution
+- Technical decision-making for system architecture
+----
+
 ## 🏗️ Technical Architecture
 
 ### Infrastructure Highlights
