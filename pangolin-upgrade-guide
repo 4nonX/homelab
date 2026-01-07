@@ -1,5 +1,19 @@
 🆙 Migration: Pangolin Stack v1.14.0<p align="center"><img src="https://img.shields.io/badge/Server-v1.14.0-blue?style=for-the-badge&logo=docker" /><img src="https://img.shields.io/badge/Client-v1.8.1-orange?style=for-the-badge&logo=linux" /><img src="https://img.shields.io/badge/Status-Online-success?style=for-the-badge" /></p>This document details the migration process and network optimization for the homelab tunnel infrastructure.🏗 Architecture VersionsComponentRepositoryVersionStatusServerfosrl/pangolin1.14.0🟢 ActiveRelayfosrl/gerbil1.1.1🟢 ActiveClientfosrl/newt1.8.1🟢 Active⚡ Technical Execution🔹 Client-Side Optimization (ZimaOS)The new WireGuard engine requires specific MTU handling to prevent packet fragmentation across the tunnel.Bash# Prepare persistent binary environment
 
+🏗 Architecture Versions
+
+| Component | Repository       | Version    | Status    |
+| --------- | ---------------- | ---------- | --------- |
+| Server    | `fosrl/pangolin` | **1.14.0** | 🟢 Active |
+| Relay     | `fosrl/gerbil`   | **1.1.1**  | 🟢 Active |
+| Client    | `fosrl/newt`     | **1.8.1**  | 🟢 Active |
+
+⚡ Technical Execution
+🔹 Client-Side Optimization (ZimaOS)
+
+The updated WireGuard engine requires explicit MTU tuning to prevent packet fragmentation across the tunnel.
+
+# Prepare persistent binary environment
 mkdir -p /DATA/newt-client && cd /DATA/newt-client
 curl -L "https://github.com/fosrl/newt/releases/download/1.8.1/newt_linux_amd64" -o newt
 chmod +x newt
@@ -9,16 +23,22 @@ sudo systemctl stop newt
 mv /DATA/bin/newt /DATA/bin/newt_old
 cp /DATA/newt-client/newt /DATA/bin/newt
 sudo systemctl start newt
-🔹 Updated Configuration (config.json)JSON{
+
+🔹 Updated Configuration (config.json)
+
+JSON{
   "endpoint": "https://pangolin.xxxx.com",
   "mtu": 1280,
   "keepAlive": 25
 }
+
 🔹 Server-Side Deployment (VPS)Bash# Infrastructure backup & pull
 cd ~/homelab/elegant-rhodes
 tar -czvf backup_v1.12.2.tar.gz ./config ./letsencrypt docker-compose.yml
 docker compose pull && docker compose up -d
+
 🚦 Verification & Verification[!IMPORTANT]Database migration from v1.12.2 to v1.14.0 involves schema changes. Ensure logs confirm "Migration successful" before client reconnection.Handshake: Established via WebSocket Secure (WSS)MTU: Optimized at 1280 for Zero-FragmentationEndpoint: 100.90.128.0<p align="center"><b>4nonX Homelab Infrastructure</b><i>Automated • Secure • Persistent</i></p>Docker Code Drop-in (docker-compose.yml)YAML  pangolin:
+    
     image: fosrl/pangolin:1.14.0
     container_name: pangolin
     restart: unless-stopped
