@@ -43,7 +43,7 @@ Core network services providing DNS, ad-blocking, VPN access, and security monit
 
 **Network Routing:**
 ```
-qBittorrent → Gluetun → VPN Provider → Internet
+Application → Gluetun → VPN Provider → Internet
            ↓
     Kill Switch Active
     (No direct internet access)
