@@ -26,7 +26,7 @@ from ZimaOS (Debian-based) to NixOS for my entire production homelab.
 - Data migration strategy for 33TB BTRFS RAID5
 - Comprehensive documentation of process and learnings
 
-**Current Status:** Planning Phase | Target: Q1-Q2 2025
+**Current Status:** Planning Phase | Target: Q2-Q3 2025
 ---
 
 ## 📋 Table of Contents
