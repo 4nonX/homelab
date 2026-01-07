@@ -4,6 +4,7 @@
 [![Uptime](https://img.shields.io/badge/uptime-99.9%25-brightgreen?style=for-the-badge)](https://github.com/4nonX/homelab)
 [![Services](https://img.shields.io/badge/services-40+-blue?style=for-the-badge)](https://github.com/4nonX/homelab)
 [![Storage](https://img.shields.io/badge/storage-33TB-orange?style=for-the-badge)](https://github.com/4nonX/homelab)
+[![Migration](https://img.shields.io/badge/NixOS_Migration-Planning-yellow?style=for-the-badge)](NIXOS-MIGRATION.md)
 
 > **Production-grade personal cloud infrastructure** built from scratch, demonstrating enterprise-level architecture, security, and operational practices at homelab scale.
 
