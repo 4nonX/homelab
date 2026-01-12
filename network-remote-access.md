@@ -625,7 +625,7 @@ OpenVPN served well in the past but WireGuard-based solutions (Pangolin, Tailsca
    ├─ Full infrastructure control
    ├─ Custom security hardening
    ├─ CrowdSec protection
-   └─ Federal employment compatible
+   └─ Sensitive data compatible
 
 2. 🥈 Pragmatic Backup: Tailscale
    ├─ Reliable across network conditions
@@ -662,8 +662,6 @@ The layered approach ensures continuous access while maintaining security:
 ✅ **Future-proof** - Not locked into single vendor/technology
 
 ### Critical Security Requirements
-
-Given federal employment considerations and future work with sensitive information:
 
 🔴 **Non-Negotiable:**
 
@@ -712,7 +710,7 @@ Day-to-Day:
 
 * **Pangolin:** 95% (only downtime during planned maintenance or VPS inavailability)
 * **Tailscale:** ~100% (always worked when tried)
-* **ZeroTier:** ~99.9% (reliable for maintenance access)
+* **ZeroTier:** ~95% (reliable for maintenance access)
 
 ---
 
