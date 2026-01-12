@@ -101,5 +101,10 @@
     - Security hardening
    
 14. **[pangolin-upgrade-guide.md](pangolin-uograde-guide.md)** - Step-by-step
-    - 
+    - lorem upsum
+    - lorem ipsum
+    - lorem ipsum
+    - lorem ipsum
+   
+
     
