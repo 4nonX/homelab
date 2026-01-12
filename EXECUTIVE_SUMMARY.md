@@ -4,7 +4,7 @@
 
 **Project:** Personal Cloud Infrastructure  
 **Status:** Production, 6+ months operational  
-**Uptime:** 99.9%+
+**Uptime:** ~90%+
 
 ---
 
