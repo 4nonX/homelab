@@ -15,7 +15,7 @@ This repository documents my personal homelab infrastructure, showcasing practic
 
 **Platform:** DIY NAS Build (Intel i3-13100, 32GB RAM) running ZimaOS  
 **Scale:** 40+ containerized services across multiple categories  
-**Uptime:** 99.9%+ with automated monitoring and health checks  
+**Uptime:** ~90%+ with automated monitoring and health checks  
 **Storage:** BTRFS on RAID5 (33TB) with compression and checksumming  
 **External Access:** Self-hosted Pangolin tunnel with Traefik reverse proxy (VPS-based)
 
