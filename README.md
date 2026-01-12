@@ -230,7 +230,7 @@ Layer 5: Data Protection
 | **Hardware** | [Hardware Specs](hardware-specs.md) |
 | **Docker** | [Docker Infrastructure](docker-infrastructure.md) |
 | **Services** | [Media Stack](media-stack.md) · [Productivity](productivity-services.md) |
-| **Network** | [Network Security](network-security.md) |
+| **Network** | [Network Security](network-security.md) · [Remote Access](remote-access.md) |
 | **Pangolin** | [Infrastructure](pangolin-infrastructure.md) · [Configs](pangolin-configurations.md) · [Deployment](pangolin-deployment-guide.md) |
 
 ---
