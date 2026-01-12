@@ -271,7 +271,7 @@ Switch
 - **Queries/Day:** ~500,000
 - **Blocked:** ~25-30%
 - **Response Time:** <10ms
-- **Uptime:** 99.9%+
+- **Uptime:** 90%+
 
 ### Network Performance
 - **Internal Bandwidth:** 1 Gbps
