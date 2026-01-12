@@ -1708,7 +1708,7 @@ Benefit: Data sovereignty, compliance, customization
 
 **Technical Achievements:**
 - ✅ 40+ production services deployed
-- ✅ 99.9%+ uptime maintained
+- ✅ 90%+ uptime maintained
 - ✅ Zero data loss incidents
 - ✅ Professional external access (Pangolin)
 - ✅ Automated backup and monitoring
