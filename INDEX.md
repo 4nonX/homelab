@@ -100,7 +100,7 @@
     - Client installation
     - Security hardening
    
-14. **[pangolin-upgrade-guide](pangolin-uograde-guide)** - Step-by-step
+14. **[pangolin-upgrade-guide](pangolin-upgrade-guide)** - Step-by-step
     - lorem upsum
     - lorem ipsum
     - lorem ipsum
