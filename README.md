@@ -22,7 +22,7 @@ from ZimaOS (Debian-based) to NixOS for my entire production homelab.
 - 🔄 Simplified disaster recovery through "system as code"
 
 **Migration Strategy:**
-- Zero-downtime target for critical services
+- Minimal-downtime target for critical services
 - Service-by-service migration with rollback capability  
 - Data migration strategy for 33TB BTRFS RAID5
 - Comprehensive documentation of process and learnings
