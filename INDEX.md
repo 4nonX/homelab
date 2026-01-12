@@ -8,7 +8,7 @@
    - Business value
    - Quick stats
   
-   **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Ongoing Project showcase
+2.   **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Ongoing Project showcase
    - NixOS-Migration - reasoning
    - NixOS - features
    - NixOS - migration steps
@@ -25,7 +25,7 @@
 
 ### 📖 Complete Story
 
-4. **[homelab-complete-journey.md](homelab-complete-journey.md)** - Full build journey (1790 lines!)
+5. **[homelab-complete-journey.md](homelab-complete-journey.md)** - Full build journey (1790 lines!)
    - Why build a personal cloud?
    - Requirements & planning
    - Hardware selection & build
@@ -42,20 +42,20 @@
 
 ### 🔧 Technical Deep-Dives
 
-5. **[hardware-specs.md](hardware-specs.md)** - Hardware documentation
+6. **[hardware-specs.md](hardware-specs.md)** - Hardware documentation
    - Complete component list
    - Selection rationale
    - Performance benchmarks
    - Upgrade paths
 
-6. **[docker-infrastructure.md](docker-infrastructure.md)** - Container architecture
+7. **[docker-infrastructure.md](docker-infrastructure.md)** - Container architecture
    - Docker Compose strategy
    - Network architecture
    - Security best practices
    - Resource management
    - Update procedures
 
-7. **[network-security.md](network-security.md)** - Network & security
+8. **[network-security.md](network-security.md)** - Network & security
    - Network topology
    - Security layers
    - Firewall configuration
@@ -63,13 +63,13 @@
 
 ### 📺 Service Categories
 
-8. **[media-stack.md](media-stack.md)** - Media automation
+9. **[media-stack.md](media-stack.md)** - Media automation
    - Arr Suite integration
    - VPN-secured downloads
    - Streaming services
    - Quality profiles
 
-9. **[productivity-services.md](productivity-services.md)** - Productivity apps
+10. **[productivity-services.md](productivity-services.md)** - Productivity apps
    - Nextcloud setup
    - Immich photo management
    - Paperless-NGX documents
@@ -77,7 +77,7 @@
 
 ### 🌐 External Access (Pangolin)
 
-10. **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture,
+11. **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture,
      - Pangolin/Tailscale/ZeroTier comparison
      - security integration
 
@@ -99,3 +99,7 @@
     - Server deployment
     - Client installation
     - Security hardening
+   
+14. **[pangolin-upgrade-guide.md](pangolin-uograde-guide.md)** - Step-by-step
+    - 
+    
