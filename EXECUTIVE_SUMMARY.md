@@ -47,7 +47,7 @@ VPS Gateway (External Access)
 - ✅ **Zero Port Forwarding** via Pangolin tunnel
 - ✅ **Automatic SSL** certificates (Let's Encrypt)
 - ✅ **Multi-layer Security** (IDS/IPS, encryption, isolation)
-- ✅ **99.9% Uptime** with automated monitoring
+- ✅ **~90%+ Uptime** with automated monitoring
 
 ### Financial
 
