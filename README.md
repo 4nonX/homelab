@@ -350,7 +350,7 @@ Timeline:           6+ months
 Services:           40+ containers
 Storage:            33TB RAID5 (10% used)
 RAM:                32GB (31% used)
-Uptime:             99.9%+
+Uptime:             90%+
 Power:              30W avg, 60W peak
 Documentation:      5,000+ lines, 17 files
 ```
