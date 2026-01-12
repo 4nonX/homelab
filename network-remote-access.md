@@ -261,9 +261,9 @@ http:
 | **Key Management** | ✅ Complete control | ❌ Provider managed |
 | **Compliance** | ✅ Meets federal employment requirements | ⚠️ Problematic for sensitive work |
 
-**Why Self-Hosted is Essential:**
+**Why Self-Hosted is Essential:*
 
-Given my federal employment background and potential future work with sensitive information, maintaining complete control over VPN infrastructure isn't just a preference—it's a security necessity. A publicly hosted solution would:
+A publicly hosted solution would:
 
 * Introduce external party into trust chain
 * Create single point of compromise affecting all connected networks
