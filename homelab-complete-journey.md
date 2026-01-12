@@ -8,7 +8,7 @@ This document chronicles the complete journey of building a production-grade per
 - **Timeline:** 6+ months from planning to production
 - **Investment:** ~€1,500 hardware + €60/year VPS
 - **Result:** Private cloud replacing €300+/year SaaS subscriptions
-- **Scale:** 40+ containerized services, 33TB storage, 99.9%+ uptime
+- **Scale:** 40+ containerized services, 33TB storage, ~90%+ uptime
 - **Skills Demonstrated:** Infrastructure design, security architecture, system administration, DevOps practices
 
 ## Table of Contents
