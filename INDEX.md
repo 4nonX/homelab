@@ -77,7 +77,7 @@
 
 ### 🌐 External Access (Pangolin)
 
-10. **[Remote Access Strategy](remote-access.md)** - Multi-layered VPN architecture,
+10. **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture,
      - Pangolin/Tailscale/ZeroTier comparison
      - security integration
 
