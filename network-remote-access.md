@@ -6,14 +6,14 @@ Multi-layered VPN architecture ensuring reliable connectivity while maintaining 
 
 ## 📋 Table of Contents
 
-* [Architecture Overview](#architecture-overview)
-* [Access Methods Comparison](#access-methods-comparison)
-* [Primary: Pangolin VPN](#primary-pangolin-vpn)
-* [Fallback: Tailscale](#fallback-tailscale)
-* [System Access: ZeroTier](#system-access-zerotier)
-* [HTTPS & SSL Automation](#https--ssl-automation)
-* [Alternatives Considered](#alternatives-considered)
-* [Design Philosophy](#design-philosophy)
+* [Architecture Overview](#️-architecture-overview)
+* [Access Methods Comparison](#-access-methods-comparison)
+* [Primary: Pangolin VPN](#-primary-pangolin-vpn)
+* [Fallback: Tailscale](#-fallback-tailscale)
+* [System Access: ZeroTier](#-system-access-zerotier)
+* [HTTPS & SSL Automation](#-https--ssl-automation)
+* [Alternatives Considered](#-alternatives-considered)
+* [Design Philosophy](#-design-philosophy)
 
 ---
 
