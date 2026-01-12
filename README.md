@@ -92,9 +92,10 @@ Explore specific technical implementations:
 
 - **[Hardware Specifications](hardware-specs.md)** - DIY build details and performance
 - **[Docker Infrastructure](docker-infrastructure.md)** - Container architecture and best practices
+- **[Remote Access Strategy](remote-access.md)** - Multi-layered VPN architecture, Pangolin/Tailscale/ZeroTier comparison, security integration
 - **[Pangolin Tunnel](pangolin-infrastructure.md)** - Self-hosted external access solution
 - **[Network Security](network-security.md)** - Multi-layer security architecture
-
+  
 ---
 
 ## 🏗️ Architecture
