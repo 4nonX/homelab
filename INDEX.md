@@ -77,19 +77,23 @@
 
 ### 🌐 External Access (Pangolin)
 
-10. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
+10. **[Remote Access Strategy](remote-access.md)** - Multi-layered VPN architecture,
+     - Pangolin/Tailscale/ZeroTier comparison
+     - security integration
+
+12. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
     - Why Pangolin?
     - Multi-layer security
     - Performance characteristics
     - Cost analysis
 
-11. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
+13. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
     - Docker Compose files
     - Server configuration
     - Client setup
     - Troubleshooting
 
-12. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
+14. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
     - VPS setup
     - DNS configuration
     - Server deployment
