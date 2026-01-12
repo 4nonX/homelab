@@ -200,7 +200,7 @@ Internet → Router → Pi-hole (DNS) → Services
 ## 📊 Project Statistics
 
 - **Total Services:** 40+ active containers
-- **Uptime:** 99.9%+ (monitored via health checks)
+- **Uptime:** ~90%+ (monitored via health checks)
 - **Storage:** 33TB BTRFS RAID5 storage
 - **Power Consumption:** ~30W average (energy efficient)
 - **Network Traffic:** ~500K DNS queries/day (Pi-hole)
