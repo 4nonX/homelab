@@ -554,7 +554,7 @@ Wiredoor would be suitable for simple VPN access but lacks the sophisticated fea
 While Cloudflare Tunnel is technically excellent and very convenient, it fundamentally conflicts with the homelab's core principles:
 
 1. **Privacy Concerns:** Every HTTP request is decrypted and re-encrypted by Cloudflare, giving them complete visibility into all traffic
-2. **Federal Employment Incompatibility:** Cannot use for work with sensitive information due to third-party data access
+2. **Sensitive Data Incompatibility:** Cannot use for work with sensitive information due to third-party data access
 3. **Data Sovereignty:** Violates principle of keeping all data under personal control
 4. **Philosophy Mismatch:** Defeats the purpose of self-hosting if giving all access to external company
 
@@ -694,10 +694,9 @@ Given federal employment considerations and future work with sensitive informati
 
 ```
 Day-to-Day:
-├─ 70% Pangolin (primary web services)
-├─ 20% ZeroTier (SSH/terminal/maintenance)
-├─ 9% Tailscale (mobile access, quick checks)
-└─ 1% Other (testing, troubleshooting)
+├─ 95% Pangolin (primary web services)
+├─ 3% ZeroTier (SSH/terminal/maintenance)
+├─ 1% Tailscale (mobile access, quick checks)
 ```
 
 **Use Case Breakdown:**
@@ -711,9 +710,9 @@ Day-to-Day:
 
 **Uptime Experience:**
 
-* **Pangolin:** 99.9% (only downtime during planned maintenance)
-* **Tailscale:** 100% (always worked when tried)
-* **ZeroTier:** 99.9% (reliable for maintenance access)
+* **Pangolin:** 95% (only downtime during planned maintenance or VPS inavailability)
+* **Tailscale:** ~100% (always worked when tried)
+* **ZeroTier:** ~99.9% (reliable for maintenance access)
 
 ---
 
