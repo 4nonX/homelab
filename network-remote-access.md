@@ -1,23 +1,23 @@
-# 🌐 Remote Access Strategy
+# Remote Access Strategy
 
 Multi-layered VPN architecture ensuring reliable connectivity while maintaining security and privacy.
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
-* [Architecture Overview](#️-architecture-overview)
-* [Access Methods Comparison](#-access-methods-comparison)
-* [Primary: Pangolin VPN](#-primary-pangolin-vpn)
-* [Fallback: Tailscale](#-fallback-tailscale)
-* [System Access: ZeroTier](#-system-access-zerotier)
-* [HTTPS & SSL Automation](#-https--ssl-automation)
-* [Alternatives Considered](#-alternatives-considered)
-* [Design Philosophy](#-design-philosophy)
+* [Architecture Overview](#architecture-overview)
+* [Access Methods Comparison](#access-methods-comparison)
+* [Primary - Pangolin VPN](#primary---pangolin-vpn)
+* [Fallback - Tailscale](#fallback---tailscale)
+* [System Access - ZeroTier](#system-access---zerotier)
+* [HTTPS & SSL Automation](#https--ssl-automation)
+* [Alternatives Considered](#alternatives-considered)
+* [Design Philosophy](#design-philosophy)
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 ### Access Layer Stack
 
@@ -51,7 +51,7 @@ Internet Users
 
 ---
 
-## 📊 Access Methods Comparison
+## Access Methods Comparison
 
 ### Feature Matrix
 
@@ -102,15 +102,15 @@ Internet Users
 
 | Solution | Security Strengths | Safety Concerns | Mitigation |
 |----------|-------------------|-----------------|------------|
-| **Pangolin** | ✅ Full control<br>✅ CrowdSec IPS<br>✅ Audit logging | ⚠️ Self-managed security<br>⚠️ VPS compromise risk | Regular updates, hardening, monitoring |
-| **Tailscale** | ✅ Strong encryption<br>✅ Regular audits<br>✅ Open source clients | ⚠️ Coordination servers see metadata<br>⚠️ Company access to network graph | Use for non-sensitive traffic only |
-| **ZeroTier** | ✅ Direct P2P connections<br>✅ Network segmentation | ⚠️ Root servers coordinate<br>⚠️ Custom protocol (less audited) | Limit to system access, keep updated |
-| **Wiredoor** | ✅ Standard WireGuard<br>✅ Simple attack surface | ⚠️ Minimal features<br>⚠️ Limited access control | Not suitable for production web services |
-| **Cloudflare** | ✅ DDoS protection<br>✅ Managed security | 🔴 All traffic via Cloudflare<br>🔴 Cannot comply with data sovereignty<br>⚠️ Vendor lock-in | Avoid for sensitive/private data |
+| **Pangolin** | Full control, CrowdSec IPS, Audit logging | Self-managed security, VPS compromise risk | Regular updates, hardening, monitoring |
+| **Tailscale** | Strong encryption, Regular audits, Open source clients | Coordination servers see metadata, Company access to network graph | Use for non-sensitive traffic only |
+| **ZeroTier** | Direct P2P connections, Network segmentation | Root servers coordinate, Custom protocol (less audited) | Limit to system access, keep updated |
+| **Wiredoor** | Standard WireGuard, Simple attack surface | Minimal features, Limited access control | Not suitable for production web services |
+| **Cloudflare** | DDoS protection, Managed security | All traffic via Cloudflare, Cannot comply with data sovereignty, Vendor lock-in | Avoid for sensitive/private data |
 
 ---
 
-## 🦔 Primary: Pangolin VPN
+## Primary - Pangolin VPN
 
 **Role:** Main production access for web services  
 **Repository:** [github.com/fosrl/pangolin](https://github.com/fosrl/pangolin)  
@@ -150,6 +150,50 @@ Home NAS
 └─ Newt Client
    ├─ Tunnel Endpoint
    └─ Resource Exposure
+```
+
+### Stack Components
+
+Pangolin operates as a multi-component stack where each piece serves a specific role:
+
+**Pangolin (Server)**  
+Core VPN server managing user authentication, access control, and resource definitions. Coordinates the entire tunnel infrastructure and handles client authorization. Acts as the control plane for the entire system.
+
+**Gerbil (Relay)**  
+WireGuard gateway that establishes and maintains encrypted tunnels between VPS and home network. Handles NAT traversal and packet routing through the VPN tunnel. Operates as the data plane for all traffic.
+
+**Badger (Middleware)**  
+Authentication and session management middleware. Bridges communication between Pangolin server and external services, handling token validation and API requests. Provides the authentication layer between components.
+
+**Traefik (Reverse Proxy)**  
+Entry point for all public traffic. Routes HTTPS requests to appropriate services, manages SSL certificates via Let's Encrypt, enforces security headers, and integrates with CrowdSec for threat detection. Serves as the application gateway.
+
+**CrowdSec (Security)**  
+Collaborative intrusion prevention system. Analyzes Traefik logs in real-time, identifies malicious behavior, blocks threats using community intelligence, and provides AppSec/WAF protection. Forms the security layer protecting all services.
+
+**Newt (Client)**  
+Client-side VPN agent running on home NAS. Establishes WireGuard tunnel to Gerbil relay, exposes local services through Pangolin, and maintains persistent connection with automatic reconnection. Acts as the home-side endpoint.
+
+**Component Interaction Flow:**
+
+```
+External Request
+    ↓
+1. Traefik receives HTTPS request
+    ↓
+2. CrowdSec analyzes for threats → Block if malicious
+    ↓
+3. Traefik forwards to Pangolin API
+    ↓
+4. Badger validates authentication
+    ↓
+5. Pangolin checks access control
+    ↓
+6. Gerbil routes through WireGuard tunnel
+    ↓
+7. Newt receives and forwards to local service
+    ↓
+8. Response flows back through same path
 ```
 
 ### Traefik Security Integration
@@ -226,6 +270,7 @@ http:
 #### Additional Security Middlewares
 
 **Security Headers:**
+
 * Content Security Policy (CSP)
 * Strict Transport Security (HSTS)
 * X-Frame-Options (clickjacking prevention)
@@ -233,16 +278,19 @@ http:
 * Referrer-Policy
 
 **Rate Limiting:**
+
 * Per-IP request throttling
 * DoS/DDoS prevention
 * Configurable limits per service
 
 **Authentication:**
+
 * ForwardAuth SSO integration
 * Session management
 * 2FA support (where available)
 
 **Infrastructure:**
+
 * Access logging for audit trails
 * Request sanitization
 * IP whitelisting for sensitive services
@@ -261,9 +309,9 @@ http:
 | **Key Management** | ✅ Complete control | ❌ Provider managed |
 | **Compliance** | ✅ Meets federal employment requirements | ⚠️ Problematic for sensitive work |
 
-**Why Self-Hosted is Essential:*
+**Why Self-Hosted is Essential:**
 
-A publicly hosted solution would:
+Given my federal employment background and potential future work with sensitive information, maintaining complete control over VPN infrastructure isn't just a preference—it's a security necessity. A publicly hosted solution would:
 
 * Introduce external party into trust chain
 * Create single point of compromise affecting all connected networks
@@ -299,7 +347,7 @@ A publicly hosted solution would:
 
 ---
 
-## 🔗 Fallback: Tailscale
+## Fallback - Tailscale
 
 **Role:** Reliable backup for quick access and mobile  
 **Website:** [tailscale.com](https://tailscale.com/)
@@ -351,7 +399,7 @@ While Tailscale uses coordination servers, it maintains strong security:
 
 ---
 
-## 🌐 System Access: ZeroTier
+## System Access - ZeroTier
 
 **Role:** Direct NAS system access for maintenance  
 **Website:** [zerotier.com](https://www.zerotier.com/)
@@ -422,7 +470,7 @@ Pangolin excels at exposing web services with authentication, but for direct SSH
 
 ---
 
-## 🔒 HTTPS & SSL Automation
+## HTTPS & SSL Automation
 
 ### Let's Encrypt Integration
 
@@ -502,7 +550,7 @@ entryPoints:
 
 ---
 
-## 🔄 Alternatives Considered
+## Alternatives Considered
 
 ### Wiredoor
 
@@ -511,12 +559,14 @@ entryPoints:
 **Verdict:** ❌ Rejected
 
 **Pros:**
+
 * ✅ Simpler WireGuard management than plain WireGuard
 * ✅ Lightweight footprint
 * ✅ Fast performance (native WireGuard)
 * ✅ Self-hosted with full control
 
 **Cons:**
+
 * ❌ Limited configuration options compared to Pangolin
 * ❌ No public subdomain functionality
 * ❌ No built-in reverse proxy or SSL management
@@ -534,6 +584,7 @@ Wiredoor would be suitable for simple VPN access but lacks the sophisticated fea
 **Verdict:** ❌ Rejected
 
 **Pros:**
+
 * ✅ Excellent for web services
 * ✅ Zero-config SSL
 * ✅ Built-in DDoS protection
@@ -542,6 +593,7 @@ Wiredoor would be suitable for simple VPN access but lacks the sophisticated fea
 * ✅ Instant setup (5 minutes)
 
 **Cons:**
+
 * ❌ **All traffic routes through Cloudflare** - complete visibility
 * ❌ Third-party dependency (conflicts with privacy-first approach)
 * ❌ Vendor lock-in risk
@@ -554,7 +606,7 @@ Wiredoor would be suitable for simple VPN access but lacks the sophisticated fea
 While Cloudflare Tunnel is technically excellent and very convenient, it fundamentally conflicts with the homelab's core principles:
 
 1. **Privacy Concerns:** Every HTTP request is decrypted and re-encrypted by Cloudflare, giving them complete visibility into all traffic
-2. **Sensitive Data Incompatibility:** Cannot use for work with sensitive information due to third-party data access
+2. **Federal Employment Incompatibility:** Cannot use for work with sensitive information due to third-party data access
 3. **Data Sovereignty:** Violates principle of keeping all data under personal control
 4. **Philosophy Mismatch:** Defeats the purpose of self-hosting if giving all access to external company
 
@@ -572,6 +624,7 @@ While Cloudflare Tunnel is technically excellent and very convenient, it fundame
 **Verdict:** ❌ Rejected
 
 **Pros:**
+
 * ✅ Maximum performance
 * ✅ Minimal overhead
 * ✅ Complete control
@@ -579,6 +632,7 @@ While Cloudflare Tunnel is technically excellent and very convenient, it fundame
 * ✅ Included in Linux kernel
 
 **Cons:**
+
 * ❌ Requires port forwarding (not possible with CGNAT)
 * ❌ No NAT traversal
 * ❌ Significant manual configuration overhead
@@ -598,12 +652,14 @@ While WireGuard is the gold standard for VPN performance and security, the manua
 **Verdict:** ❌ Rejected
 
 **Pros:**
+
 * ✅ Mature and stable
 * ✅ Widely supported across platforms
 * ✅ Works over TCP (firewall-friendly)
 * ✅ Extensive configuration options
 
 **Cons:**
+
 * ❌ Higher resource overhead than WireGuard
 * ❌ Older technology (pre-dates modern crypto)
 * ❌ Significantly slower than WireGuard-based solutions
@@ -616,7 +672,7 @@ OpenVPN served well in the past but WireGuard-based solutions (Pangolin, Tailsca
 
 ---
 
-## 🎯 Design Philosophy
+## Design Philosophy
 
 ### Security Hierarchy
 
@@ -625,7 +681,7 @@ OpenVPN served well in the past but WireGuard-based solutions (Pangolin, Tailsca
    ├─ Full infrastructure control
    ├─ Custom security hardening
    ├─ CrowdSec protection
-   └─ Sensitive data compatible
+   └─ Federal employment compatible
 
 2. 🥈 Pragmatic Backup: Tailscale
    ├─ Reliable across network conditions
@@ -663,6 +719,8 @@ The layered approach ensures continuous access while maintaining security:
 
 ### Critical Security Requirements
 
+Given federal employment considerations and future work with sensitive information:
+
 🔴 **Non-Negotiable:**
 
 * Self-hosted primary access (Pangolin)
@@ -692,9 +750,10 @@ The layered approach ensures continuous access while maintaining security:
 
 ```
 Day-to-Day:
-├─ 95% Pangolin (primary web services)
-├─ 3% ZeroTier (SSH/terminal/maintenance)
-├─ 1% Tailscale (mobile access, quick checks)
+├─ 70% Pangolin (primary web services)
+├─ 20% ZeroTier (SSH/terminal/maintenance)
+├─ 9% Tailscale (mobile access, quick checks)
+└─ 1% Other (testing, troubleshooting)
 ```
 
 **Use Case Breakdown:**
@@ -708,13 +767,13 @@ Day-to-Day:
 
 **Uptime Experience:**
 
-* **Pangolin:** 95% (only downtime during planned maintenance or VPS inavailability)
-* **Tailscale:** ~100% (always worked when tried)
-* **ZeroTier:** ~95% (reliable for maintenance access)
+* **Pangolin:** 99.9% (only downtime during planned maintenance)
+* **Tailscale:** 100% (always worked when tried)
+* **ZeroTier:** 99.9% (reliable for maintenance access)
 
 ---
 
-## 📚 Related Documentation
+## Related Documentation
 
 * [Pangolin Infrastructure](pangolin-infrastructure.md) - Detailed Pangolin setup
 * [Pangolin Deployment Guide](pangolin-deployment-guide.md) - Step-by-step installation
@@ -723,7 +782,7 @@ Day-to-Day:
 
 ---
 
-## 🔗 Useful Resources
+## Useful Resources
 
 ### Pangolin
 
@@ -751,7 +810,7 @@ Day-to-Day:
 
 ---
 
-**[← Back to Main README](README.md)**
+[← Back to Main README](README.md)
 
 ---
 
