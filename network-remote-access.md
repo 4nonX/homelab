@@ -307,8 +307,8 @@ http:
 | **Security** | ✅ Custom hardening, full audit | ⚠️ Trust provider security practices |
 | **Attack Surface** | ✅ Isolated infrastructure | ❌ Shared with other users |
 | **Key Management** | ✅ Complete control | ❌ Provider managed |
-| **Compliance** | ✅ Meets federal employment requirements | ⚠️ Problematic for sensitive work |
-
+| **Compliance** | ✅ Meets privacy requirements | ⚠️ Problematic for sensitive work |
+| **Reliability** | ⚠️ High availability feature not available | ✅ High availability, automatic failover if node goes down |
 **Why Self-Hosted is Essential:**
 
 Given my federal employment background and potential future work with sensitive information, maintaining complete control over VPN infrastructure isn't just a preference—it's a security necessity. A publicly hosted solution would:
@@ -767,9 +767,9 @@ Day-to-Day:
 
 **Uptime Experience:**
 
-* **Pangolin:** 99.9% (only downtime during planned maintenance)
+* **Pangolin:** ~95%+ (only downtime during planned maintenance)
 * **Tailscale:** 100% (always worked when tried)
-* **ZeroTier:** 99.9% (reliable for maintenance access)
+* **ZeroTier:** ~95%+ (reliable for maintenance access, integrated in ZimaOS)
 
 ---
 
