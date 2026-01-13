@@ -23,7 +23,7 @@ DIY NAS Server (Homelab)
 VPS Gateway (External Access)
 ├─ Provider: IONOS Berlin
 ├─ Specs: 2 vCPU, 2GB RAM, 80GB NVMe
-└─ Stack: Pangolin + Traefik + CrowdSec
+└─ Stack: Pangolin + Traefik + Gerbil + CrowdSec
 ```
 
 ### Service Categories
