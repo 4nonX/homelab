@@ -166,9 +166,11 @@ homelab-infrastructure/
 ├── hardware-specs.md                  # Hardware details
 ├── docker-infrastructure.md           # Container architecture
 ├── network-security.md                # Network & security
+├── network-remote-access.md           # Network & remote-access solution
 ├── pangolin-infrastructure.md         # Tunnel system
 ├── pangolin-configurations.md         # Sanitized configs
 ├── pangolin-deployment-guide.md       # Step-by-step setup
+├── pangolin-upgrade-guide.md          # Upgrading the Pangolin-Stack
 ├── media-stack.md                     # Media automation
 ├── productivity-services.md           # Productivity apps
 └── CORRECTIONS_SUMMARY.md             # Technical corrections
