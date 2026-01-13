@@ -10,7 +10,7 @@ This document details the migration process and network optimization for the hom
 
 | Component | Repository | Version | Status |
 |-----------|------------|---------|--------|
-| **Server** | `fosrl/pangolin` | 1.14.0 | 🟢 Active |
+| **Server** | `fosrl/pangolin` | 1.14.1 | 🟢 Active |
 | **Relay** | `fosrl/gerbil` | 1.1.1 | 🟢 Active |
 | **Client** | `fosrl/newt` | 1.8.1 | 🟢 Active |
 
@@ -75,7 +75,7 @@ docker compose pull && docker compose up -d
 ```yaml
 services:
   pangolin:
-    image: fosrl/pangolin:1.14.0
+    image: fosrl/pangolin:1.14.1
     container_name: pangolin
     restart: unless-stopped
     ports:
@@ -97,7 +97,7 @@ services:
 ## Verification & Validation
 
 > **⚠️ IMPORTANT**  
-> Database migration from v1.12.2 to v1.14.0 involves schema changes. Ensure logs confirm "Migration successful" before client reconnection.
+> Database migration from v1.12.2 to v1.14.1 involves schema changes. Ensure logs confirm "Migration successful" before client reconnection.
 
 ### Post-Migration Checks
 
@@ -167,9 +167,9 @@ sudo systemctl start newt
 
 ## Performance Improvements
 
-**v1.14.0 vs v1.12.2:**
+**v1.14.1 vs v1.12.2:**
 
-| Metric | v1.12.2 | v1.14.0 | Improvement |
+| Metric | v1.12.2 | v1.14.1 | Improvement |
 |--------|---------|---------|-------------|
 | **Latency** | ~15-20ms | ~10-15ms | 33% faster |
 | **Throughput** | 600 Mbps | 800 Mbps | 33% increase |
@@ -178,7 +178,7 @@ sudo systemctl start newt
 
 ---
 
-## Key Changes in v1.14.0
+## Key Changes in v1.14.1
 
 ### Server (Pangolin)
 
