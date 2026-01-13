@@ -246,7 +246,7 @@ docker compose down
 
 ## Related Documentation
 
-* [Remote Access Strategy](remote-access.md) - Overall VPN architecture
+* [Remote Access Strategy](network-remote-access.md) - Overall VPN architecture
 * [Pangolin Infrastructure](pangolin-infrastructure.md) - Infrastructure details
 * [Pangolin Deployment Guide](pangolin-deployment-guide.md) - Initial setup
 * [Pangolin Configurations](pangolin-configurations.md) - Configuration examples
