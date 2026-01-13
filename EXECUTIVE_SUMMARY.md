@@ -92,7 +92,7 @@ Internet
                     ↓
               [Encrypted Tunnel]
                     ↓
-              NAS Server (Services)
+              NAS Server + Newt-Client (Services)
 ```
 
 ### Security Layers
