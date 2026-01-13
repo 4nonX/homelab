@@ -17,6 +17,26 @@ This document details the migration process and network optimization for the hom
 | **Security** | `crowdsecurity/crowdsec` | latest | 🟢 Active | [GitHub](https://github.com/crowdsecurity/crowdsec) |
 | **Client** | `fosrl/newt` | 1.8.1 | 🟢 Active | [GitHub](https://github.com/fosrl/newt) |
 
+### Component Roles
+
+**Pangolin (Server)**  
+Core VPN server managing user authentication, access control, and resource definitions. Coordinates the entire tunnel infrastructure and handles client authorization.
+
+**Gerbil (Relay)**  
+WireGuard gateway that establishes and maintains encrypted tunnels between VPS and home network. Handles NAT traversal and packet routing through the VPN tunnel.
+
+**Badger (Middleware)**  
+Authentication and session management middleware. Bridges communication between Pangolin server and external services, handling token validation and API requests.
+
+**Traefik (Reverse Proxy)**  
+Entry point for all public traffic. Routes HTTPS requests to appropriate services, manages SSL certificates via Let's Encrypt, enforces security headers, and integrates with CrowdSec for threat detection.
+
+**CrowdSec (Security)**  
+Collaborative intrusion prevention system. Analyzes Traefik logs in real-time, identifies malicious behavior, blocks threats using community intelligence, and provides AppSec/WAF protection.
+
+**Newt (Client)**  
+Client-side VPN agent running on home NAS. Establishes WireGuard tunnel to Gerbil relay, exposes local services through Pangolin, and maintains persistent connection with automatic reconnection.
+
 ---
 
 ## Migrating from v1.12.2 to v1.14.1
