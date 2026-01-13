@@ -160,18 +160,21 @@ Multi-Site Redundancy (Global)
 
 ```
 homelab-infrastructure/
-├── README.md                          # Overview
+├── EXECUTIVE_SUMMARY.md               # Project Summary
+├── INDEX.md                           # Documentation Index
+├── NIXOS-MIGRATION.md                 # NixOS System Migration
 ├── PORTFOLIO.md                       # Portfolio showcase
-├── homelab-complete-journey.md        # Complete build story
-├── hardware-specs.md                  # Hardware details
+├── README.md                          # Overview
 ├── docker-infrastructure.md           # Container architecture
-├── network-security.md                # Network & security
+├── hardware-specs.md                  # Hardware details
+├── homelab-complete-journey.md        # Complete build story
+├── media-stack.md                     # Media automation
 ├── network-remote-access.md           # Network & remote-access solution
-├── pangolin-infrastructure.md         # Tunnel system
+├── network-security.md                # Network & security
 ├── pangolin-configurations.md         # Sanitized configs
 ├── pangolin-deployment-guide.md       # Step-by-step setup
+├── pangolin-infrastructure.md         # Tunnel system
 ├── pangolin-upgrade-guide.md          # Upgrading the Pangolin-Stack
-├── media-stack.md                     # Media automation
 ├── productivity-services.md           # Productivity apps
 └── CORRECTIONS_SUMMARY.md             # Technical corrections
 ```
