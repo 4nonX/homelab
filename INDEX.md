@@ -101,10 +101,19 @@
     - Security hardening
    
 14. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step
-    - lorem upsum
-    - lorem ipsum
-    - lorem ipsum
-    - lorem ipsum
+    - Architecture Versions
+    - Migrating from v1.12.2 to v1.14.1
+    - Technical Execution
+    - Docker Compose Configuration
+    - Verification & Validation
+    - Migration Timeline
+    - Rollback Procedure
+    - Performance Improvements
+    - Key Changes in v1.14.1
+    - Major Version Update Considerations
+    - Troubleshooting
+    - Related Documentation
+    - Resources
    
 
     
