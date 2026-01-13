@@ -8,11 +8,14 @@ This document details the migration process and network optimization for the hom
 
 ## Architecture Versions
 
-| Component | Repository | Version | Status |
-|-----------|------------|---------|--------|
-| **Server** | `fosrl/pangolin` | 1.14.1 | 🟢 Active |
-| **Relay** | `fosrl/gerbil` | 1.1.1 | 🟢 Active |
-| **Client** | `fosrl/newt` | 1.8.1 | 🟢 Active |
+| Component | Repository | Version | Status | Link |
+|-----------|------------|---------|--------|------|
+| **Server** | `fosrl/pangolin` | 1.14.1 | 🟢 Active | [GitHub](https://github.com/fosrl/pangolin) |
+| **Relay** | `fosrl/gerbil` | 1.1.1 | 🟢 Active | [GitHub](https://github.com/fosrl/gerbil) |
+| **Middleware** | `fosrl/badger` | 1.3.1 | 🟢 Active | [GitHub](https://github.com/fosrl/badger) |
+| **Reverse Proxy** | `traefik/traefik` | 2.10 | 🟢 Active | [GitHub](https://github.com/traefik/traefik) |
+| **Security** | `crowdsecurity/crowdsec` | latest | 🟢 Active | [GitHub](https://github.com/crowdsecurity/crowdsec) |
+| **Client** | `fosrl/newt` | 1.8.1 | 🟢 Active | [GitHub](https://github.com/fosrl/newt) |
 
 ---
 
