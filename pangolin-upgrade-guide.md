@@ -1,4 +1,4 @@
-# 🆙 Pangolin Stack Migration: v1.14.0
+# 🆙 Pangolin Stack Migration: v1.14.1
 
 This document details the migration process and network optimization for the homelab tunnel infrastructure.
 
