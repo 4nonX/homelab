@@ -61,7 +61,7 @@
    - Firewall configuration
    - Monitoring setup
 
-9. **[nextcloud-optimization-guide.md](nextcloud-optimization-guide.md)** - Network & security
+9. **[nextcloud-optimization-guide.md](nextcloud-optimization-guide.md)** - Docker & databse-setup
    - Features
    - Prerequisites
    - Architecture
