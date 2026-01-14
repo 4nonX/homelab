@@ -199,8 +199,7 @@ docker exec -u www-data nextcloud php occ config:system:set default_phone_region
 
 ### Docker Compose Configuration
 
-<details>
-<summary>📋 Click to expand docker-compose.yml</summary>
+**`docker-compose.yml`**
 
 ```yaml
 version: "3.9"
@@ -412,14 +411,13 @@ networks:
     driver: bridge
 ```
 
-</details>
+---
 
 ### Environment Variables
 
 Create a `.env` file in the same directory as `docker-compose.yml`:
 
-<details>
-<summary>📝 Click to expand .env template</summary>
+**`.env`**
 
 ```bash
 # ============================================================================
@@ -461,9 +459,9 @@ SIGNALING_CONFIG_PATH=/DATA/AppData/talk-signaling/server.conf
 TIMEZONE=Europe/Berlin
 ```
 
-</details>
-
 > **🔐 Security Note:** Never commit `.env` files to version control! Add `.env` to your `.gitignore`.
+
+---
 
 ### Talk Signaling Configuration
 
@@ -542,10 +540,7 @@ curl -I https://talk-signaling.yourdomain.com/api/v1/welcome
 # All should return HTTP 200 or redirect to login
 ```
 
-##### Pangolin Configuration Screenshots
-
-<details>
-<summary>📸 Click to see example Pangolin resource configuration</summary>
+##### Pangolin Resource Examples
 
 **Nextcloud Resource:**
 ```
@@ -574,7 +569,7 @@ Subdomain: talk-signaling.d-net.me
 Health Check: ✅ Enabled (/api/v1/welcome)
 ```
 
-</details>
+---
 
 ##### Troubleshooting Pangolin
 
