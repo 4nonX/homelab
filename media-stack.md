@@ -111,20 +111,6 @@ Devices (TV, Mobile, Desktop)
 - Controlled approval process
 - Organized media acquisition workflow
 
-### Network Security & Privacy
-
-**Gluetun VPN Gateway**
-- Privacy-focused VPN container
-- Wireguard/OpenVPN support
-- Kill switch for enhanced privacy
-- Network isolation
-- Used for: Privacy protection, secure remote access
-
-**Purpose:**
-- Protect privacy during internet usage
-- Secure connections for remote services
-- Network segmentation for security
-- Enhanced privacy for all network traffic
 
 ## 🔒 Security Architecture
 
@@ -136,18 +122,15 @@ Isolated Networks:
 │   └─ Library organization tools
 ├─ Streaming Network  
 │   └─ Emby, SwingMusic, Kavita
-├─ Privacy Network (VPN)
-│   └─ Privacy-enhanced services
 └─ Storage Network
     └─ Direct storage access
 ```
 
 **Security Features:**
 1. **Network Segmentation:** Services isolated by function
-2. **VPN Privacy:** Optional VPN routing for enhanced privacy
-3. **No Direct Exposure:** All services behind firewall
-4. **Encrypted Remote Access:** Via Pangolin tunnel
-5. **Authentication:** All services password-protected
+2. **No Direct Exposure:** All services behind firewall
+3. **Encrypted Remote Access:** Via Pangolin tunnel
+4. **Authentication:** All services password-protected
 
 ### Access Control
 
