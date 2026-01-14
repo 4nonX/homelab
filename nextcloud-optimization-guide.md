@@ -546,7 +546,7 @@ curl -I https://talk-signaling.yourdomain.com/api/v1/welcome
 ```
 Identifier: nextcloud
 Display Name: Nextcloud
-Target: http://192.168.8.158:10081
+Target: http://192.168.X.XXX:10081
 Subdomain: nextcloud.d-net.me
 Health Check: ✅ Enabled (/)
 ```
@@ -555,7 +555,7 @@ Health Check: ✅ Enabled (/)
 ```
 Identifier: office
 Display Name: Collabora Office
-Target: http://192.168.8.158:9980
+Target: http://192.168.X.XXX:9980
 Subdomain: office.d-net.me
 Health Check: ✅ Enabled (/)
 ```
@@ -564,7 +564,7 @@ Health Check: ✅ Enabled (/)
 ```
 Identifier: talk-signaling
 Display Name: Talk Signaling
-Target: http://192.168.8.158:8188
+Target: http://192.168.X.XXX:8188
 Subdomain: talk-signaling.d-net.me
 Health Check: ✅ Enabled (/api/v1/welcome)
 ```
