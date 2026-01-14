@@ -61,15 +61,28 @@
    - Firewall configuration
    - Monitoring setup
 
+9. **[nextcloud-optimization-guide.md](nextcloud-optimization-guide.md)** - Network & security
+   - Features
+   - Prerequisites
+   - Architecture
+   - Docker Compose Stack
+   - Talk Signaling Configuration
+   - Reverse Proxy & Exposure
+   - Troubleshooting
+   - Maintenance
+   - Design Decisions & Tradeoffs
+   - Failure Modes & Recovery
+   - FAQ
+
 ### 📺 Service Categories
 
-9. **[media-stack.md](media-stack.md)** - Media automation
+10. **[media-stack.md](media-stack.md)** - Media automation
    - Arr Suite integration
    - VPN-secured downloads
    - Streaming services
    - Quality profiles
 
-10. **[productivity-services.md](productivity-services.md)** - Productivity apps
+11. **[productivity-services.md](productivity-services.md)** - Productivity apps
    - Nextcloud setup
    - Immich photo management
    - Paperless-NGX documents
@@ -77,30 +90,30 @@
 
 ### 🌐 External Access (Pangolin)
 
-11. **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture,
+12. **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture,
      - Pangolin/Tailscale/ZeroTier comparison
      - security integration
 
-12. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
+13. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
     - Why Pangolin?
     - Multi-layer security
     - Performance characteristics
     - Cost analysis
 
-13. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
+14. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
     - Docker Compose files
     - Server configuration
     - Client setup
     - Troubleshooting
 
-14. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
+15. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
     - VPS setup
     - DNS configuration
     - Server deployment
     - Client installation
     - Security hardening
    
-14. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step
+16. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step
     - Architecture Versions
     - Migrating from v1.12.2 to v1.14.1
     - Technical Execution
