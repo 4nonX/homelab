@@ -970,6 +970,205 @@ Mount SMB/NFS shares:
 3. Configure credentials and mount point
 
 ---
+# 🧠 Design Decisions & Tradeoffs
+
+This section documents intentional architectural decisions, the alternatives considered, and the tradeoffs accepted for this deployment.
+The goal of this stack is reliability, performance, and maintainability in a single-tenant home lab environment — not hyperscale elasticity.
+
+
+## 🐳 Docker Compose vs Kubernetes
+
+### Decision:
+Use Docker Compose for orchestration.
+
+### Why:
+- Predictable behavior for stateful services (Nextcloud, PostgreSQL)
+- Significantly lower operational complexity
+- Faster debugging and recovery
+- No dependency on cluster lifecycle management
+
+### Tradeoff:
+- No horizontal auto-scaling
+- Manual node failover
+
+### Rationale:
+This environment prioritizes operational clarity over abstraction. Kubernetes would add complexity without proportional benefit.
+
+
+## 🗄️ PostgreSQL Instead of MariaDB/MySQL
+
+### Decision:
+Use PostgreSQL as the database backend.
+
+### Why:
+- Better concurrency handling for mixed read/write workloads
+- Strong transactional guarantees
+- Superior performance for large metadata tables (oc_filecache)
+- Recommended by Nextcloud for larger installations
+
+### Tradeoff:
+- Slightly higher memory usage
+- Fewer beginner-level tuning resources
+
+### Rationale:
+- Predictable performance under load outweighs marginal resource overhead.
+
+
+## 🚀 Redis Without Persistence
+
+### Decision:
+- Disable Redis AOF/RDB persistence.
+
+### Why:
+- Redis is used only for cache and file locking
+- Persistence adds unnecessary disk IO
+- Cache loss is non-destructive
+
+### Tradeoff:
+- One additional container to manage
+
+### Rationale:
+Background jobs are critical for previews, cleanup, and indexing — reliability is non-negotiable.
+
+
+## 🔐 Pangolin Tunnel vs Port Forwarding
+
+### Decision:
+Expose services via Pangolin + VPS instead of direct WAN access.
+
+### Why:
+- No inbound ports on the home network
+- Centralized TLS termination
+- Reduced attack surface
+- Easier firewall and IP management
+
+### Tradeoff:
+- Dependency on VPS availability
+- Slight latency increase
+
+### Rationale:
+Security and operational safety take priority over minimal latency gains.
+
+
+# ⚠️ Failure Modes & Recovery
+
+This section documents expected failure scenarios, their impact, and recovery procedures.
+
+## 🗄️ PostgreSQL Failure
+### Symptoms
+- HTTP 500 errors
+- Database connection errors in logs
+
+### Impact
+- Nextcloud unavailable
+- No data corruption if volumes remain intact
+
+### Recovery
+docker logs db-nextcloud
+docker restart db-nextcloud
+
+### Optional manual backup:
+docker exec db-nextcloud pg_dump -U nextcloud nextcloud > backup.sql
+
+## 🚀 Redis Failure
+### Symptoms
+- Slower UI
+- File locking warnings
+
+### Impact
+- Performance degradation only
+- Performance degradation only
+
+### Recovery
+docker restart redis-nextcloud
+
+## 📞 Talk HPB Signaling Failure
+### Symptoms
+- Calls fail to connect
+- “Signaling server unreachable” in Talk settings
+
+### Impact
+- Text chat still functional
+- Video calls unavailable
+
+### Recovery
+docker logs talk-signaling
+docker logs nats-nextcloud
+docker restart talk-signaling nats-nextcloud
+
+## 🌐 Pangolin / VPS Outage
+### Symptoms
+- External access unavailable
+- Local access still works
+
+### Impact
+- Remote access disrupted
+- No internal service impact
+
+### Recovery
+- Restore VPS connectivity
+- Verify Pangolin client connection
+- No changes required on the home server
+
+## 💾 Disk Full / Storage Exhaustion
+### Symptoms
+- Upload failures
+- Database write errors
+- Preview generation stalls
+
+### Impact
+- Service instability
+- Potential write failures
+
+### Recovery
+df -h
+docker exec -u www-data nextcloud php occ files:cleanup
+
+### Prevention
+- RAID monitoring
+- Disk alerts
+- Regular cleanup jobs
+
+# 🗺️ Architecture Overview
+High-level view of traffic flow, service separation, and trust boundaries.
+
+flowchart TB
+    User[User Browser / Mobile App]
+
+    subgraph Internet
+        DNS[DNS Provider<br/>Cloudflare (DNS only)]
+        VPS[VPS<br/>Pangolin + Traefik]
+    end
+
+    subgraph Home_Network["Home Network"]
+        Tunnel[Pangolin Tunnel Client]
+
+        subgraph Docker_Stack["Docker Network"]
+            NC[Nextcloud]
+            CRON[Nextcloud Cron]
+            DB[(PostgreSQL)]
+            REDIS[(Redis)]
+            COLLABORA[Collabora Office]
+            SIGNALING[Talk Signaling]
+            NATS[NATS]
+        end
+    end
+
+    User --> DNS
+    DNS --> VPS
+    VPS --> Tunnel
+
+    Tunnel --> NC
+    Tunnel --> COLLABORA
+    Tunnel --> SIGNALING
+
+    NC --> DB
+    NC --> REDIS
+    CRON --> NC
+    SIGNALING --> NATS
+    NC --> SIGNALING
+
+---
 
 ## FAQ
 
