@@ -1365,7 +1365,7 @@ ROI after 5 years: ~€1,400 profit
 **Intangible Benefits:**
 - Complete data privacy
 - No vendor lock-in
-- Unlimited storage
+- Significantly more storage
 - Learning experience
 - Portfolio project
 - Technical skills development
