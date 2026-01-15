@@ -577,7 +577,7 @@ Internet
     │           └─ Mobile Devices (DHCP)
     │
     └─ VPS (Germany, Berlin)
-          └─ Pangolin Stack (217.154.249.xx)
+          └─ Pangolin Stack (217.xxx.xxx.xx)
               ├─ Traefik (HTTPS proxy)
               ├─ Pangolin (API)
               ├─ Gerbil (Wireguard gateway)
