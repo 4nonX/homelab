@@ -351,7 +351,7 @@ Options Considered:
 |----|------|------|-------|
 | **Ubuntu Server** | Flexible, well-documented | Manual Docker setup | 8/10 |
 | **TrueNAS** | ZFS expert, great for NAS | Complex for containers | 7/10 |
-| **Unraid** | Easy Docker, nice UI | Paid license, slower RAID, requirs USB for license | 7/10 |
+| **Unraid** | Easy Docker, nice UI | Paid license, slower RAID, requires USB for license | 7/10 |
 | **Proxmox** | Full virtualization | Overkill for this use | 6/10 |
 | **ZimaOS** | Docker-first, simple UI | Newer, less mature | 9/10 |
 
