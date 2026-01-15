@@ -17,15 +17,14 @@
 - [🏗️ Architecture](#️-architecture)
 - [🚀 Quick Start](#-quick-start)
 - [📚 Detailed Setup](#-detailed-setup)
-- [⚙️ Configuration](#️-configuration)
-- [🔧 Troubleshooting](#-troubleshooting)
-- [📊 Performance Benchmarks](#-performance-benchmarks)
-- [🛠️ Maintenance](#️-maintenance)
-- [🔒 Security Considerations](#-security-considerations)
-- [⚡ Advanced Configuration](#-advanced-configuration)
-- [❓ FAQ](#-faq)
-- [📚 Credits & Resources](#-credits--resources)
-
+- [⚙️ Configuration](#configuration)
+- [🔧 Troubleshooting](#troubleshooting)
+- [📊 Performance Benchmarks](#performance-benchmarks)
+- [🛠️ Maintenance](#maintenance)
+- [🔒 Security Considerations](#security-considerations)
+- [⚡ Advanced Configuration](#advanced-configuration)
+- [❓ FAQ](#faq)
+- [📚 Credits & Resources](#credits--resources)
 ---
 
 ## 🎯 Overview
