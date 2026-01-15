@@ -32,13 +32,13 @@ from ZimaOS (Debian-based) to NixOS for my entire production homelab.
 
 ## 📋 Table of Contents
 
-- [Overview](#-overview)
-- [Quick Start](#-quick-start)
-- [Architecture](#-architecture)  
-- [Services](#-services)
-- [Documentation](#-documentation)
-- [Tech Stack](#-tech-stack)
-- [Getting Started](#-getting-started)
+- [Overview](#overview)
+- [Quick Start](#quick-start)
+- [Architecture](#architecture)  
+- [Services](#services)
+- [Documentation](#documentation)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
 
 ---
 
