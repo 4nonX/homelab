@@ -250,8 +250,8 @@ Total minimum:         32GB
 
 **Data Pool:** 4x HDD RAID5
 - 2x 12TB drives (sda, sdd)
-- 2x 10TB drives (sdb, sdc)
-- Total raw: ~44TB
+- 2x 14TB drives (sdb, sdc)
+- Total raw: ~52TB
 - Usable: ~33TB (RAID5)
 - BTRFS filesystem
 
@@ -297,7 +297,7 @@ Options Considered:
 
 **Requirements:**
 - 400W+ capacity
-- 80+ Bronze minimum
+- 80+ Silver minimum
 - Modular cables
 
 **Selection:**
@@ -351,7 +351,7 @@ Options Considered:
 |----|------|------|-------|
 | **Ubuntu Server** | Flexible, well-documented | Manual Docker setup | 8/10 |
 | **TrueNAS** | ZFS expert, great for NAS | Complex for containers | 7/10 |
-| **Unraid** | Easy Docker, nice UI | Paid license, slower RAID | 7/10 |
+| **Unraid** | Easy Docker, nice UI | Paid license, slower RAID, requirs USB for license | 7/10 |
 | **Proxmox** | Full virtualization | Overkill for this use | 6/10 |
 | **ZimaOS** | Docker-first, simple UI | Newer, less mature | 9/10 |
 
