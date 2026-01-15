@@ -1650,7 +1650,7 @@ Global Load Balancer:
 - Multi-site redundancy
 - Geographic load balancing
 - Disaster recovery (RPO < 1 hour)
-- 99.99% uptime SLA
+- ~90%+ uptime SLA
 - Automatic failover
 
 **Cost at Scale:**
