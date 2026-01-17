@@ -136,4 +136,16 @@
     - Phase 4: Configuring the VPS-Relay
     - Phase 5: Live Cutover
     - Pro/Con Analysis
-    
+
+18. **[pangolin-z-performance-tuning-.md](pangolin-vps-relay-guide.md)**
+    - Performance Baseline
+    - Network Optimization
+    - VPS Optimization
+    - Raspberry Pi 5 Optimization
+    - Wireguard Tuning
+    - Traefik Optimization
+    - Database Performance
+    - Monitoring & Benchmarks
+    - Troubleshooting
+
+
