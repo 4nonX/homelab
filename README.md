@@ -105,27 +105,36 @@ Explore specific technical implementations:
 ```
 Internet
     │
-    ├─── VPS (Public IP: Berlin, Germany)
+    ├─── VPS Gateway (Berlin, Germany)
     │      ├─ Traefik (HTTPS Proxy)
-    │      ├─ Pangolin (API Server)
     │      ├─ Gerbil (Wireguard)
-    │      └─ CrowdSec (Security)
+    │      ├─ CrowdSec (Security)
+    │      └─ Newt Relay Client
     │           ↓
     │      [Wireguard Tunnel - Encrypted]
     │           ↓
-    └─── Home Network (10.XXX.0.0/24)
-           │
-           ├─ NAS Server (10.XXX.0.1)
-           │   ├─ Newt Client (Tunnel)
-           │   ├─ Docker (40+ containers)
-           │   └─ Storage (33TB RAID5)
-           │
-           ├─ Pi-hole (10.XXX.0.2)
-           │   └─ DNS + Ad-blocking
-           │
-           └─ Client Devices
-               └─ Workstations, Mobile
+    └─── Raspberry Pi 5 Hub (Pangolin Brain)
+           ├─ Pangolin Server (SSL/Identity)
+           ├─ Newt Tunnel Termination
+           └─ Traefik Routing
+                ↓
+           Home Network (10.XXX.0.0/24)
+                │
+                ├─ NAS Server (10.XXX.0.1)
+                │   ├─ Docker (40+ containers)
+                │   └─ Storage (33TB RAID5)
+                │
+                ├─ Pi-hole (10.XXX.0.2)
+                │   └─ DNS + Ad-blocking
+                │
+                └─ Client Devices
 ```
+
+**📊 [View Interactive Architecture Diagram](https://4nonx.github.io/homelab/architecture-diagram.html)**
+
+**🛡️ [View Security Layers Diagram](https://4nonx.github.io/homelab/security-diagram.html)**
+
+**🔄 [View Data Flow Diagram](https://4nonx.github.io/homelab/dataflow-diagram.html)**
 
 ### Security Layers
 
@@ -156,6 +165,7 @@ Layer 5: Data Protection
   └─ Encrypted Backups
 ```
 
+**🛡️ [View Interactive Security Architecture](https://4nonx.github.io/homelab/security-diagram.html)**
 ---
 
 ## 📦 Services
