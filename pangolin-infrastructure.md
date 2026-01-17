@@ -24,6 +24,14 @@ Homelab (Behind NAT)
    └─ 40+ Docker Services
 ```
 
+## 📊 Data Flow Visualization
+
+**[→ View Interactive Data Flow Diagram](https://4nonx.github.io/homelab/dataflow-diagram.html)**
+
+See how requests travel from client → VPS → Pi Hub → NAS → Services.
+
+---
+
 ## 🚀 Why Pangolin?
 
 **Traditional Approach Problems:**
