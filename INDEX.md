@@ -138,14 +138,14 @@
     - Pro/Con Analysis
 
 18. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin Latency Issues
-    - Performance Baseline
-    - Network Optimization
-    - VPS Optimization
-    - Raspberry Pi 5 Optimization
-    - Wireguard Tuning
-    - Traefik Optimization
-    - Database Performance
-    - Monitoring & Benchmarks
-    - Troubleshooting
+    - Wireguard MTU Optimization
+    - Wireguard PersistentKeepalive
+    - Traefik Timeout Optimization
+    - Disable Traefik Access Logs
+    - CrowdSec Log Level
+    - NVMe I/O Scheduler (NAS Only)
+    - TCP Window Scaling (Network Performance)
+
+
 
 
