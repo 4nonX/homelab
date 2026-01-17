@@ -2,6 +2,14 @@
 
 Core network services providing DNS, ad-blocking, VPN access, and security monitoring for the homelab.
 
+## 🛡️ Interactive Security Architecture
+
+**[→ View Complete Security Diagram](https://4nonx.github.io/homelab/security-diagram.html)**
+
+This diagram shows our 6-layer defense-in-depth strategy with interactive hover effects.
+
+---
+
 ## 🌐 Network Architecture
 
 ### Core Network Services
