@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Network Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-dark: #0a0e27;
+            --bg-darker: #050811;
+            --primary: #00ff88;
+            --secondary: #00d4ff;
+            --tertiary: #ff006e;
+            --warning: #ffbe0b;
+            --pi-color: #C51A4A;
+            --text: #e0e6ed;
+            --text-dim: #8892a6;
+            --border: #1a2332;
+            --card-bg: rgba(26, 35, 50, 0.6);
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-dark);
+            color: var(--text);
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(var(--border) 1px, transparent 1px),
+                linear-gradient(90deg, var(--border) 1px, transparent 1px);
+            background-size: 50px 50px;
+            opacity: 0.3;
+            animation: gridMove 20s linear infinite;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInDown 0.8s ease-out;
+        }
+
+        h1 {
+            font-size: 3.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+            letter-spacing: -0.02em;
+            text-transform: uppercase;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .diagram-container {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            box-shadow: 
+                0 0 60px rgba(0, 255, 136, 0.1),
+                inset 0 0 60px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.8s ease-out 0.2s backwards;
+        }
+
+        .architecture-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+            position: relative;
+        }
+
+        .layer {
+            display: flex;
+            align-items: center;
+            gap: 2rem;
+            position: relative;
+            animation: slideInLeft 0.6s ease-out backwards;
+        }
+
+        .layer:nth-child(1) { animation-delay: 0.3s; }
+        .layer:nth-child(2) { animation-delay: 0.4s; }
+        .layer:nth-child(3) { animation-delay: 0.5s; }
+        .layer:nth-child(4) { animation-delay: 0.6s; }
+        .layer:nth-child(5) { animation-delay: 0.7s; }
+        .layer:nth-child(6) { animation-delay: 0.8s; }
+
+        .layer-label {
+            min-width: 180px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .nodes {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            flex: 1;
+        }
+
+        .node {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 212, 255, 0.05));
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            min-width: 280px;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .node::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(0, 255, 136, 0.3) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .node:hover::before {
+            opacity: 1;
+        }
+
+        .node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+            border-color: var(--secondary);
+        }
+
+        .node.vps {
+            border-color: var(--warning);
+            background: linear-gradient(135deg, rgba(255, 190, 11, 0.1), rgba(255, 190, 11, 0.05));
+        }
+
+        .node.tunnel {
+            border-color: var(--tertiary);
+            background: linear-gradient(135deg, rgba(255, 0, 110, 0.1), rgba(255, 0, 110, 0.05));
+        }
+
+        .node.pi {
+            border-color: var(--pi-color);
+            background: linear-gradient(135deg, rgba(197, 26, 74, 0.1), rgba(197, 26, 74, 0.05));
+        }
+
+        .node.nas {
+            border-color: var(--secondary);
+            background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(0, 212, 255, 0.05));
+        }
+
+        .node-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .node.vps .node-title { color: var(--warning); }
+        .node.tunnel .node-title { color: var(--tertiary); }
+        .node.pi .node-title { color: var(--pi-color); }
+        .node.nas .node-title { color: var(--secondary); }
+
+        .node-icon {
+            width: 24px;
+            height: 24px;
+        }
+
+        .node-desc {
+            font-size: 0.85rem;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
+        }
+
+        .node-services {
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+        }
+
+        .service {
+            font-size: 0.8rem;
+            color: var(--text);
+            padding: 0.3rem 0.6rem;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 4px;
+            border-left: 3px solid var(--primary);
+            font-family: 'Space Mono', monospace;
+        }
+
+        .node.vps .service { border-left-color: var(--warning); }
+        .node.tunnel .service { border-left-color: var(--tertiary); }
+        .node.pi .service { border-left-color: var(--pi-color); }
+        .node.nas .service { border-left-color: var(--secondary); }
+
+        .connection-line {
+            position: absolute;
+            width: 2px;
+            background: linear-gradient(180deg, var(--primary), var(--secondary));
+            left: 90px;
+            height: calc(100% - 2rem);
+            top: 50%;
+            opacity: 0.3;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 0.7; }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-card {
+            background: var(--card-bg);
+            backdrop-filter: blur(10px);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+            animation: fadeInUp 0.8s ease-out backwards;
+        }
+
+        .stat-card:nth-child(1) { animation-delay: 0.9s; }
+        .stat-card:nth-child(2) { animation-delay: 1s; }
+        .stat-card:nth-child(3) { animation-delay: 1.1s; }
+        .stat-card:nth-child(4) { animation-delay: 1.2s; }
+
+        .stat-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(0, 255, 136, 0.3);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            border: 2px solid;
+        }
+
+        .legend-color.internet { background: var(--warning); border-color: var(--warning); }
+        .legend-color.tunnel { background: var(--tertiary); border-color: var(--tertiary); }
+        .legend-color.pi { background: var(--pi-color); border-color: var(--pi-color); }
+        .legend-color.homelab { background: var(--secondary); border-color: var(--secondary); }
+        .legend-color.services { background: var(--primary); border-color: var(--primary); }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .diagram-container { padding: 1.5rem; }
+            .layer { flex-direction: column; align-items: flex-start; }
+            .connection-line { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏗️ Network Architecture</h1>
+            <p class="subtitle">Production-Grade Homelab Infrastructure with Pi-Hub</p>
+        </header>
+
+        <div class="diagram-container">
+            <div class="architecture-flow">
+                <div class="connection-line"></div>
+
+                <div class="layer">
+                    <div class="layer-label">🌐 Internet</div>
+                    <div class="nodes">
+                        <div class="node vps">
+                            <div class="node-title">
+                                <span class="node-icon">☁️</span>
+                                VPS Gateway
+                            </div>
+                            <div class="node-desc">IONOS Berlin • 2 vCPU • 2GB RAM • 80GB NVMe</div>
+                            <div class="node-services">
+                                <div class="service">→ Traefik (Reverse Proxy)</div>
+                                <div class="service">→ Gerbil (Wireguard Gateway)</div>
+                                <div class="service">→ CrowdSec (IDS/IPS)</div>
+                                <div class="service">→ UFW Firewall</div>
+                                <div class="service">→ Newt Relay Client</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-label">🔒 Encrypted Tunnel</div>
+                    <div class="nodes">
+                        <div class="node tunnel">
+                            <div class="node-title">
+                                <span class="node-icon">🔐</span>
+                                Wireguard VPN
+                            </div>
+                            <div class="node-desc">Zero-trust encrypted connection VPS → Pi Hub</div>
+                            <div class="node-services">
+                                <div class="service">→ TLS 1.3 encryption</div>
+                                <div class="service">→ Automatic reconnection</div>
+                                <div class="service">→ NAT traversal</div>
+                                <div class="service">→ Sub-10ms latency</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-label">🧠 Pangolin Brain</div>
+                    <div class="nodes">
+                        <div class="node pi">
+                            <div class="node-title">
+                                <span class="node-icon">🥧</span>
+                                Raspberry Pi 5 Hub
+                            </div>
+                            <div class="node-desc">Pi 5 8GB • NVMe Gen3 • Ethernet • 27W PSU</div>
+                            <div class="node-services">
+                                <div class="service">→ Pangolin Server (Identity/SSL)</div>
+                                <div class="service">→ Newt Tunnel Termination</div>
+                                <div class="service">→ Traefik Routing</div>
+                                <div class="service">→ Let's Encrypt Certificates</div>
+                                <div class="service">→ Local Network Bridge</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-label">🏠 Home Network</div>
+                    <div class="nodes">
+                        <div class="node nas">
+                            <div class="node-title">
+                                <span class="node-icon">🖥️</span>
+                                NAS Server
+                            </div>
+                            <div class="node-desc">i3-13100 • 32GB RAM • 33TB RAID5 • ZimaOS</div>
+                            <div class="node-services">
+                                <div class="service">→ Docker Engine (40+ containers)</div>
+                                <div class="service">→ BTRFS Filesystem</div>
+                                <div class="service">→ mdadm RAID5</div>
+                                <div class="service">→ Application Services</div>
+                                <div class="service">→ Database Instances</div>
+                            </div>
+                        </div>
+                        <div class="node nas">
+                            <div class="node-title">
+                                <span class="node-icon">🛡️</span>
+                                Pi-hole DNS
+                            </div>
+                            <div class="node-desc">Network-wide ad-blocking & DNS</div>
+                            <div class="node-services">
+                                <div class="service">→ DNS filtering</div>
+                                <div class="service">→ DHCP server</div>
+                                <div class="service">→ Ad blocking</div>
+                                <div class="service">→ Query logging</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-label">📦 Services</div>
+                    <div class="nodes">
+                        <div class="node">
+                            <div class="node-title">
+                                <span class="node-icon">🎬</span>
+                                Media Stack
+                            </div>
+                            <div class="node-desc">Automated media management & streaming</div>
+                            <div class="node-services">
+                                <div class="service">Emby • Sonarr • Radarr</div>
+                                <div class="service">Prowlarr • Bazarr • Lidarr</div>
+                                <div class="service">qBittorrent • Gluetun VPN</div>
+                            </div>
+                        </div>
+                        <div class="node">
+                            <div class="node-title">
+                                <span class="node-icon">☁️</span>
+                                Productivity
+                            </div>
+                            <div class="node-desc">Self-hosted cloud services</div>
+                            <div class="node-services">
+                                <div class="service">Nextcloud • Immich Photos</div>
+                                <div class="service">Paperless-NGX • Vaultwarden</div>
+                                <div class="service">Joplin • Linkwarden</div>
+                            </div>
+                        </div>
+                        <div class="node">
+                            <div class="node-title">
+                                <span class="node-icon">🗄️</span>
+                                Infrastructure
+                            </div>
+                            <div class="node-desc">Backend & database services</div>
+                            <div class="node-services">
+                                <div class="service">PostgreSQL (8x instances)</div>
+                                <div class="service">Redis (3x instances)</div>
+                                <div class="service">Dockge • Syncthing</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="layer">
+                    <div class="layer-label">👤 Clients</div>
+                    <div class="nodes">
+                        <div class="node">
+                            <div class="node-title">
+                                <span class="node-icon">💻</span>
+                                End Users
+                            </div>
+                            <div class="node-desc">Secure access from anywhere</div>
+                            <div class="node-services">
+                                <div class="service">Web browsers (HTTPS only)</div>
+                                <div class="service">Mobile apps (iOS/Android)</div>
+                                <div class="service">Desktop clients</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="legend">
+                <div class="legend-item">
+                    <div class="legend-color internet"></div>
+                    <span>Public Gateway</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color tunnel"></div>
+                    <span>Encrypted Tunnel</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color pi"></div>
+                    <span>Pangolin Brain (Pi 5)</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color homelab"></div>
+                    <span>Home Infrastructure</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color services"></div>
+                    <span>Application Services</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value">40+</div>
+                <div class="stat-label">Services</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">33TB</div>
+                <div class="stat-label">Storage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">~90%</div>
+                <div class="stat-label">Uptime</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">35W</div>
+                <div class="stat-label">Total Power</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

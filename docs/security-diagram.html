@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Security Architecture</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #000000;
+            --layer1: #ff0844;
+            --layer2: #ff6b35;
+            --layer3: #f7931e;
+            --layer4: #fdc500;
+            --layer5: #8ac926;
+            --layer6: #1982c4;
+            --text: #ffffff;
+            --text-dim: #94a3b8;
+            --border: #1e293b;
+        }
+
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-height: 100vh;
+            position: relative;
+        }
+
+        /* Scanline effect */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(
+                0deg,
+                rgba(0, 0, 0, 0.15),
+                rgba(0, 0, 0, 0.15) 1px,
+                transparent 1px,
+                transparent 2px
+            );
+            pointer-events: none;
+            z-index: 1000;
+            animation: scanline 8s linear infinite;
+        }
+
+        @keyframes scanline {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(10px); }
+        }
+
+        /* Glitch effect */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(255, 8, 68, 0.03);
+            pointer-events: none;
+            z-index: 999;
+            animation: glitch 5s infinite;
+            opacity: 0;
+        }
+
+        @keyframes glitch {
+            0%, 98%, 100% { opacity: 0; }
+            99% { opacity: 1; }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeIn 1s ease-out;
+        }
+
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 900;
+            color: var(--layer1);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.5rem;
+            text-shadow: 
+                0 0 20px var(--layer1),
+                0 0 40px var(--layer1),
+                0 0 60px rgba(255, 8, 68, 0.5);
+            animation: flicker 3s infinite alternate;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.95; }
+        }
+
+        .subtitle {
+            font-size: 1rem;
+            color: var(--text-dim);
+            letter-spacing: 0.3em;
+            text-transform: uppercase;
+        }
+
+        .defense-layers {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+            position: relative;
+        }
+
+        .layer {
+            background: rgba(255, 255, 255, 0.02);
+            border: 2px solid;
+            padding: 2.5rem;
+            border-radius: 8px;
+            position: relative;
+            transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            animation: slideIn 0.8s ease-out backwards;
+        }
+
+        .layer:nth-child(1) { 
+            border-color: var(--layer1);
+            border-left-width: 8px;
+            animation-delay: 0.1s;
+        }
+        .layer:nth-child(2) { 
+            border-color: var(--layer2);
+            border-left-width: 8px;
+            animation-delay: 0.2s;
+        }
+        .layer:nth-child(3) { 
+            border-color: var(--layer3);
+            border-left-width: 8px;
+            animation-delay: 0.3s;
+        }
+        .layer:nth-child(4) { 
+            border-color: var(--layer4);
+            border-left-width: 8px;
+            animation-delay: 0.4s;
+        }
+        .layer:nth-child(5) { 
+            border-color: var(--layer5);
+            border-left-width: 8px;
+            animation-delay: 0.5s;
+        }
+        .layer:nth-child(6) { 
+            border-color: var(--layer6);
+            border-left-width: 8px;
+            animation-delay: 0.6s;
+        }
+
+        .layer:hover {
+            transform: scale(1.01);
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 40px currentColor;
+            z-index: 10;
+        }
+
+        .layer-number {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            opacity: 0.1;
+            line-height: 1;
+        }
+
+        .layer:nth-child(1) .layer-number { color: var(--layer1); }
+        .layer:nth-child(2) .layer-number { color: var(--layer2); }
+        .layer:nth-child(3) .layer-number { color: var(--layer3); }
+        .layer:nth-child(4) .layer-number { color: var(--layer4); }
+        .layer:nth-child(5) .layer-number { color: var(--layer5); }
+        .layer:nth-child(6) .layer-number { color: var(--layer6); }
+
+        .layer-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .layer-icon {
+            font-size: 2rem;
+            filter: drop-shadow(0 0 10px currentColor);
+        }
+
+        .layer-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .layer:nth-child(1) .layer-title { color: var(--layer1); text-shadow: 0 0 20px var(--layer1); }
+        .layer:nth-child(2) .layer-title { color: var(--layer2); text-shadow: 0 0 20px var(--layer2); }
+        .layer:nth-child(3) .layer-title { color: var(--layer3); text-shadow: 0 0 20px var(--layer3); }
+        .layer:nth-child(4) .layer-title { color: var(--layer4); text-shadow: 0 0 20px var(--layer4); }
+        .layer:nth-child(5) .layer-title { color: var(--layer5); text-shadow: 0 0 20px var(--layer5); }
+        .layer:nth-child(6) .layer-title { color: var(--layer6); text-shadow: 0 0 20px var(--layer6); }
+
+        .layer-desc {
+            color: var(--text-dim);
+            margin-bottom: 1.5rem;
+            line-height: 1.8;
+            font-size: 0.95rem;
+        }
+
+        .defenses {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+        }
+
+        .defense-item {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid currentColor;
+            padding: 1rem;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .defense-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .defense-item:hover::before {
+            left: 100%;
+        }
+
+        .defense-item:hover {
+            background: rgba(255, 255, 255, 0.08);
+            transform: translateX(5px);
+        }
+
+        .layer:nth-child(1) .defense-item { border-color: var(--layer1); color: var(--layer1); }
+        .layer:nth-child(2) .defense-item { border-color: var(--layer2); color: var(--layer2); }
+        .layer:nth-child(3) .defense-item { border-color: var(--layer3); color: var(--layer3); }
+        .layer:nth-child(4) .defense-item { border-color: var(--layer4); color: var(--layer4); }
+        .layer:nth-child(5) .defense-item { border-color: var(--layer5); color: var(--layer5); }
+        .layer:nth-child(6) .defense-item { border-color: var(--layer6); color: var(--layer6); }
+
+        .defense-prefix {
+            color: currentColor;
+            margin-right: 0.5rem;
+            font-weight: 700;
+        }
+
+        .threat-model {
+            background: rgba(255, 8, 68, 0.1);
+            border: 2px solid var(--layer1);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-top: 3rem;
+            animation: fadeIn 1s ease-out 0.8s backwards;
+        }
+
+        .threat-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--layer1);
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            text-shadow: 0 0 20px var(--layer1);
+        }
+
+        .threats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .threat-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .threat-card:hover {
+            border-color: var(--layer1);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 40px rgba(255, 8, 68, 0.3);
+        }
+
+        .threat-name {
+            font-weight: 700;
+            color: var(--layer1);
+            margin-bottom: 0.5rem;
+            font-size: 1.1rem;
+        }
+
+        .threat-mitigation {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            h1 { font-size: 2rem; }
+            .layer { padding: 1.5rem; }
+            .layer-number { font-size: 2rem; }
+            .layer-title { font-size: 1.3rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🛡️ Defense in Depth</h1>
+            <p class="subtitle">Multi-Layer Security Architecture</p>
+        </header>
+
+        <div class="defense-layers">
+            <div class="layer">
+                <div class="layer-number">01</div>
+                <div class="layer-header">
+                    <div class="layer-icon">🔥</div>
+                    <h2 class="layer-title">VPS Perimeter</h2>
+                </div>
+                <p class="layer-desc">
+                    First line of defense at the public gateway. Traffic is filtered and analyzed before entering the tunnel.
+                </p>
+                <div class="defenses">
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>UFW Firewall
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>CrowdSec IDS/IPS
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>DDoS Protection
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Rate Limiting
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Fail2Ban
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Port Restrictions
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-number">02</div>
+                <div class="layer-header">
+                    <div class="layer-icon">🔐</div>
+                    <h2 class="layer-title">Encrypted Transport</h2>
+                </div>
+                <p class="layer-desc">
+                    All traffic between VPS and homelab is encrypted end-to-end with modern protocols.
+                </p>
+                <div class="defenses">
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Wireguard Tunnel
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>TLS 1.3 (Traefik)
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Let's Encrypt SSL
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Certificate Pinning
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Perfect Forward Secrecy
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>HSTS Headers
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-number">03</div>
+                <div class="layer-header">
+                    <div class="layer-icon">🌐</div>
+                    <h2 class="layer-title">Network Isolation</h2>
+                </div>
+                <p class="layer-desc">
+                    Services are segmented into isolated networks with controlled communication paths.
+                </p>
+                <div class="defenses">
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Docker Networks
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Service Segmentation
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Database Isolation
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>VPN Gateway (Gluetun)
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>DNS Filtering (Pi-hole)
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>VLAN Separation
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-number">04</div>
+                <div class="layer-header">
+                    <div class="layer-icon">🔒</div>
+                    <h2 class="layer-title">Application Security</h2>
+                </div>
+                <p class="layer-desc">
+                    Each service implements authentication and access controls appropriate to its function.
+                </p>
+                <div class="defenses">
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Service Authentication
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>2FA (where available)
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Access Control Lists
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Session Management
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>API Key Rotation
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Security Headers
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-number">05</div>
+                <div class="layer-header">
+                    <div class="layer-icon">💾</div>
+                    <h2 class="layer-title">Data Protection</h2>
+                </div>
+                <p class="layer-desc">
+                    Storage layer ensures data integrity and availability through redundancy and verification.
+                </p>
+                <div class="defenses">
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>BTRFS Checksumming
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>RAID5 Redundancy
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Encrypted Backups
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Snapshot Management
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Data Scrubbing
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Off-site Backups
+                    </div>
+                </div>
+            </div>
+
+            <div class="layer">
+                <div class="layer-number">06</div>
+                <div class="layer-header">
+                    <div class="layer-icon">📊</div>
+                    <h2 class="layer-title">Monitoring & Response</h2>
+                </div>
+                <p class="layer-desc">
+                    Continuous monitoring enables early threat detection and rapid incident response.
+                </p>
+                <div class="defenses">
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Log Aggregation
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Intrusion Detection
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Performance Metrics
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Uptime Monitoring
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Alert Notifications
+                    </div>
+                    <div class="defense-item">
+                        <span class="defense-prefix">→</span>Automated Updates
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="threat-model">
+            <h2 class="threat-title">⚠️ Threat Model & Mitigations</h2>
+            <div class="threats-grid">
+                <div class="threat-card">
+                    <div class="threat-name">DDoS Attacks</div>
+                    <div class="threat-mitigation">
+                        CrowdSec + CloudFlare DDoS protection on VPS. Rate limiting at multiple layers. Automatic IP banning.
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-name">Unauthorized Access</div>
+                    <div class="threat-mitigation">
+                        Zero-trust tunnel architecture. No direct port forwarding. All services behind authentication + 2FA.
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-name">Data Breaches</div>
+                    <div class="threat-mitigation">
+                        End-to-end encryption. Network isolation. Database access restricted. Credentials stored in Vaultwarden.
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-name">Man-in-the-Middle</div>
+                    <div class="threat-mitigation">
+                        TLS 1.3 with Let's Encrypt certificates. HSTS enforcement. Certificate pinning. Wireguard encryption.
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-name">Malware/Exploits</div>
+                    <div class="threat-mitigation">
+                        Container isolation. Regular updates via Watchtower. VPN for torrent traffic. Pi-hole DNS filtering.
+                    </div>
+                </div>
+                <div class="threat-card">
+                    <div class="threat-name">Data Loss</div>
+                    <div class="threat-mitigation">
+                        RAID5 redundancy (2-disk failure tolerance). BTRFS checksums. Automated backups. Snapshot retention.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
