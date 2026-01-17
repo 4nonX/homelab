@@ -137,7 +137,7 @@
     - Phase 5: Live Cutover
     - Pro/Con Analysis
 
-18. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)**
+18. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin Latency Issues
     - Performance Baseline
     - Network Optimization
     - VPS Optimization
