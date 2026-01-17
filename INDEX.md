@@ -137,7 +137,7 @@
     - Phase 5: Live Cutover
     - Pro/Con Analysis
 
-18. **[pangolin-z-performance-tuning-.md](pangolin-vps-relay-guide.md)**
+18. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)**
     - Performance Baseline
     - Network Optimization
     - VPS Optimization
