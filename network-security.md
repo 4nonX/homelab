@@ -91,7 +91,7 @@ Internet → VPS (IONOS Berlin)
 - ✅ Professional subdomain routing
 - ✅ Zero-trust network access
 
-*See `pangolin-infrastructure.md` for complete architecture documentation.*
+*See `[pangolin-infrastructure.md](https://github.com/4nonX/homelab/edit/main/network-security.md)` for complete architecture documentation.*
 
 ### File Synchronization
 
