@@ -127,6 +127,13 @@
     - Troubleshooting
     - Related Documentation
     - Resources
-   
 
+17. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
+    - Architecture Overview
+    - Phase 1: Hardware & OS Setup
+    - Phase 2: Network Mounting (Static IP)
+    - Phase 3: Installing the Pangolin Brain
+    - Phase 4: Configuring the VPS-Relay
+    - Phase 5: Live Cutover
+    - Pro/Con Analysis
     
