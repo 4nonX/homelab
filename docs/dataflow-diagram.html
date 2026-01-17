@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homelab Data Flow with Pi Hub</title>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&family=IBM+Plex+Sans:wght@700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #0f0f23;
+            --bg-card: #1a1a2e;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-orange: #f59e0b;
+            --accent-red: #ef4444;
+            --text: #f1f5f9;
+            --text-dim: #94a3b8;
+            --border: #334155;
+        }
+
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        h1 {
+            font-family: 'IBM Plex Sans', sans-serif;
+            font-size: 3rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-dim);
+            font-size: 1rem;
+        }
+
+        .flow-diagram {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 16px;
+            padding: 3rem;
+            margin-bottom: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flow-diagram::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(59, 130, 246, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(139, 92, 246, 0.1) 0%, transparent 50%);
+            pointer-events: none;
+        }
+
+        .flow-steps {
+            display: grid;
+            gap: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flow-step {
+            display: grid;
+            grid-template-columns: 80px 1fr 300px;
+            gap: 2rem;
+            align-items: center;
+            position: relative;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 0 30px rgba(59, 130, 246, 0.5);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 0 40px rgba(59, 130, 246, 0.8);
+            }
+        }
+
+        .step-content {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .step-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: linear-gradient(180deg, var(--accent-blue), var(--accent-purple));
+        }
+
+        .step-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .step-description {
+            color: var(--text-dim);
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        .step-details {
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+
+        .detail-title {
+            font-size: 0.85rem;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
+        }
+
+        .detail-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .detail-item {
+            font-size: 0.85rem;
+            color: var(--text);
+            padding-left: 1rem;
+            position: relative;
+        }
+
+        .detail-item::before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+        }
+
+        .flow-arrow {
+            position: absolute;
+            left: 40px;
+            top: 100%;
+            width: 2px;
+            height: 2rem;
+            background: linear-gradient(180deg, var(--accent-blue), transparent);
+            animation: flowDown 2s ease-in-out infinite;
+        }
+
+        @keyframes flowDown {
+            0%, 100% { opacity: 0.3; }
+            50% { opacity: 1; }
+        }
+
+        .packet-animation {
+            position: absolute;
+            left: 39px;
+            top: 100%;
+            width: 4px;
+            height: 4px;
+            background: var(--accent-green);
+            border-radius: 50%;
+            animation: packetFlow 4s ease-in-out infinite;
+            box-shadow: 0 0 10px var(--accent-green);
+        }
+
+        @keyframes packetFlow {
+            0% {
+                top: 100%;
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                top: calc(100% + 2rem);
+                opacity: 0;
+            }
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+
+        .stat-box {
+            background: var(--bg-card);
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.2);
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+        }
+
+        .protocol-legend {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+            margin-top: 2rem;
+            padding: 1.5rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+        }
+
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .legend-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            animation: blink 2s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.4; }
+        }
+
+        .legend-dot.https { background: var(--accent-blue); }
+        .legend-dot.wireguard { background: var(--accent-purple); }
+        .legend-dot.pi { background: var(--accent-red); }
+        .legend-dot.docker { background: var(--accent-green); }
+        .legend-dot.database { background: var(--accent-orange); }
+
+        .legend-label {
+            color: var(--text-dim);
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 1024px) {
+            .flow-step {
+                grid-template-columns: 1fr;
+            }
+            
+            .step-number {
+                margin: 0 auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 Data Flow Architecture</h1>
+            <p class="subtitle">Complete request lifecycle through VPS → Pi Hub → Homelab</p>
+        </header>
+
+        <div class="flow-diagram">
+            <div class="flow-steps">
+                <div class="flow-step">
+                    <div class="step-number">1</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Client Request</h3>
+                        <p class="step-description">
+                            User accesses service via HTTPS from any device. DNS resolves to VPS public IP.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Client Types</div>
+                        <div class="detail-list">
+                            <div class="detail-item">Web Browsers (Desktop/Mobile)</div>
+                            <div class="detail-item">Native Mobile Apps</div>
+                            <div class="detail-item">Desktop Sync Clients</div>
+                            <div class="detail-item">API Consumers</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="packet-animation"></div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">2</div>
+                    <div class="step-content">
+                        <h3 class="step-title">VPS Gateway</h3>
+                        <p class="step-description">
+                            Request hits public VPS in Berlin. CrowdSec analyzes traffic for threats. Newt relay prepares to forward through tunnel.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Security Filters</div>
+                        <div class="detail-list">
+                            <div class="detail-item">UFW Firewall (Ports 80/443)</div>
+                            <div class="detail-item">CrowdSec IDS/IPS Analysis</div>
+                            <div class="detail-item">Rate Limiting Check</div>
+                            <div class="detail-item">IP Reputation Lookup</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="packet-animation" style="animation-delay: 0.5s;"></div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">3</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Wireguard Tunnel Entry</h3>
+                        <p class="step-description">
+                            Newt relay on VPS packages request and sends through encrypted Wireguard tunnel. VPS acts as "dumb pipe" - never sees decrypted content.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Tunnel Layer</div>
+                        <div class="detail-list">
+                            <div class="detail-item">ChaCha20-Poly1305 Encryption</div>
+                            <div class="detail-item">Perfect Forward Secrecy</div>
+                            <div class="detail-item">NAT Traversal via Gerbil</div>
+                            <div class="detail-item">< 10ms Added Latency</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="packet-animation" style="animation-delay: 1s;"></div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">4</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Pi 5 Pangolin Brain</h3>
+                        <p class="step-description">
+                            Raspberry Pi 5 receives encrypted traffic via Newt. Pangolin server terminates SSL, handles identity, and routes request to appropriate backend service on NAS.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Pi Hub Functions</div>
+                        <div class="detail-list">
+                            <div class="detail-item">SSL Termination (Local)</div>
+                            <div class="detail-item">Let's Encrypt Management</div>
+                            <div class="detail-item">Traefik Routing Rules</div>
+                            <div class="detail-item">Identity & Access Control</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="packet-animation" style="animation-delay: 1.5s;"></div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">5</div>
+                    <div class="step-content">
+                        <h3 class="step-title">NAS Routing</h3>
+                        <p class="step-description">
+                            Pi forwards decrypted request to NAS over local network. Docker network routes to target container based on domain/path.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Network Layer</div>
+                        <div class="detail-list">
+                            <div class="detail-item">Local Ethernet (1Gbps)</div>
+                            <div class="detail-item">Docker Bridge Networks</div>
+                            <div class="detail-item">Service Discovery</div>
+                            <div class="detail-item">Health Checks</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="packet-animation" style="animation-delay: 2s;"></div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">6</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Service Execution</h3>
+                        <p class="step-description">
+                            Target container processes request. May access PostgreSQL databases, Redis cache, or BTRFS storage as needed.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Backend Services</div>
+                        <div class="detail-list">
+                            <div class="detail-item">PostgreSQL (8x instances)</div>
+                            <div class="detail-item">Redis Cache (3x)</div>
+                            <div class="detail-item">BTRFS RAID5 Storage</div>
+                            <div class="detail-item">Application Logic</div>
+                        </div>
+                    </div>
+                    <div class="flow-arrow"></div>
+                    <div class="packet-animation" style="animation-delay: 2.5s;"></div>
+                </div>
+
+                <div class="flow-step">
+                    <div class="step-number">7</div>
+                    <div class="step-content">
+                        <h3 class="step-title">Response Return Path</h3>
+                        <p class="step-description">
+                            Response travels back: NAS → Pi (re-encrypt) → Wireguard → VPS → Internet. Same encryption and security layers in reverse.
+                        </p>
+                    </div>
+                    <div class="step-details">
+                        <div class="detail-title">Return Journey</div>
+                        <div class="detail-list">
+                            <div class="detail-item">Container → Docker → NAS</div>
+                            <div class="detail-item">NAS → Pi Hub (Local)</div>
+                            <div class="detail-item">Pi → Wireguard → VPS</div>
+                            <div class="detail-item">VPS → Internet → Client</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-value">~20ms</div>
+                <div class="stat-label">Total Latency</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">256-bit</div>
+                <div class="stat-label">Encryption</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">3</div>
+                <div class="stat-label">Network Hops</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-value">0%</div>
+                <div class="stat-label">VPS Data Access</div>
+            </div>
+        </div>
+
+        <div class="protocol-legend">
+            <div class="legend-item">
+                <div class="legend-dot https"></div>
+                <span class="legend-label">HTTPS/TLS 1.3</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot wireguard"></div>
+                <span class="legend-label">Wireguard Tunnel</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot pi"></div>
+                <span class="legend-label">Pi Hub Processing</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot docker"></div>
+                <span class="legend-label">Docker Networks</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-dot database"></div>
+                <span class="legend-label">Database Layer</span>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
