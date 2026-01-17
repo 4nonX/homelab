@@ -26,6 +26,8 @@ This guide documents the "Live Transplant" of the Pangolin Server from a VPS-hos
 * **The Tunnel (Newt):** Encrypted link connecting the VPS to your home network.
 * **The Brain (Pi 5):** Terminates SSL, manages Identity, and handles routing on a Gen4 NVMe SSD.
 
+**[→ View Interactive Architecture Diagram](https://4nonx.github.io/homelab/architecture-diagram.html)**
+
 ---
 
 ## 🛠️ Phase 1: Hardware & OS Setup
