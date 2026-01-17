@@ -45,7 +45,7 @@ from ZimaOS (Debian-based) to NixOS for my entire production homelab.
 ## 🎯 Overview
 
 **What:** Self-hosted cloud infrastructure replacing €580+/year in SaaS subscriptions  
-**Scale:** 40+ containerized services, 33TB storage, 99.9%+ uptime  
+**Scale:** 40+ containerized services, 33TB storage, 90%+ uptime  
 **Goal:** Complete data ownership, unlimited storage, learning experience  
 **Result:** Enterprise-grade infrastructure at homelab cost
 
