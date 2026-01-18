@@ -1,7 +1,7 @@
 # 🛡️ Pangolin Pi-Hub: The Transparent VPS Relay Guide
 
 [![Hardware](https://img.shields.io/badge/Hardware-Pi%205%208GB-BC1142?logo=raspberry-pi&logoColor=white)](#)
-[![Storage](https://img.shields.io/badge/Storage-NVMe%20Gen4-yellow?logo=ssm&logoColor=black)](#)
+[![Storage](https://img.shields.io/badge/Storage-NVMe%20Gen3-yellow?logo=ssm&logoColor=black)](#)
 [![Status](https://img.shields.io/badge/Status-16--Star--Milestone-blueviolet)](#)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
