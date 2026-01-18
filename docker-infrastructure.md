@@ -18,7 +18,6 @@ Comprehensive Docker deployment strategy, container orchestration, and operation
 docker-compose/
 ├── media/
 │   ├── arr-stack.yml           # Sonarr, Radarr, Lidarr, Prowlarr
-│   ├── downloaders.yml          # qBittorrent + Gluetun
 │   └── media-servers.yml        # Emby, SwingMusic
 ├── productivity/
 │   ├── nextcloud-stack.yml      # Nextcloud + DB + Redis
