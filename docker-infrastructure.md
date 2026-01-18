@@ -125,7 +125,6 @@ volumes:
 │   ├── movies/
 │   └── music/
 ├── backups/              # Local backups
-└── downloads/            # Download cache
 ```
 
 ## 🔒 Security Best Practices
