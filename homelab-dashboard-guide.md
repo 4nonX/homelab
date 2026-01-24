@@ -1289,6 +1289,16 @@ volumes:
   - $HOME/.local/share/homelab-dashboard/nginx.conf:/etc/nginx/conf.d/default.conf:ro
 ```
 
+### Why is ther no Authentication?
+
+**Because!** This Dashboard is meant to be hosted behind Pangolin.
+Authentication & Access Control
+
+This dashboard intentionally implements no built-in authentication.
+It is designed to be exposed exclusively behind Pangolin, which provides centralized authentication, authorization, and TLS for all homelab services.
+
+The dashboard is therefore treated as a trusted internal application, relying on the upstream access gateway rather than duplicating auth logic.
+
 ### Can I contribute to this project?
 
 **Absolutely!** Contributions welcome:
