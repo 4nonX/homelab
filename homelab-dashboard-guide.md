@@ -1,6 +1,6 @@
 # 🏠 Homelab Dashboard - Complete Deployment Guide
 
-**Production-ready homelab dashboard with 32+ services support, drag & drop management, real-time stats, and beautiful cyberpunk design**
+**Production-ready homelab dashboard with 32+ services support, drag & drop management, real-time stats, and beautiful cyberpunk design. This dashboard is a self-contained, static HTML dashboard designed specifically for my homelab. It is included here as a reference implementation and can be reused or adapted by others**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
