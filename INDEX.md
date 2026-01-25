@@ -109,14 +109,14 @@
     - Client setup
     - Troubleshooting
 
-16. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
+16. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step-deployment
     - VPS setup
     - DNS configuration
     - Server deployment
     - Client installation
     - Security hardening
 
-17. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step
+17. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step-upgrade
     - Architecture versions
     - Migrating from v1.12.2 to v1.14.1
     - Technical execution
