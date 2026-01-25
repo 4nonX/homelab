@@ -1,6 +1,13 @@
 # 🏠 Homelab Dashboard - Complete Deployment Guide
 
-**Production-ready homelab dashboard with 32+ services support, drag & drop management, real-time stats, and beautiful cyberpunk design. This dashboard is a self-contained, static HTML dashboard designed specifically for my homelab. It is included here as a reference implementation and can be reused or adapted by others**
+Production-ready homelab dashboard with 32+ services support, drag & drop management, real-time stats, and beautiful cyberpunk design. This dashboard is a self-contained, static HTML dashboard designed specifically for my homelab. It is included here as a reference implementation and can be reused or adapted by others. 
+
+Authentication & Security Model
+
+This dashboard intentionally implements no authentication or authorization logic.
+It is designed to be deployed exclusively behind an upstream access gateway (e.g. Pangolin, Traefik + Auth, Zero Trust proxy), which provides centralized authentication, authorization, and TLS termination.
+
+The dashboard is treated as a trusted internal application.
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
 [![Docker](https://img.shields.io/badge/Docker-Ready-blue.svg)](https://www.docker.com/)
