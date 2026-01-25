@@ -682,6 +682,7 @@ Change to your preferred text.
 
 ## 🔌 Optional: Stats API Setup
 
+If enabled, the stats endpoint must be exposed only within the trusted network or behind the same upstream auth gateway as the dashboard.
 By default, the dashboard shows **simulated stats**. To enable **real-time server statistics**, deploy the optional Stats API.
 
 ### Create Stats API Files
