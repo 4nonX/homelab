@@ -7,8 +7,8 @@
    - Key achievements
    - Business value
    - Quick stats
-  
-2.   **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Ongoing Project showcase
+
+2. **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Ongoing Project showcase
    - NixOS-Migration - reasoning
    - NixOS - features
    - NixOS - migration steps
@@ -40,112 +40,119 @@
    - Lessons learned
    - Scaling to enterprise
 
+6. **[homelab-dashboard-guide.md](homelab-dashboard-guide.md)** - Dashboard setup and usage
+
 ### 🔧 Technical Deep-Dives
 
-6. **[hardware-specs.md](hardware-specs.md)** - Hardware documentation
+7. **[hardware-specs.md](hardware-specs.md)** - Hardware documentation
    - Complete component list
    - Selection rationale
    - Performance benchmarks
    - Upgrade paths
 
-7. **[docker-infrastructure.md](docker-infrastructure.md)** - Container architecture
+8. **[docker-infrastructure.md](docker-infrastructure.md)** - Container architecture
    - Docker Compose strategy
    - Network architecture
    - Security best practices
    - Resource management
    - Update procedures
 
-8. **[network-security.md](network-security.md)** - Network & security
+9. **[network-security.md](network-security.md)** - Network & security
    - Network topology
    - Security layers
    - Firewall configuration
    - Monitoring setup
 
-9. **[nextcloud-optimization-guide.md](nextcloud-optimization-guide.md)** - Docker & databse-setup
-   - Features
-   - Prerequisites
-   - Architecture
-   - Docker Compose Stack
-   - Talk Signaling Configuration
-   - Reverse Proxy & Exposure
-   - Troubleshooting
-   - Maintenance
-   - Design Decisions & Tradeoffs
-   - Failure Modes & Recovery
-   - FAQ
+10. **[nextcloud-optimization-guide.md](nextcloud-optimization-guide.md)** - Docker & database setup
+    - Features
+    - Prerequisites
+    - Architecture
+    - Docker Compose stack
+    - Talk signaling configuration
+    - Reverse proxy & exposure
+    - Troubleshooting
+    - Maintenance
+    - Design decisions & tradeoffs
+    - Failure modes & recovery
+    - FAQ
 
 ### 📺 Service Categories
 
-10. **[media-stack.md](media-stack.md)** - Media automation
-   - Arr Suite integration
-   - VPN-secured downloads
-   - Streaming services
-   - Quality profiles
+11. **[media-stack.md](media-stack.md)** - Media automation
+    - Arr Suite integration
+    - VPN-secured downloads
+    - Streaming services
+    - Quality profiles
 
-11. **[productivity-services.md](productivity-services.md)** - Productivity apps
-   - Nextcloud setup
-   - Immich photo management
-   - Paperless-NGX documents
-   - Password management
+12. **[productivity-services.md](productivity-services.md)** - Productivity apps
+    - Nextcloud setup
+    - Immich photo management
+    - Paperless-NGX documents
+    - Password management
 
 ### 🌐 External Access (Pangolin)
 
-12. **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture,
-     - Pangolin/Tailscale/ZeroTier comparison
-     - security integration
+13. **[network-remote-access.md](network-remote-access.md)** - Remote Access Strategy
+    - Multi-layered VPN architecture
+    - Pangolin/Tailscale/ZeroTier comparison
+    - Security integration
 
-13. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
+14. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
     - Why Pangolin?
     - Multi-layer security
     - Performance characteristics
     - Cost analysis
 
-14. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
+15. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
     - Docker Compose files
     - Server configuration
     - Client setup
     - Troubleshooting
 
-15. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
+16. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step
     - VPS setup
     - DNS configuration
     - Server deployment
     - Client installation
     - Security hardening
-   
-16. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step
-    - Architecture Versions
+
+17. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step
+    - Architecture versions
     - Migrating from v1.12.2 to v1.14.1
-    - Technical Execution
-    - Docker Compose Configuration
-    - Verification & Validation
-    - Migration Timeline
-    - Rollback Procedure
-    - Performance Improvements
-    - Key Changes in v1.14.1
-    - Major Version Update Considerations
+    - Technical execution
+    - Docker Compose configuration
+    - Verification & validation
+    - Migration timeline
+    - Rollback procedure
+    - Performance improvements
+    - Key changes in v1.14.1
+    - Major version update considerations
     - Troubleshooting
-    - Related Documentation
+    - Related documentation
     - Resources
 
-17. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
-    - Architecture Overview
-    - Phase 1: Hardware & OS Setup
-    - Phase 2: Network Mounting (Static IP)
+18. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
+    - Architecture overview
+    - Phase 1: Hardware & OS setup
+    - Phase 2: Network mounting (Static IP)
     - Phase 3: Installing the Pangolin Brain
     - Phase 4: Configuring the VPS-Relay
-    - Phase 5: Live Cutover
-    - Pro/Con Analysis
+    - Phase 5: Live cutover
+    - Pro/Con analysis
 
-18. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin Latency Issues
-    - Wireguard MTU Optimization
-    - Wireguard PersistentKeepalive
-    - Traefik Timeout Optimization
-    - Disable Traefik Access Logs
-    - CrowdSec Log Level
-    - NVMe I/O Scheduler (NAS Only)
-    - TCP Window Scaling (Network Performance)
+19. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin latency issues
+    - WireGuard MTU optimization
+    - WireGuard persistent keepalive
+    - Traefik timeout optimization
+    - Disable Traefik access logs
+    - CrowdSec log level
+    - NVMe I/O scheduler (NAS only)
+    - TCP window scaling (network performance)
 
+### 🗂 Architecture & Diagrams
 
+20. **[architecture-diagram.html](architecture-diagram.html)** - Overall system architecture  
+21. **[dataflow-diagram.html](dataflow-diagram.html)** - Service data flows  
+22. **[security-diagram.html](security-diagram.html)** - Security layers & controls
 
 
