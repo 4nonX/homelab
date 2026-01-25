@@ -71,7 +71,7 @@ Before starting, prepare these values:
 ```bash
 NAS_IP=YOUR_NAS_IP                # Example: 192.168.1.100
 NAS_SSH_PORT=22                   # Default SSH port
-DASHBOARD_PORT=8654               # Choose any free port
+DASHBOARD_PORT=86xx               # Choose any free port
 DOMAIN=your-domain.com            # Optional: your domain
 VPN_IP=YOUR_VPN_IP               # Optional: your VPN IP (e.g., 10.243.0.1)
 ```
@@ -317,7 +317,7 @@ networks:
 
 ```yaml
     ports:
-      - 8654:80  # Change 8654 to your preferred port (e.g., 8080)
+      - 86xx:80  # Change 86xx to your preferred port (e.g., 8080)
 ```
 
 ### 2.5 Add Traefik Labels (Optional)
