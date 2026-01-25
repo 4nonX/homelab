@@ -288,7 +288,7 @@ services:
     container_name: homelab-dashboard
     restart: unless-stopped
     ports:
-      - 8654:80
+      - 86xx:80
     volumes:
       - /DATA/AppData/homelab-dashboard/html:/usr/share/nginx/html:ro
       - /DATA/AppData/homelab-dashboard/nginx.conf:/etc/nginx/conf.d/default.conf:ro
