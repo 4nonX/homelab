@@ -351,7 +351,7 @@ In the Dockge interface, you should see:
 ├── Status: Running (green indicator)
 ├── Container: homelab-dashboard
 ├── Image: nginx:alpine
-├── Ports: 0.0.0.0:8654->80/tcp
+├── Ports: 0.0.0.0:86xx->80/tcp
 └── Health: healthy (if healthcheck configured)
 ```
 
@@ -371,7 +371,7 @@ ssh root@YOUR_NAS_IP
 docker ps | grep homelab-dashboard
 
 # Expected output:
-# abc123def456   nginx:alpine   Up 2 minutes   0.0.0.0:8654->80/tcp   homelab-dashboard
+# abc123def456   nginx:alpine   Up 2 minutes   0.0.0.0:86xx->80/tcp   homelab-dashboard
 
 # Check container logs
 docker logs homelab-dashboard
@@ -380,7 +380,7 @@ docker logs homelab-dashboard
 # /docker-entrypoint.sh: Configuration complete; ready for start up
 
 # Test HTTP response
-curl -I http://localhost:8654
+curl -I http://localhost:86xx
 
 # Expected output:
 # HTTP/1.1 200 OK
@@ -391,7 +391,7 @@ curl -I http://localhost:8654
 ### Test 2: Internal Access (Browser)
 
 1. Open a browser on any device on your local network
-2. Navigate to: `http://YOUR_NAS_IP:8654` (use your actual NAS IP and port)
+2. Navigate to: `http://YOUR_NAS_IP:86xx` (use your actual NAS IP and port)
 3. Dashboard should load and display:
    - ✅ **HOMELAB.SYS** header with gradient text
    - ✅ **Network badges** showing your customized IPs
@@ -541,7 +541,7 @@ services:
     container_name: homelab-dashboard
     restart: unless-stopped
     ports:
-      - 8654:80
+      - 86xx:80
     volumes:
       - /DATA/AppData/homelab-dashboard/html:/usr/share/nginx/html:ro
       - /DATA/AppData/homelab-dashboard/nginx.conf:/etc/nginx/conf.d/default.conf:ro
@@ -923,14 +923,14 @@ sudo ss -tulpn | grep 8654
 In Dockge:
 1. Click on "homelab-dashboard" stack
 2. Click "Bearbeiten" (Edit)
-3. Change the ports line: `8654:80` → `8080:80` (or any free port)
+3. Change the ports line: `86xx:80` → `8080:80` (or any free port)
 4. Click "Update" → "Deploy"
 
 **Option 2: Stop the conflicting service**
 
 ```bash
 # Find the conflicting container/process
-sudo netstat -tulpn | grep 8654
+sudo netstat -tulpn | grep 86xx
 
 # Stop it
 docker stop CONTAINER_NAME
@@ -1236,12 +1236,12 @@ Configure Traefik's ForwardAuth middleware with Authelia, Authentik, or similar.
 **Python:**
 ```bash
 cd /DATA/AppData/homelab-dashboard/html
-python3 -m http.server 8654
+python3 -m http.server 86xx
 ```
 
 **Node.js:**
 ```bash
-npx http-server /DATA/AppData/homelab-dashboard/html -p 8654
+npx http-server /DATA/AppData/homelab-dashboard/html -p 86xx
 ```
 
 ### How do I update the dashboard?
