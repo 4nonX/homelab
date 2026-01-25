@@ -10,6 +10,7 @@ This repository documents my personal homelab infrastructure, showcasing practic
 - Linux system administration
 - Self-hosted service deployment
 - Infrastructure automation
+- Custom dashboard for monitoring and management
 
 ## 🎯 Project Overview
 
@@ -17,7 +18,8 @@ This repository documents my personal homelab infrastructure, showcasing practic
 **Scale:** 40+ containerized services across multiple categories  
 **Uptime:** ~90%+ with automated monitoring and health checks  
 **Storage:** BTRFS on RAID5 (33TB) with compression and checksumming  
-**External Access:** Self-hosted Pangolin tunnel with Traefik reverse proxy (VPS-based)
+**External Access:** Self-hosted Pangolin tunnel with Traefik reverse proxy (VPS-based)  
+**Dashboard:** Custom homelab HTML dashboard for service monitoring and management
 
 ## 🚧 Current Major Project: NixOS Migration (2026)
 
@@ -44,7 +46,6 @@ I'm planning and executing a **complete infrastructure migration** from ZimaOS (
 - Modern Infrastructure-as-Code practices beyond containers
 - Complex project planning and execution
 - Technical decision-making for system architecture
-----
 
 ## 🏗️ Technical Architecture
 
@@ -56,15 +57,15 @@ I'm planning and executing a **complete infrastructure migration** from ZimaOS (
 - **External Access:** Self-hosted Pangolin tunnel (Wireguard) with Traefik reverse proxy
 - **Security:** Multi-layered defense with CrowdSec IDS/IPS and encryption
 - **Storage:** BTRFS RAID5 (33TB) with compression and self-healing
-- **Monitoring:** Health checks, logging, and planned observability stack
+- **Monitoring:** Health checks, logging, and custom dashboard
 
 ### Service Categories
 
 #### 📺 Media Library & Streaming
 Personal media server infrastructure with organized library management:
-* Library organization tools (metadata, quality profiles, automation)
-* Emby streaming server with Intel Quick Sync transcoding
-* Household request and sharing workflow
+- Library organization tools (metadata, quality profiles, automation)
+- Emby streaming server with Intel Quick Sync transcoding
+- Household request and sharing workflow
 
 #### 🛠️ Productivity Suite
 Self-hosted alternatives to cloud services:
@@ -94,6 +95,7 @@ Self-hosted alternatives to cloud services:
 - Syncthing (decentralized file sync)
 - Automated backups with testing
 - Health monitoring and logging
+- Custom HTML dashboard for service overview and edits
 
 ## 💻 Technical Skills Demonstrated
 
@@ -138,17 +140,6 @@ Self-hosted alternatives to cloud services:
 - Update automation (Watchtower)
 - Documentation as code
 - Disaster recovery planning
-
-## 📚 Documentation
-
-Comprehensive documentation covering all aspects of the infrastructure:
-
-- **[README.md](README.md)** - Project overview and quick start
-- **[hardware-specs.md](hardware-specs.md)** - Detailed hardware configuration
-- **[docker-infrastructure.md](docker-infrastructure.md)** - Docker deployment and best practices
-- **[media-stack.md](media-stack.md)** - Media management pipeline
-- **[productivity-services.md](productivity-services.md)** - Self-hosted productivity tools
-- **[network-security.md](network-security.md)** - Network architecture and security
 
 ## 🔨 Technical Implementation
 
@@ -197,6 +188,13 @@ Internet → Router → Pi-hole (DNS) → Services
                             └─ VPN Network (Gluetun)
 ```
 
+### Custom Dashboard
+- Web-based dashboard for quick access to all services
+- Editable IP tiles for LAN & ZeroTrust networks
+- Edit and launch buttons per service
+- Responsive UI for desktop & mobile
+- Lightweight static HTML + JS, integrated with Docker stack
+
 ## 📊 Project Statistics
 
 - **Total Services:** 40+ active containers
@@ -209,7 +207,7 @@ Internet → Router → Pi-hole (DNS) → Services
 ## 🚀 Future Enhancements
 
 ### Short-term
-- [ ] Implement reverse proxy (Nginx Proxy Manager/Traefik)
+- [ ] Implement reverse proxy (Traefik/Nginx)
 - [ ] Deploy monitoring stack (Prometheus + Grafana)
 - [ ] Set up centralized logging (Loki)
 - [ ] Configure automated SSL certificates
@@ -218,7 +216,7 @@ Internet → Router → Pi-hole (DNS) → Services
 - [ ] Implement container orchestration (K3s)
 - [ ] Build CI/CD pipeline for infrastructure
 - [ ] Advanced security monitoring (IDS/IPS)
-- [ ] Multi-site replication for DR
+- [ ] Multi-site replication for disaster recovery
 
 ## 🎓 Learning Outcomes
 
@@ -232,13 +230,36 @@ This project demonstrates proficiency in:
 ✅ **Documentation:** Comprehensive technical documentation  
 ✅ **Problem Solving:** Troubleshooting complex multi-service deployments
 
+## 📚 Documentation
+
+Comprehensive documentation covering all aspects of the infrastructure:
+
+- **[EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md)** - Quick reference guide
+- **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Migration project plan
+- **[PORTFOLIO.md](PORTFOLIO.md)** - Portfolio showcase
+- **[README.md](README.md)** - Project overview
+- **[hardware-specs.md](hardware-specs.md)** - Detailed hardware configuration
+- **[docker-infrastructure.md](docker-infrastructure.md)** - Docker deployment and best practices
+- **[media-stack.md](media-stack.md)** - Media management pipeline
+- **[productivity-services.md](productivity-services.md)** - Self-hosted productivity tools
+- **[network-security.md](network-security.md)** - Network architecture and security
+- **[network-remote-access.md](network-remote-access.md)** - Remote VPN architecture
+- **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete Pangolin architecture
+- **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
+- **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step deployment
+- **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Upgrade guide
+- **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry Pi relay guide
+- **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Pangolin performance tuning
+- **[homelab-dashboard-guide.md](homelab-dashboard-guide.md)** - Custom dashboard guide
+- **[homelab-complete-journey.md](homelab-complete-journey.md)** - Full homelab journey
+
 ## 📞 Contact
 
 This portfolio demonstrates practical DevOps and infrastructure skills. For professional inquiries or technical discussions about this implementation, please connect via:
 
-- **GitHub:** (https://github.com/4nonX/)
-- **LinkedIn:** (https://www.linkedin.com/in/dan-dreßen-b83b1839a/)
-- **Email:** [dan.dressen@d-net.me]
+- **GitHub:** [https://github.com/4nonX/](https://github.com/4nonX/)
+- **LinkedIn:** [https://www.linkedin.com/in/dan-dreßen-b83b1839a/](https://www.linkedin.com/in/dan-dreßen-b83b1839a/)
+- **Email:** [dan.dressen@d-net.me](mailto:dan.dressen@d-net.me)
 
 ## 📄 License
 
