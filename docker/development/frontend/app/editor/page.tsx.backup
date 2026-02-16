@@ -1,0 +1,141 @@
+'use client';
+
+import { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { authAPI, portfolioAPI } from '@/lib/api';
+import toast from 'react-hot-toast';
+
+export default function EditorPage() {
+  const router = useRouter();
+  const [portfolio, setPortfolio] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
+
+  useEffect(() => {
+    const init = async () => {
+      if (!authAPI.isAuthenticated()) {
+        router.push('/login');
+        return;
+      }
+
+      // Get username from localStorage
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        setUsername(user.username);
+      }
+
+      try {
+        const data = await portfolioAPI.getMyPortfolio();
+        setPortfolio(data);
+      } catch (error) {
+        toast.error('Failed to load');
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
+  }, [router]);
+
+  const handleSave = async () => {
+    try {
+      await portfolioAPI.updatePortfolio(portfolio);
+      toast.success('Saved!');
+    } catch (error) {
+      toast.error('Failed');
+    }
+  };
+
+  if (loading || !portfolio) {
+    return (
+      <div className="min-h-screen bg-[#0F1419] flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
+
+  const url = `http://192.168.8.158:3000/${username}`;
+
+  return (
+    <div className="min-h-screen bg-[#0F1419] text-white p-8">
+      <div className="max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-white">Editor</h1>
+          <button onClick={handleSave} className="px-6 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-semibold">
+            Save
+          </button>
+        </div>
+
+        <div className="space-y-6 bg-[#1C2128] p-8 rounded-xl border border-gray-800">
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-300">Name</label>
+            <input
+              type="text"
+              value={portfolio.name || ''}
+              onChange={(e) => setPortfolio({ ...portfolio, name: e.target.value })}
+              className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-300">Title</label>
+            <input
+              type="text"
+              value={portfolio.title || ''}
+              onChange={(e) => setPortfolio({ ...portfolio, title: e.target.value })}
+              className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-300">Email</label>
+            <input
+              type="email"
+              value={portfolio.email || ''}
+              onChange={(e) => setPortfolio({ ...portfolio, email: e.target.value })}
+              className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-300">Location</label>
+            <input
+              type="text"
+              value={portfolio.location || ''}
+              onChange={(e) => setPortfolio({ ...portfolio, location: e.target.value })}
+              className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            />
+          </div>
+
+          <div>
+            <label className="block mb-2 text-sm font-medium text-gray-300">Theme</label>
+            <select
+              value={portfolio.theme || 'modern'}
+              onChange={(e) => setPortfolio({ ...portfolio, theme: e.target.value })}
+              className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+            >
+              <option value="modern">Modern</option>
+              <option value="minimal">Minimal</option>
+              <option value="professional">Professional</option>
+              <option value="aurora">Aurora</option>
+              <option value="dark-ocean">Dark Ocean</option>
+              <option value="cosmic">Cosmic</option>
+            </select>
+          </div>
+
+          <div className="pt-4 border-t border-gray-700">
+            <p className="text-sm text-gray-400 mb-2">Your portfolio URL:</p>
+            <a 
+              href={url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-blue-400 hover:text-blue-300 font-medium break-all"
+            >
+              {url} →
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

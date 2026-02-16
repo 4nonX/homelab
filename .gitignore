@@ -1,0 +1,35 @@
+# Sensitive files
+.env
+*.env
+!.env.example
+*.key
+*.pem
+*.crt
+secrets/
+*.secret
+
+# Temporary files
+*.bak
+*.tmp
+*.log
+*.swp
+*~
+
+# Data directories - don't commit actual data
+docker/*/data/
+docker/*/db/
+docker/*/*/data/
+docker/*/*/db/
+docker/*/postgres-data/
+docker/*/uploads/
+docker/*/html/
+docker/*/*/html/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor files
+.vscode/
+.idea/
+*.code-workspace

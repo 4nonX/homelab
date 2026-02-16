@@ -1,0 +1,70 @@
+name: big-bear-dockge
+services:
+    app:
+        container_name: big-bear-dockge
+        environment:
+            DOCKGE_STACKS_DIR: /DATA/AppData/big-bear-dockge/stacks
+        image: louislam/dockge:1.5.0
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/dockge.png
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 5001
+              published: "5001"
+              protocol: tcp
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /var/run/docker.sock
+              target: /var/run/docker.sock
+              bind:
+                create_host_path: true
+            - type: bind
+              source: /DATA/AppData/$AppID/data
+              target: /app/data
+              bind:
+                create_host_path: true
+            - type: bind
+              source: /DATA/AppData/$AppID/stacks
+              target: /DATA/AppData/big-bear-dockge/stacks
+              bind:
+                create_host_path: true
+        x-casaos:
+            ports:
+                - container: "5001"
+                  description:
+                    en_us: 'Container Port: 5001'
+            volumes:
+                - container: /var/run/docker.sock
+                  description:
+                    en_us: 'Container Path: /var/run/docker.sock'
+                - container: /app/data
+                  description:
+                    en_us: 'Container Path: /app/data'
+                - container: /DATA/AppData/big-bear-dockge/stacks
+                  description:
+                    en_us: 'Container Path: /DATA/AppData/big-bear-dockge/stacks'
+networks:
+    default:
+        name: big-bear-dockge_default
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+    author: BigBearTechWorld
+    category: BigBearCasaOS
+    description:
+        en_us: A fancy, easy-to-use and reactive docker `compose.yaml` stack-oriented manager
+    developer: louislam
+    icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/dockge.png
+    is_uncontrolled: false
+    main: app
+    port_map: "5001"
+    store_app_id: big-bear-dockge
+    tagline:
+        en_us: Dockge
+    thumbnail: ""
+    title:
+        en_us: Dockge

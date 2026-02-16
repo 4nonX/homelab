@@ -1,0 +1,24 @@
+services:
+  stacks:
+    image: zelest/stacks:latest
+    container_name: stacks
+    ports:
+      # Change the left port if 7788 is already in use
+      - 5559:7788
+    volumes:
+      # REQUIRED - change these paths to match your system
+      - /mainpool/AppData/stacks/config:/opt/stacks/config # Configuration files
+      - /mainpool/AppData/stacks/download:/opt/stacks/download # Downloaded files
+      - /mainpool/AppData/stacks/logs:/opt/stacks/logs # Log files
+    restart: unless-stopped
+    environment:
+      # These only apply on first run, afterward edit config.yaml directly
+      - USERNAME=DanDressen # Default admin username (change if desired)
+      - PASSWORD=DHimHmwnmPS23# Default admin password - CHANGE THIS!
+      # Uncomment to reset the admin password to the above values on startup
+      # - RESET_ADMIN=true
+
+      # Set your timezone:
+      # https://en.wikipedia.org/wiki/List_of_tz_database_time_zones
+      - TZ=CET
+networks: {}

@@ -1,0 +1,89 @@
+name: big-bear-dockpeek
+services:
+    big-bear-dockpeek:
+        cpu_shares: 90
+        command: []
+        container_name: big-bear-dockpeek
+        deploy:
+            resources:
+                limits:
+                    memory: "33416294400"
+                reservations: {}
+        environment:
+            DOCKER_HOST: unix:///var/run/docker.sock
+            PASSWORD: DHimHmwnmPS23
+            SECRET_KEY: DHimHmwnmPS23
+            USERNAME: DanDressen
+        image: ghcr.io/dockpeek/dockpeek:v1.7.2
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/dockpeek.png
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 8000
+              published: "3420"
+              protocol: tcp
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /var/run/docker.sock
+              target: /var/run/docker.sock
+              bind:
+                create_host_path: true
+        x-casaos:
+            envs:
+                - container: SECRET_KEY
+                  description:
+                    en_us: Secret key for the application. Change this for security.
+                - container: USERNAME
+                  description:
+                    en_us: Username for authentication. Change this from default.
+                - container: PASSWORD
+                  description:
+                    en_us: Password for authentication. Change this from default.
+                - container: DOCKER_HOST
+                  description:
+                    en_us: Docker host socket path.
+            ports:
+                - container: "8000"
+                  description:
+                    en_us: 'Container Port: 8000'
+            volumes:
+                - container: /var/run/docker.sock
+                  description:
+                    en_us: 'Container Path: /var/run/docker.sock'
+networks:
+    default:
+        name: big-bear-dockpeek_default
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+    author: BigBearTechWorld
+    category: BigBearCasaOS
+    description:
+        en_us: A lightweight, self-hosted Docker dashboard that provides quick access to all running containers and their exposed ports with one-click access to web apps.
+    developer: dockpeek
+    hostname: ""
+    icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/dockpeek.png
+    index: /
+    is_uncontrolled: false
+    main: big-bear-dockpeek
+    port_map: "3420"
+    scheme: http
+    store_app_id: big-bear-dockpeek
+    tagline:
+        en_us: Docker Dashboard
+    thumbnail: ""
+    tips:
+        before_install:
+            en_us: |-
+                **Support BigBearTechWorld**: https://ko-fi.com/bigbeartechworld
+                **Community Forum**: https://community.bigbeartechworld.com
+                **Read this before installing**: https://community.bigbeartechworld.com/t/added-dockpeek-to-bigbearcasaos/4136?u=dragonfire1119
+
+                Before you install, make sure to change the default credentials (SECRET_KEY, USERNAME, PASSWORD) for security.
+    title:
+        custom: ""
+        en_us: Dockpeek
