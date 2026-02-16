@@ -1,0 +1,70 @@
+name: big-bear-wallos
+services:
+    big-bear-wallos:
+        container_name: big-bear-wallos
+        environment:
+            TZ: UTC
+        image: bellamy/wallos:4.6.0
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/wallos.png
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 80
+              published: "8282"
+              protocol: tcp
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /DATA/AppData/big-bear-wallos/db
+              target: /var/www/html/db
+              bind:
+                create_host_path: true
+            - type: bind
+              source: /DATA/AppData/big-bear-wallos/logos
+              target: /var/www/html/images/uploads/logos
+              bind:
+                create_host_path: true
+        x-casaos:
+            envs:
+                - container: TZ
+                  description:
+                    en_us: 'Container Environment Variable: TZ'
+            ports:
+                - container: "80"
+                  description:
+                    en_us: 'Container Port: 80'
+            volumes:
+                - container: /var/www/html/db
+                  description:
+                    en_us: 'Container Path: /var/www/html/db'
+                - container: /var/www/html/images/uploads/logos
+                  description:
+                    en_us: 'Container Path: /var/www/html/images/uploads/logos'
+networks:
+    default:
+        name: big-bear-wallos_default
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+    author: BigBearTechWorld
+    category: BigBearCasaOS
+    description:
+        en_us: 'Wallos: Open-Source Personal Subscription Tracker'
+    developer: bellamy
+    icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/wallos.png
+    is_uncontrolled: false
+    main: big-bear-wallos
+    port_map: "8282"
+    store_app_id: big-bear-wallos
+    tagline:
+        en_us: Wallos
+    thumbnail: ""
+    tips:
+        before_install:
+            en_us: |
+                Before you install read this: https://community.bigbeartechworld.com/t/added-wallos-to-bigbearcasaos/2139?u=dragonfire1119
+    title:
+        en_us: Wallos

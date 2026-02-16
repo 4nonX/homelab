@@ -1,0 +1,151 @@
+DEPLOYING WITH DOCKGE ON YOUR NAS
+==================================
+
+OPTION 1: Using Dockge UI (Recommended)
+----------------------------------------
+
+1. PREPARE FILES ON YOUR NAS
+   - Copy the entire 'aptifolio-clone' folder to your NAS
+   - Suggested location: /volume1/docker/aptifolio-clone
+   - Make sure all files are there (backend/, frontend/, .env, docker-compose.yml, etc.)
+
+2. ACCESS DOCKGE
+   - Open Dockge in your browser (usually http://nas-ip:5001)
+
+3. CREATE NEW STACK
+   - Click "+ Compose" or "New Stack"
+   - Stack Name: portfolio-builder (or any name you prefer)
+
+4. CONFIGURE PATHS
+   - In the compose editor, you need to update volume paths to absolute paths on your NAS
+   - Replace relative paths with absolute paths:
+
+   BEFORE (relative):
+   volumes:
+     - ./uploads:/uploads
+     - ./postgres-data:/var/lib/postgresql/data
+     - ./backend:/app
+
+   AFTER (absolute - adjust to your NAS path):
+   volumes:
+     - /volume1/docker/aptifolio-clone/uploads:/uploads
+     - /volume1/docker/aptifolio-clone/postgres-data:/var/lib/postgresql/data
+     - /volume1/docker/aptifolio-clone/backend:/app
+
+5. SET ENVIRONMENT VARIABLES
+   In Dockge, you can either:
+   
+   a) Use the .env file (easiest):
+      - Make sure .env is in the stack directory
+      - Dockge will automatically load it
+   
+   b) Or set them in Dockge UI:
+      - GEMINI_API_KEY=AIzaSyDSEXfhCfwIypAR8TNVWHV7OhALQy3HvmE
+      - JWT_SECRET=8f7e6d5c4b3a2918f7e6d5c4b3a29187f6e5d4c3b2a19180
+      - POSTGRES_PASSWORD=db_secure_pass_2024_portfolio_builder_private
+      - DATABASE_URL=postgresql://aptifolio:db_secure_pass_2024_portfolio_builder_private@postgres:5432/aptifolio
+
+6. DEPLOY
+   - Click "Deploy" or "Start"
+   - Wait for all containers to start (2-3 minutes first time)
+   - Check logs if any issues
+
+7. ACCESS YOUR PORTFOLIO BUILDER
+   - http://nas-ip:3000 (frontend)
+   - http://nas-ip:8000 (backend API)
+
+
+OPTION 2: Using Dockge with Git (Advanced)
+-------------------------------------------
+
+If you want to version control:
+
+1. Create a Git repository with your portfolio builder
+2. In Dockge, use "Import from Git URL"
+3. Point to your repository
+4. Dockge will pull and deploy
+
+
+IMPORTANT: Port Configuration
+------------------------------
+
+If ports 3000 or 8000 are already in use on your NAS:
+
+Edit docker-compose.yml and change:
+  frontend:
+    ports:
+      - "3000:3000"  # Change first number: "8080:3000"
+  
+  backend:
+    ports:
+      - "8000:8000"  # Change first number: "8001:8000"
+
+Then access at http://nas-ip:8080 instead
+
+
+REVERSE PROXY (Optional)
+------------------------
+
+If using Caddy or another reverse proxy on your NAS:
+
+1. Remove Caddy service from docker-compose.yml (lines for aptifolio-caddy)
+2. Configure your existing reverse proxy to forward to:
+   - Frontend: localhost:3000
+   - Backend: localhost:8000
+
+Example for Caddy:
+  portfolio.yourdomain.com {
+    reverse_proxy localhost:3000
+  }
+  
+  portfolio.yourdomain.com/api/* {
+    reverse_proxy localhost:8000
+  }
+
+
+TROUBLESHOOTING
+---------------
+
+Issue: "Port already in use"
+→ Change ports in docker-compose.yml as shown above
+
+Issue: "Permission denied" on volumes
+→ Check folder permissions: chmod -R 755 /volume1/docker/aptifolio-clone
+
+Issue: "Cannot connect to database"
+→ Wait 30 seconds, postgres takes time to initialize
+→ Check logs in Dockge
+
+Issue: "Network error"
+→ Make sure your NAS allows Docker containers to access external network
+→ Check firewall settings
+
+
+UPDATING THE APPLICATION
+-------------------------
+
+1. In Dockge, click on your portfolio-builder stack
+2. Click "Pull" to get updated images
+3. Click "Restart" to apply updates
+
+
+BACKUP
+------
+
+Important directories to backup:
+- /volume1/docker/aptifolio-clone/postgres-data (database)
+- /volume1/docker/aptifolio-clone/uploads (resumes)
+- /volume1/docker/aptifolio-clone/.env (configuration)
+
+You can use Hyper Backup or:
+  tar -czf portfolio-backup.tar.gz /volume1/docker/aptifolio-clone
+
+
+MONITORING
+----------
+
+In Dockge you can:
+- View real-time logs for each container
+- Monitor CPU/RAM usage
+- Start/stop/restart individual services
+- Check container health status

@@ -1,0 +1,33 @@
+# Main domain configuration
+# Replace 'localhost' with your actual domain (e.g., portfolio.yourdomain.com)
+
+localhost {
+    # Frontend routes
+    route / {
+        reverse_proxy frontend:3000
+    }
+
+    # API routes
+    route /api/* {
+        reverse_proxy backend:8000
+    }
+
+    # Uploaded files
+    route /uploads/* {
+        root * /
+        file_server browse
+    }
+}
+
+# Optional: Wildcard subdomain routing for user portfolios
+# Requires DNS: *.portfolio.yourdomain.com -> your server IP
+# Uncomment and configure if you want subdomain routing:
+
+# *.portfolio.yourdomain.com {
+#     @portfolio {
+#         not host portfolio.yourdomain.com
+#     }
+#     handle @portfolio {
+#         reverse_proxy frontend:3000
+#     }
+# }

@@ -1,0 +1,107 @@
+PORTFOLIO THEMES
+================
+
+Your portfolio builder includes 10 professionally designed themes:
+
+STATIC THEMES
+-------------
+
+1. MODERN (default)
+   - Style: Gradient backgrounds, vibrant colors
+   - Feel: Contemporary, energetic
+   - Best for: Creative professionals, designers, tech workers
+   - Colors: Blue and purple gradients
+
+2. MINIMAL
+   - Style: Clean white background, simple typography
+   - Feel: Professional, understated
+   - Best for: Writers, consultants, minimalists
+   - Colors: Black, white, grays
+
+3. PROFESSIONAL
+   - Style: Traditional business format
+   - Feel: Corporate, formal
+   - Best for: Business professionals, executives, corporate roles
+   - Colors: Navy/slate with structured layout
+
+
+ANIMATED THEMES - LIGHT
+------------------------
+
+4. ANIMATED WAVES
+   - Animation: Gentle water-like waves at bottom
+   - Style: Soft blue tones, floating elements
+   - Feel: Calm, flowing, serene
+   - Best for: Healthcare, wellness, education, counseling
+   - Colors: Light blue and indigo with glassmorphism
+
+5. ANIMATED GRADIENT
+   - Animation: Slow-moving color gradients
+   - Style: Soft purple-pink-blue transitions
+   - Feel: Dreamy, elegant, smooth
+   - Best for: Artists, photographers, creative fields
+   - Colors: Purple, pink, blue gradients with frosted glass
+
+
+ANIMATED THEMES - DARK (NEW!)
+------------------------------
+
+6. AURORA
+   - Animation: Subtle northern lights effect
+   - Style: Dark theme with glowing accents
+   - Feel: Sophisticated, calm, mystical
+   - Best for: Tech professionals, night mode lovers, developers
+   - Colors: Dark background with cyan and purple aurora effects
+
+7. DARK OCEAN
+   - Animation: Gentle teal/cyan waves
+   - Style: Deep ocean vibes with glassmorphism
+   - Feel: Calm, professional, immersive
+   - Best for: Marine professionals, data scientists, tech
+   - Colors: Dark slate with cyan/teal accents
+
+8. DARK PURPLE
+   - Animation: Flowing purple and magenta waves
+   - Style: Vibrant dark theme
+   - Feel: Creative, bold, modern
+   - Best for: Designers, artists, creative tech
+   - Colors: Dark gray with purple/fuchsia waves
+
+9. DARK FOREST
+   - Animation: Misty emerald and green effects
+   - Style: Natural, organic dark theme
+   - Feel: Grounded, calm, eco-friendly
+   - Best for: Environmental work, sustainability, natural sciences
+   - Colors: Dark background with emerald/green accents
+
+10. COSMIC
+    - Animation: Twinkling stars and nebula effects
+    - Style: Space/galaxy theme with glowing elements
+    - Feel: Futuristic, innovative, awe-inspiring
+    - Best for: Tech innovators, scientists, space enthusiasts
+    - Colors: Pure black with blue/purple/pink nebula effects
+
+
+CHANGING THEMES
+---------------
+
+1. Log in to your portfolio
+2. Go to Dashboard
+3. Click "Edit" button
+4. Scroll to "Theme & Settings" section
+5. Click on any theme to apply it
+6. Click "Save Changes"
+7. View your portfolio to see the new theme
+
+All themes are fully responsive and work on mobile, tablet, and desktop.
+
+MULTI-LANGUAGE SUPPORT
+----------------------
+
+All themes automatically adapt to your resume's language:
+- German resume → German labels
+- French resume → French labels  
+- English resume → English labels
+- Korean, Spanish, etc. all supported
+
+The theme styling remains the same, only the UI labels change.

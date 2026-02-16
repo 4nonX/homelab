@@ -1,0 +1,89 @@
+QUICK DOCKGE DEPLOYMENT
+========================
+
+Step-by-step for your ZimaOS NAS:
+
+1. UPLOAD TO NAS
+   - Copy entire 'aptifolio-clone' folder to:
+     /DATA/AppData/dockge/stacks/portfolio-builder/
+   
+   Or wherever your Dockge stacks are stored
+
+2. OPEN DOCKGE
+   - Go to http://your-nas-ip:5001
+   - Login to Dockge
+
+3. CREATE STACK
+   - Click "+ Compose"
+   - Name: portfolio-builder
+   - Paste contents from docker-compose.dockge.yml
+   
+4. UPDATE PATHS IN COMPOSE
+   Replace all instances of /volume1/docker/aptifolio-clone with your actual path:
+   
+   Find: /volume1/docker/aptifolio-clone
+   Replace with: /DATA/AppData/dockge/stacks/portfolio-builder
+   
+   (Or whatever path you used in step 1)
+
+5. SET ENVIRONMENT VARIABLES
+   In Dockge, add these environment variables:
+   
+   GEMINI_API_KEY=AIzaSyDSEXfhCfwIypAR8TNVWHV7OhALQy3HvmE
+   JWT_SECRET=8f7e6d5c4b3a2918f7e6d5c4b3a29187f6e5d4c3b2a19180
+   POSTGRES_PASSWORD=db_secure_pass_2024_portfolio_builder_private
+   DATABASE_URL=postgresql://aptifolio:db_secure_pass_2024_portfolio_builder_private@postgres:5432/aptifolio
+   
+   OR just make sure the .env file is in the stack folder
+
+6. DEPLOY
+   - Click "Deploy" button
+   - Wait 2-3 minutes for first build
+   - Check logs for "Services are running" message
+
+7. ACCESS
+   - Portfolio: http://your-nas-ip:3000
+   - API: http://your-nas-ip:8000
+   - API Docs: http://your-nas-ip:8000/docs
+
+8. CREATE ACCOUNT
+   - Click "Get Started"
+   - Register your account
+   - Upload your resume PDF
+   - Choose a theme
+   - Done!
+
+PORTS
+-----
+If 3000 or 8000 are taken, change in docker-compose:
+  frontend:
+    ports:
+      - "3100:3000"  # Use 3100 instead
+  backend:
+    ports:
+      - "8001:8000"  # Use 8001 instead
+
+Then access at http://your-nas-ip:3100
+
+USING EXISTING REVERSE PROXY
+-----------------------------
+If you already have Caddy/Nginx/Traefik:
+
+1. Remove the 'caddy' service from docker-compose
+2. Remove ports 80/443 mappings
+3. Configure your proxy to forward:
+   - your-domain.com → localhost:3000
+   - your-domain.com/api → localhost:8000
+
+PANGOLIN VPN ACCESS
+-------------------
+If using Pangolin VPN on ZimaOS:
+1. Access via: http://pangolin-hostname:3000
+2. Or use your ZimaOS domain
+
+TROUBLESHOOTING
+---------------
+"Build failed" → Check Docker has internet access
+"Port in use" → Change ports as shown above  
+"Can't connect" → Wait 30 seconds after deploy
+"Database error" → Check POSTGRES_PASSWORD matches in both places
