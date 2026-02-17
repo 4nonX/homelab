@@ -22,9 +22,9 @@ services:
             COMPOSE_PROJECT_NAME: big-bear-paperless-ngx
             LIBVA_DRIVER_NAME: iHD
             OMP_THREAD_LIMIT: "4"
-            PAPERLESS_ADMIN_PASSWORD: c22e92a6-2a3d-4edf-a98e-4044834daea6
-            PAPERLESS_ADMIN_USER: bigbear
-            PAPERLESS_ALLOWED_HOSTS: paperless.d-net.me,192.168.8.158,localhost
+            PAPERLESS_ADMIN_PASSWORD: XXXXXXXXXXXXXXXXXXX
+            PAPERLESS_ADMIN_USER: XXXXXXXXXXXXXXXXXXXXXX
+            PAPERLESS_ALLOWED_HOSTS: paperless.mydomain.com,1XX.1XX.X.1XX,localhost
             PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.d-net.me,http://192.168.8.158:8000
             PAPERLESS_DBHOST: big-bear-paperless-ngx-db
             PAPERLESS_DBPASS: c6e74adb-3fce-4318-b657-4bdc0858fcac
@@ -153,8 +153,8 @@ services:
                 reservations: {}
         environment:
             POSTGRES_DB: paperless
-            POSTGRES_PASSWORD: DHimHmwnmPS23
-            POSTGRES_USER: DanDressen
+            POSTGRES_PASSWORD: XXXXXXXXXX
+            POSTGRES_USER: XXXXXXXXXX
         image: library/postgres:latest
         labels:
             icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/paperless-ngx.png
