@@ -29,8 +29,8 @@ Step-by-step for your ZimaOS NAS:
 5. SET ENVIRONMENT VARIABLES
    In Dockge, add these environment variables:
    
-   GEMINI_API_KEY=AIzaSyDSEXfhCfwIypAR8TNVWHV7OhALQy3HvmE
-   JWT_SECRET=8f7e6d5c4b3a2918f7e6d5c4b3a29187f6e5d4c3b2a19180
+   GEMINI_API_KEY=gemini_api_key_2024_portfolio_builder
+   JWT_SECRET=jwt_secret_key_2024_portfolio_builder
    POSTGRES_PASSWORD=db_secure_pass_2024_portfolio_builder_private
    DATABASE_URL=postgresql://aptifolio:db_secure_pass_2024_portfolio_builder_private@postgres:5432/aptifolio
    
