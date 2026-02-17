@@ -12,7 +12,7 @@ services:
         environment:
             DATABASE_URL: postgresql://casaos:***REMOVED***@big-bear-linkwarden-db:5432/big-bear-linkwarden
             NEXT_PUBLIC_DISABLE_REGISTRATION: ""
-            NEXTAUTH_SECRET: ***REMOVED***
+            NEXTAUTH_SECRET: XXXXXXXXXXXXXXXXXXXXXXXXXXX
             NEXTAUTH_URL: http://localhost/api/v1/auth
         image: ghcr.io/linkwarden/linkwarden:latest
         labels:
@@ -42,8 +42,8 @@ services:
                 reservations: {}
         environment:
             POSTGRES_DB: big-bear-linkwarden
-            POSTGRES_PASSWORD: ***REMOVED***
-            POSTGRES_USER: casaos
+            POSTGRES_PASSWORD: XXXXXXXXXXX
+            POSTGRES_USER: XXXXXXXXX
         image: postgres:16
         labels:
             icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/linkwarden.png
