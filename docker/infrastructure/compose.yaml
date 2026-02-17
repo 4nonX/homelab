@@ -13,8 +13,8 @@ services:
     restart: unless-stopped
     environment:
       # These only apply on first run, afterward edit config.yaml directly
-      - USERNAME=DanDressen # Default admin username (change if desired)
-      - PASSWORD=DHimHmwnmPS23# Default admin password - CHANGE THIS!
+      - USERNAME=XXXXXXXXXXXXX # Default admin username (change if desired)
+      - PASSWORD=XXXXXXXXXXXXXXXXX# Default admin password - CHANGE THIS!
       # Uncomment to reset the admin password to the above values on startup
       # - RESET_ADMIN=true
 
