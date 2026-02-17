@@ -84,7 +84,7 @@ Start here to understand the project scope and skills demonstrated:
 
 1. 📊 **[Executive Summary](EXECUTIVE_SUMMARY.md)** - Quick overview and key achievements
 2. 🎯 **[Portfolio Showcase](PORTFOLIO.md)** - Skills and technical implementation
-3. 📖 **[Complete Journey](homelab-complete-journey.md)** - Full build story (1,790 lines!)
+3. 📖 **[Complete Journey](homelab-complete-journey.md)** - Full build story
 
 ### For Technical Deep-Dive
 
