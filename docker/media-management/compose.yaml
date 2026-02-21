@@ -16,7 +16,7 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY=QAPsH+Rfbx6QOtXSV+PeK1v3BDA6JyJbn7WGMZTPXU8=
+      - WIREGUARD_PRIVATE_KEY={wireguard_private_key}
       - WIREGUARD_ADDRESSES=10.2.0.2/32
       - SERVER_COUNTRIES=Germany
       - VPN_PORT_FORWARDING=on
