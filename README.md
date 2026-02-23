@@ -1,33 +1,37 @@
 # 🏠 Homelab Infrastructure
-
 [![Status](https://img.shields.io/badge/status-production-success?style=for-the-badge)](https://github.com/4nonX/homelab)
 [![Uptime](https://img.shields.io/badge/uptime-90%25-brightgreen?style=for-the-badge)](https://github.com/4nonX/homelab)
 [![Services](https://img.shields.io/badge/services-40+-blue?style=for-the-badge)](https://github.com/4nonX/homelab)
 [![Storage](https://img.shields.io/badge/storage-33TB-orange?style=for-the-badge)](https://github.com/4nonX/homelab)
-[![Migration](https://img.shields.io/badge/NixOS_Migration-Planning-yellow?style=for-the-badge)](NIXOS-MIGRATION.md)
+[![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=for-the-badge&logo=nixos)](https://nixos.org)
+[![NAS](https://img.shields.io/badge/NAS-D--PlaneOS-blueviolet?style=for-the-badge)](https://github.com/4nonX/D-PlaneOS)
 
 > **Production-grade personal cloud infrastructure** built from scratch, demonstrating enterprise-level architecture, security, and operational practices at homelab scale.
 
 ---
 
-## 🚧 Current Major Project: NixOS Migration (2026)
+## 🖥️ Current Stack: NixOS + D-PlaneOS
 
-I'm currently planning and executing a **complete infrastructure migration** 
-from ZimaOS (Debian-based) to NixOS for my entire production homelab.
+The homelab runs **NixOS** as the base OS with **D-PlaneOS** as the NAS management layer — a combination I'm actively developing and dogfooding in production.
 
-**Why NixOS?**
-- 🔧 Declarative system configuration (Infrastructure as Code at OS level)
-- ♻️ Atomic rollbacks and reproducible builds
-- 📦 Better separation of system state and configuration
-- 🔄 Simplified disaster recovery through "system as code"
+**Why this stack?**
+- 🔧 NixOS provides declarative, reproducible system configuration with atomic OTA updates and A/B slot boot
+- 🗄️ D-PlaneOS provides the NAS management layer — ZFS pool management, SMB/NFS shares, Docker orchestration, user management, and a full web UI — purpose-built to run on NixOS
+- ♻️ Full rollback capability at both the OS level (NixOS generations) and storage level (ZFS snapshots)
+- 📦 System state is separated from data — the OS is ephemeral, data lives on ZFS pools
 
-**Migration Strategy:**
-- Minimal-downtime target for critical services
-- Service-by-service migration with rollback capability  
-- Data migration strategy for 33TB BTRFS RAID5
-- Comprehensive documentation of process and learnings
+**Current Status:** Active testing | D-PlaneOS v3.3.0
 
-**Current Status:** Planning Phase | Target: Q2-Q3 2026
+<div align="center">
+
+### 🛩️ Interested in the NAS layer?
+
+[![D-PlaneOS](https://img.shields.io/badge/D--PlaneOS-Open_Source_NAS_OS-blueviolet?style=for-the-badge&logo=github)](https://github.com/4nonX/D-PlaneOS)
+
+*The NAS operating system powering this homelab — ZFS management, Docker orchestration, SMB/NFS shares, and a full web UI, purpose-built for NixOS.*
+
+</div>
+
 ---
 
 ## 📋 Table of Contents
