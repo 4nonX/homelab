@@ -20,7 +20,7 @@ The homelab runs **NixOS** as the base OS with **D-PlaneOS** as the NAS manageme
 - ♻️ Full rollback capability at both the OS level (NixOS generations) and storage level (ZFS snapshots)
 - 📦 System state is separated from data — the OS is ephemeral, data lives on ZFS pools
 
-**Current Status:** Active testing | D-PlaneOS v3.3.0
+**Current Status:** Active testing | D-PlaneOS v3.3.1
 
 <div align="center">
 
