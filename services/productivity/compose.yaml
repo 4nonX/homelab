@@ -1,0 +1,201 @@
+version: "3.9"
+# ============================================================================
+#  NEXTCLOUD OPTIMIZED STACK
+#  Production-ready deployment with Redis, Collabora, Talk HPB
+# ============================================================================
+
+services:
+  # --------------------------------------------------------------------------
+  #  DATABASE - PostgreSQL with Performance Tuning
+  # --------------------------------------------------------------------------
+  db:
+    image: postgres:14
+    container_name: db-nextcloud
+    restart: unless-stopped
+    command:
+      - postgres
+      - -c
+      - listen_addresses=*
+      # Performance optimizations
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - max_connections=200
+      - -c
+      - effective_cache_size=1GB
+      - -c
+      - maintenance_work_mem=128MB
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - effective_io_concurrency=200
+      - -c
+      - work_mem=5242kB
+    volumes:
+      - nextcloud-db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=${DB_PASSWORD} # Set in .env or replace directly
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U nextcloud
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  CACHE - Redis for Performance Boost
+  # --------------------------------------------------------------------------
+  redis:
+    image: redis:alpine
+    container_name: redis-nextcloud
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
+      - --save
+      - "60"
+      - "1"
+      - --appendonly
+      - no
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  NEXTCLOUD - Main Application
+  # --------------------------------------------------------------------------
+  nextcloud:
+    image: nextcloud:latest
+    container_name: nextcloud
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    ports:
+      - ${NEXTCLOUD_PORT:-10081}:80 # Default: 10081
+    environment:
+      # Database Configuration
+      - POSTGRES_DB=nextcloud
+      - POSTGRES_USER=nextcloud
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_HOST=db
+      # Admin Account (Change on first login!)
+      - NEXTCLOUD_ADMIN_USER=${ADMIN_USER:-admin}
+      - NEXTCLOUD_ADMIN_PASSWORD=${ADMIN_PASSWORD}
+      # Domain & Trust Configuration
+      - >-
+        NEXTCLOUD_TRUSTED_DOMAINS=${NEXTCLOUD_DOMAIN}
+        ${NEXTCLOUD_LOCAL_IP}
+        ${NEXTCLOUD_LOCAL_IP}:${NEXTCLOUD_PORT}
+        localhost
+      - NEXTCLOUD_TRUSTED_PROXIES=${PROXY_IP}
+      #- OVERWRITEPROTOCOL=https
+      #- OVERWRITECLIURL=https://${NEXTCLOUD_DOMAIN}
+      # Redis Cache
+      - REDIS_HOST=redis
+      - REDIS_HOST_PORT=6379
+      # PHP Performance Tuning
+      - PHP_MEMORY_LIMIT=2048M
+      - PHP_UPLOAD_LIMIT=10G
+      - PHP_MAX_EXECUTION_TIME=3600
+    volumes:
+      - nextcloud-data:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock:ro # Optional: For AppAPI
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  CRON - Background Job Execution
+  # --------------------------------------------------------------------------
+  nextcloud-cron:
+    image: nextcloud:latest
+    container_name: nextcloud-cron
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    volumes:
+      - nextcloud-data:/var/www/html
+    networks:
+      - nextcloud-net
+    entrypoint: /cron.sh
+  # --------------------------------------------------------------------------
+  #  COLLABORA - Online Office Suite
+  # --------------------------------------------------------------------------
+  collabora:
+    image: collabora/code:latest
+    container_name: collabora
+    restart: unless-stopped
+    environment:
+      - domain=${NEXTCLOUD_DOMAIN_ESCAPED} # e.g., nextcloud\\.domain\\.com
+      - username=admin
+      - password=${COLLABORA_PASSWORD}
+      - extra_params=--o:ssl.enable=false --o:ssl.termination=true
+        --o:remote_font_config.url=https://${NEXTCLOUD_DOMAIN}/apps/richdocuments/settings/fonts.json
+      - dictionaries=en_US de_DE fr_FR
+      - DONT_GEN_SSL_CERT=true
+    cap_add:
+      - MKNOD
+    volumes:
+      - collabora-data:/config
+    networks:
+      - nextcloud-net
+    ports:
+      - ${COLLABORA_PORT:-9980}:9980
+  # --------------------------------------------------------------------------
+  #  NATS - Message Bus for Talk HPB
+  # --------------------------------------------------------------------------
+  nats:
+    image: nats:alpine
+    container_name: nats-nextcloud
+    restart: unless-stopped
+    command:
+      - -p
+      - "4222"
+      - -m
+      - "8222"
+    networks:
+      - nextcloud-net
+    ports:
+      - 4222:4222
+      - 8222:8222
+  # --------------------------------------------------------------------------
+  #  TALK SIGNALING - High-Performance Backend for Video Calls
+  # --------------------------------------------------------------------------
+  talk-signaling:
+    image: strukturag/nextcloud-spreed-signaling:latest
+    container_name: talk-signaling
+    restart: unless-stopped
+    depends_on:
+      - nats
+    environment:
+      - TZ=${TIMEZONE:-Europe/Berlin}
+    volumes:
+      - ${SIGNALING_CONFIG_PATH:-/DATA/AppData/talk-signaling/server.conf}:/config/server.conf:ro
+    networks:
+      - nextcloud-net
+    ports:
+      - ${SIGNALING_PORT:-8188}:8188
+# ============================================================================
+#  VOLUMES - Persistent Data Storage
+# ============================================================================
+volumes:
+  nextcloud-db:
+    driver: local
+  nextcloud-data:
+    driver: local
+  collabora-data:
+    driver: local
+# ============================================================================
+#  NETWORKS - Internal Communication
+# ============================================================================
+networks:
+  nextcloud-net:
+    driver: bridge

@@ -1,0 +1,92 @@
+name: big-bear-scrutiny
+services:
+    big-bear-scrutiny:
+        cap_add:
+            - SYS_RAWIO
+        container_name: big-bear-scrutiny
+        devices:
+            - /dev/sda:/dev/sda
+            - /dev/nvme0:/dev/nvme0
+        healthcheck:
+            test:
+                - CMD
+                - curl
+                - -f
+                - http://localhost:8080/api/health
+            timeout: 10s
+            interval: 1m30s
+            retries: 3
+            start_period: 40s
+        image: ghcr.io/analogj/scrutiny:master-omnibus
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/scrutiny.png
+        networks:
+            default: null
+        ports:
+            - mode: ingress
+              target: 8080
+              published: "38080"
+              protocol: tcp
+            - mode: ingress
+              target: 8086
+              published: "38086"
+              protocol: tcp
+        privileged: true
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /DATA/AppData/$AppID/config
+              target: /opt/scrutiny/config
+              bind:
+                create_host_path: true
+            - type: bind
+              source: /DATA/AppData/$AppID/influxdb
+              target: /opt/scrutiny/influxdb
+              bind:
+                create_host_path: true
+            - type: bind
+              source: /run/udev
+              target: /run/udev
+              read_only: true
+              bind:
+                create_host_path: true
+        x-casaos:
+            ports:
+                - container: "8080"
+                  description:
+                    en_us: 'Container Port: 8080'
+                - container: "8086"
+                  description:
+                    en_us: 'Container Port: 8086'
+            volumes:
+                - container: /opt/scrutiny/config
+                  description:
+                    en_us: 'Container Path: /opt/scrutiny/config'
+                - container: /opt/scrutiny/influxdb
+                  description:
+                    en_us: 'Container Path: /opt/scrutiny/influxdb'
+                - container: /run/udev
+                  description:
+                    en_us: 'Container Path: /run/udev'
+networks:
+    default:
+        name: big-bear-scrutiny_default
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+    author: BigBearTechWorld
+    category: BigBearCasaOS
+    description:
+        en_us: If you run a server with more than a couple of hard drives, you're probably already familiar with S.M.A.R.T and the smartd daemon.
+    developer: analogj
+    icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/scrutiny.png
+    is_uncontrolled: false
+    main: big-bear-scrutiny
+    port_map: "38080"
+    store_app_id: big-bear-scrutiny
+    tagline:
+        en_us: Monitor your server's hard disk health
+    thumbnail: ""
+    title:
+        en_us: Scrutiny

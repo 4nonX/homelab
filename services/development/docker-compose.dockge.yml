@@ -1,0 +1,78 @@
+version: '3.8'
+
+# DOCKGE DEPLOYMENT VERSION
+# Update all paths below to match your NAS location
+# Example: Change /volume1/docker/aptifolio-clone to your actual path
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: portfolio-db
+    environment:
+      POSTGRES_USER: aptifolio
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: aptifolio
+    volumes:
+      - /volume1/docker/aptifolio-clone/postgres-data:/var/lib/postgresql/data
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  backend:
+    build: /volume1/docker/aptifolio-clone/backend
+    container_name: portfolio-backend
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      UPLOAD_DIR: /uploads
+      FRONTEND_URL: http://localhost:3000
+    volumes:
+      - /volume1/docker/aptifolio-clone/uploads:/uploads
+      - /volume1/docker/aptifolio-clone/backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  frontend:
+    build: /volume1/docker/aptifolio-clone/frontend
+    container_name: portfolio-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://YOUR_NAS_IP:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+  # Optional: Remove if using existing reverse proxy on NAS
+  caddy:
+    image: caddy:2-alpine
+    container_name: portfolio-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - /volume1/docker/aptifolio-clone/caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - portfolio-network
+    restart: unless-stopped
+
+networks:
+  portfolio-network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:
