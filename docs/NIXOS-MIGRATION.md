@@ -84,20 +84,20 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 - Set up NixOS test environment
 - Learn Nix language and module system
 - Test Docker/Podman compatibility
-- Validate BTRFS support on NixOS
+- Validate ZFS support and D-PlaneOS integration on NixOS
 
 **Tasks:**
 - [x] Research NixOS architecture and best practices
 - [ ] Install NixOS on separate test hardware
 - [ ] Configure basic system (network, storage, users)
 - [ ] Test Docker vs Podman for container workloads
-- [ ] Test BTRFS RAID5 setup on NixOS
+- [ ] Test ZFS pool setup on NixOS — evaluate D-PlaneOS integration
 - [ ] Document initial configuration patterns
 
 **Success Criteria:**
 - NixOS boots and runs stably on test hardware
 - Can deploy at least 3 test containers
-- BTRFS performance acceptable
+- ZFS pool creates and mounts correctly
 - Configuration documented in git
 
 **Rollback:** N/A (isolated test environment)
@@ -237,7 +237,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 ### Phase 4: Infrastructure & Storage (Weeks 9-10)
 
 **Components:**
-- BTRFS RAID5 (33TB)
+- ZFS RAID-Z2 pool (33TB — replacing BTRFS RAID5)
 - Traefik (reverse proxy)
 - PostgreSQL databases (8 instances)
 - Redis instances (3)
@@ -251,38 +251,36 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 
 **Storage Migration Strategy:**
 
-**Option A: In-Place Migration (Lower Risk)**
-1. Install NixOS on separate drive
-2. Mount existing BTRFS RAID5 array
-3. Verify data integrity (checksums)
-4. Keep ZimaOS bootable as backup
+The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-PlaneOS). An in-place conversion from BTRFS to ZFS is not possible — the array must be rebuilt. The data must leave the drives before ZFS can claim them.
 
-**Option B: Fresh Array (Higher Safety)**
-1. Build new BTRFS array on NixOS
-2. Rsync data from ZimaOS (33TB = ~24h)
-3. Verify checksums
-4. Keep old array for 2 weeks
-
-**Decision:** Option A (in-place) - Less time, BTRFS snapshots provide safety
+**Plan:**
+1. Boot NixOS from NVMe — ZimaOS remains bootable on its own partition as fallback
+2. Generate `sha256sum` manifest of all data on the BTRFS array (pre-migration baseline)
+3. Rsync all 33TB to external/temporary storage (estimated 24–48h at HDD speeds)
+4. Take a final BTRFS snapshot; note the timestamp
+5. Destroy the mdadm array, create ZFS RAID-Z2 pool via D-PlaneOS
+6. Configure datasets (`mainpool/appdata`, `mainpool/media`, `mainpool/home`) with appropriate properties
+7. Rsync data back from temporary storage
+8. Verify checksums against pre-migration manifest
+9. Bring services up on NixOS, validate for 48h before decommissioning ZimaOS boot
 
 **Database Migration:**
-- Take snapshots before migration
-- Export dumps as safety net
-- Test restore procedures
-- Verify application connectivity
+- Take PostgreSQL dumps as safety net before any destructive operation
+- ZFS snapshot immediately before each database port
+- Test restore from dump before proceeding
+- Verify application connectivity before moving to next service
 
 **Rollback Strategy:**
-- BTRFS snapshot before migration
-- Rollback time: < 10 minutes
-- Boot back to ZimaOS if needed
-- Data integrity guaranteed
+- ZimaOS remains bootable until Step 9
+- BTRFS array intact until Step 5 — can abort at any point before that
+- Rollback time to ZimaOS: < 5 minutes (boot selection)
 
 **Success Criteria:**
-- All 33TB data accessible
-- Checksums match pre-migration
+- All 33TB data accessible on ZFS pool
+- Checksums match pre-migration manifest
 - All databases operational
-- Services connect successfully
-- Backup system functional
+- Services connect to correct dataset mount points
+- `zpool status` reports clean pool with no errors
 
 ---
 
@@ -292,13 +290,13 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 
 | Risk | Probability | Impact | Mitigation Strategy |
 |------|-------------|--------|---------------------|
-| **Data Loss (33TB)** | Low | Catastrophic | BTRFS snapshots + offsite backup + checksum verification |
+| **Data Loss (33TB)** | Low | Catastrophic | Pre-migration checksum manifest + offsite copy + ZimaOS fallback |
 | **Extended Downtime** | Medium | High | Phased approach + rollback plans + parallel systems |
 | **Configuration Errors** | High | Medium | Test environment first + incremental changes + documentation |
 | **Service Incompatibility** | Low | Medium | Pre-test all services on NixOS + compatibility matrix |
-| **Network Connectivity Loss** | Low | High | Keep old system bootable + physical access available |
-| **BTRFS Array Corruption** | Very Low | Catastrophic | Snapshots + scrub before migration + offsite backup |
-| **User Access Issues** | Medium | Low | Gradual rollout + communication + rollback ready |
+| **Network Connectivity Loss** | Low | High | Keep ZimaOS bootable + physical access available |
+| **Data corruption during rsync** | Low | High | Checksum verification before and after; abort-and-retry if mismatch |
+| **User Access Issues** | Medium | Low | Gradual rollout + rollback ready |
 
 ### Risk Mitigation Checklist
 
@@ -338,7 +336,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 **Test Scope:**
 - NixOS installation and basic configuration
 - Container deployment (Docker/Podman)
-- BTRFS setup and performance
+- ZFS pool creation and dataset management via D-PlaneOS
 - Service configurations
 - Backup/restore procedures
 
@@ -356,7 +354,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 
 **Planned:**
 - [ ] Container service deployment
-- [ ] BTRFS RAID testing
+- [ ] ZFS pool setup and D-PlaneOS integration testing
 - [ ] Network configuration
 - [ ] Traefik setup
 - [ ] Database deployment
@@ -378,8 +376,8 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 │   │   ├── networking.nix        # Network configuration
 │   │   └── users.nix             # User management
 │   ├── storage/
-│   │   ├── btrfs.nix             # BTRFS RAID5 setup
-│   │   └── backups.nix           # Backup configuration
+│   │   ├── zfs.nix               # ZFS pool + dataset configuration (see D-PlaneOS)
+│   │   └── backups.nix           # Snapshot and replication schedules
 │   ├── containers/
 │   │   ├── docker.nix            # Docker/Podman setup
 │   │   └── podman.nix
@@ -503,7 +501,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 **Week 2:**
 - [ ] Basic NixOS configuration
 - [ ] Docker/Podman testing
-- [ ] BTRFS performance testing
+- [ ] ZFS pool + D-PlaneOS integration testing
 - [ ] Document initial findings
 
 ---
@@ -534,55 +532,6 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 ### Recommendations for Others
 
 *Post-migration advice for similar projects*
-
----
-
-## 🤝 Why I'm Documenting This Publicly
-
-This migration project demonstrates several skills relevant to modern infrastructure and DevOps roles:
-
-**Technical Skills:**
-- **Change Management:** Planning and executing complex production changes
-- **Risk Assessment:** Identifying potential issues and mitigation strategies  
-- **System Architecture:** Understanding infrastructure from OS to application layer
-- **Modern Practices:** Adopting Infrastructure as Code principles at OS level
-
-**Professional Skills:**
-- **Project Planning:** Breaking complex projects into manageable phases
-- **Documentation:** Creating comprehensive technical documentation
-- **Problem Solving:** Systematic approach to technical challenges
-- **Continuous Learning:** Self-directed learning of advanced technologies
-
-**Why Public:**
-1. **Portfolio:** Demonstrates practical infrastructure engineering skills
-2. **Community:** Help others considering similar migrations
-3. **Accountability:** Public commitment encourages completion
-4. **Feedback:** Learn from community suggestions and experiences
-
----
-
-## 💬 Questions or Feedback?
-
-If you're doing something similar, have suggestions, or want to discuss this project:
-
-- **Open an Issue:** [github.com/4nonX/homelab/issues](https://github.com/4nonX/homelab/issues)
-- **Connect:** [linkedin.com/in/dan-dressen](https://linkedin.com/in/dan-dressen)
-- **Portfolio:** [github.com/4nonX](https://github.com/4nonX)
-
-I'm happy to discuss technical approaches, share learnings, or hear about your experiences with NixOS or similar migrations.
-
----
-
-## 📜 License & Usage
-
-This documentation is shared for educational purposes. Feel free to reference or adapt for your own projects. If you find it helpful, a GitHub star ⭐ is appreciated!
-
----
-
-**Last Updated:** 2025-01-07  
-**Project Status:** 🟡 Phase 0 - Planning & Preparation  
-**Next Milestone:** Complete test environment setup  
-**Progress:** ~5% (Planning complete, execution starting)
 
 ---
 
