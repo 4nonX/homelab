@@ -2,13 +2,11 @@
 
 [![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
 [![Services](https://img.shields.io/badge/services-40+-blue?style=flat-square)](https://github.com/4nonX/homelab)
-[![Storage](https://img.shields.io/badge/storage-33TB_BTRFS_RAID5-orange?style=flat-square)](https://github.com/4nonX/homelab)
+[![Storage](https://img.shields.io/badge/storage-33TB_→_ZFS_RAID--Z2-orange?style=flat-square)](infrastructure/storage/README.md)
 [![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
 [![NAS](https://img.shields.io/badge/NAS_layer-D--PlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/D-PlaneOS)
 
-A reference implementation of a self-hosted home infrastructure stack: 40+ containerised services, 33 TB BTRFS RAID5 storage, zero port-forwarding. Runs on NixOS with [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) as the NAS management layer.
-
-This repo documents one specific production setup. The compose files, architecture decisions, and configuration notes are intended to be useful as a reference for anyone building something similar — not as a drop-in kit. Adapt what's relevant to your own hardware and network topology.
+A reference implementation of a self-hosted home infrastructure stack: 40+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) as the NAS management layer — currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
 
 ---
 
@@ -84,9 +82,10 @@ Layer 4 — Application
   Vaultwarden for shared credential management
 
 Layer 5 — Data integrity
-  BTRFS checksumming: silent corruption detected and repaired via RAID5 parity
-  RAID5 redundancy: single-disk fault tolerance
+  ZFS end-to-end checksumming: every block verified on read, silent corruption repaired from RAID-Z2 parity
+  RAID-Z2: dual-disk fault tolerance, no write-hole vulnerability (unlike BTRFS RAID5)
   Scheduled scrubs verify the full pool
+  Current: migrating from BTRFS RAID5 — see infrastructure/storage/README.md
 ```
 
 ---
@@ -97,48 +96,48 @@ Layer 5 — Data integrity
 
 | Service | Purpose | Compose |
 |---|---|---|
-| Emby | Media server | `services/media/` |
-| Sonarr | TV show automation | `services/media/media-management-compose.yaml` |
-| Radarr | Movie automation | `services/media/media-management-compose.yaml` |
-| Lidarr | Music automation | `services/media/media-management-compose.yaml` |
-| Prowlarr | Indexer management | `services/media/media-management-compose.yaml` |
-| Bazarr | Subtitle automation | `services/media/media-management-compose.yaml` |
-| qBittorrent | Download client (via Gluetun VPN) | `services/media/media-management-compose.yaml` |
-| Gluetun | WireGuard VPN gateway for downloads | `services/media/media-management-compose.yaml` |
-| SwingMusic | Self-hosted music player | `services/media/swingmusic/` |
-| Navidrome | Music streaming (Subsonic API) | `services/media/navidrome/` |
-| Audiobookshelf | Audiobooks + podcast server | `services/media/audiobookshelf/` |
-| Pinchflat | YouTube archiver | `services/media/pinchflat/` |
-| Stremio Server | Streaming add-on server | `services/media/stremio/` |
+| Emby | Media server | `services/media/arr-suite.yml` |
+| Sonarr | TV show automation | `services/media/arr-suite.yml` |
+| Radarr | Movie automation | `services/media/arr-suite.yml` |
+| Lidarr | Music automation | `services/media/arr-suite.yml` |
+| Prowlarr | Indexer management | `services/media/arr-suite.yml` |
+| Bazarr | Subtitle automation | `services/media/arr-suite.yml` |
+| qBittorrent | Download client (via Gluetun VPN) | `services/media/arr-suite.yml` |
+| Gluetun | WireGuard VPN gateway for downloads | `services/media/arr-suite.yml` |
+| SwingMusic | Self-hosted music player | `services/media/swingmusic/swingmusic.yml` |
+| Navidrome | Music streaming (Subsonic API) | `services/media/navidrome/navidrome.yml` |
+| Audiobookshelf | Audiobooks + podcast server | `services/media/audiobookshelf/audiobookshelf.yml` |
+| Pinchflat | YouTube archiver | `services/media/pinchflat/pinchflat.yml` |
+| Stremio Server | Streaming add-on server | `services/media/stremio/stremio.yml` |
 
 ### Productivity & cloud
 
 | Service | Purpose | Compose |
 |---|---|---|
-| Nextcloud + Collabora | File sync, cloud office suite | `services/productivity/compose.yaml` |
-| Nextcloud Talk HPB | High-performance video call backend | `services/productivity/compose.yaml` |
-| Immich | Google Photos replacement | `services/media/immich/` |
-| Paperless-NGX | Document OCR and archive | `services/productivity/big-bear-paperless-ngx/` |
-| Vaultwarden | Self-hosted Bitwarden server | `infrastructure/security/vaultwarden/` |
-| Joplin Server | Note sync backend | `services/productivity/big-bear-joplin/` |
-| Memos | Lightweight notes / journal | `services/productivity/memos/` |
-| Linkwarden | Bookmark archiver with full-page capture | `services/productivity/big-bear-linkwarden/` |
-| Wallos | Subscription and expense tracker | `services/productivity/big-bear-wallos/` |
+| Nextcloud + Collabora | File sync, cloud office suite | `services/productivity/nextcloud.yml` |
+| Nextcloud Talk HPB | High-performance video call backend | `services/productivity/nextcloud.yml` |
+| Immich | Google Photos replacement | `services/media/immich/immich.yml` |
+| Paperless-NGX | Document OCR and archive | `services/productivity/big-bear-paperless-ngx/paperless.yml` |
+| Vaultwarden | Self-hosted Bitwarden server | `infrastructure/security/vaultwarden/vaultwarden.yml` |
+| Joplin Server | Note sync backend | `services/productivity/big-bear-joplin/joplin.yml` |
+| Memos | Lightweight notes / journal | `services/productivity/memos/memos.yml` |
+| Linkwarden | Bookmark archiver with full-page capture | `services/productivity/big-bear-linkwarden/linkwarden.yml` |
+| Wallos | Subscription and expense tracker | `services/productivity/big-bear-wallos/wallos.yml` |
 
 ### Infrastructure & management
 
 | Service | Purpose | Compose |
 |---|---|---|
-| Pi-hole | Network-wide DNS + ad-blocking | `infrastructure/networking/pihole/` |
+| Pi-hole | Network-wide DNS + ad-blocking | `infrastructure/networking/pihole/pihole.yml` |
 | Traefik v3 | Reverse proxy, TLS termination | VPS-managed — see `infrastructure/networking/traefik/` |
 | Pangolin + Gerbil | Self-hosted WireGuard tunnel | VPS + Pi — see `infrastructure/networking/pangolin/` |
 | CrowdSec | IDS/IPS, collaborative threat intel | VPS-managed — see `infrastructure/security/crowdsec/` |
-| Dockge | Docker Compose management UI | `infrastructure/monitoring/big-bear-dockge/` |
-| Dockpeek | Container health dashboard | `infrastructure/monitoring/big-bear-dockpeek/` |
-| Scrutiny | S.M.A.R.T disk health monitoring | `infrastructure/monitoring/big-bear-scrutiny/` |
-| Glances | System resource monitoring | `infrastructure/monitoring/compose.yaml` |
-| Syncthing | Peer-to-peer file sync (config backup) | `services/management/syncthing/` |
-| SearXNG | Self-hosted metasearch engine | `services/management/searxng/` |
+| Dockge | Docker Compose management UI | `infrastructure/monitoring/big-bear-dockge/dockge.yml` |
+| Dockpeek | Container health dashboard | `infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml` |
+| Scrutiny | S.M.A.R.T disk health monitoring | `infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml` |
+| Glances | System resource monitoring | `infrastructure/monitoring/glances-dashboard.yml` |
+| Syncthing | Peer-to-peer file sync (config backup) | `services/management/syncthing/syncthing.yml` |
+| SearXNG | Self-hosted metasearch engine | `services/management/searxng/searxng.yml` |
 | PostgreSQL (×8) | Relational database instances | Per-service |
 | Redis (×3) | In-memory cache instances | Per-service |
 
@@ -154,21 +153,26 @@ Layer 5 — Data integrity
 
 > Full details: [infrastructure/storage/README.md](infrastructure/storage/README.md)
 
-**33 TB usable capacity** — four HDDs in mdadm RAID5 with BTRFS on top.
+**33 TB across four HDDs** — currently BTRFS on mdadm RAID5 (legacy, from ZimaOS). Migrating to ZFS RAID-Z2 via [D-PlaneOS](https://github.com/4nonX/D-PlaneOS).
+
+### Why ZFS
+
+ZFS RAID-Z2 (dual-parity) eliminates the write-hole vulnerability present in BTRFS RAID5, provides end-to-end checksumming at every level of the storage tree, and integrates cleanly with D-PlaneOS's pool and dataset management. `zfs send` replication makes off-site backup straightforward. The 15+ year production track record in enterprise environments makes it the right choice for a long-lived NAS.
+
+### Target pool layout
 
 ```
-/dev/md0  (BTRFS RAID5)
-├── @           system root subvolume
-├── @home       user home directories
-├── @appdata    /DATA/AppData — all container bind-mount volumes
-└── @media      /DATA/Media  — media library
+zpool: mainpool  (RAID-Z2, 4× HDD)
+├── mainpool/appdata     /DATA/AppData — container bind-mount volumes
+├── mainpool/media       /DATA/Media   — media library
+├── mainpool/home        user home directories
+└── mainpool/backups     local snapshot targets
+
+zpool: bootpool  (mirror, NVMe)
+└── NixOS system root
 ```
 
-BTRFS brings self-healing (checksums + RAID5 parity repair), copy-on-write snapshots, and `zstd` inline compression. Every data and metadata block is checksummed; weekly `btrfs scrub` validates the full pool. Silent bit-rot is caught and repaired automatically.
-
-Performance: ~400–500 MB/s sequential read, ~350–450 MB/s sequential write (HDD-limited). BTRFS CoW overhead is ~5–10%.
-
-The NixOS migration plan separates the OS/boot pool (ZFS, NVMe) from the data pool (BTRFS, retaining existing drives). See [docs/NIXOS-MIGRATION.md](docs/NIXOS-MIGRATION.md).
+Pool and dataset configuration is managed through [D-PlaneOS](https://github.com/4nonX/D-PlaneOS). Refer to that repository for NixOS module definitions and dataset property details (`compression=zstd`, `xattr=sa`, `recordsize` tuning per workload).
 
 ---
 
@@ -178,41 +182,43 @@ The NixOS migration plan separates the OS/boot pool (ZFS, NVMe) from the data po
 homelab/
 ├── infrastructure/
 │   ├── networking/
-│   │   ├── pihole/           # Pi-hole DNS + ad-blocking (compose)
+│   │   ├── pihole/pihole.yml
 │   │   ├── traefik/          # Traefik config notes (VPS-managed)
 │   │   └── pangolin/         # Pangolin tunnel docs + component map
 │   ├── security/
-│   │   ├── vaultwarden/      # Vaultwarden compose
+│   │   ├── vaultwarden/vaultwarden.yml
 │   │   └── crowdsec/         # CrowdSec notes (VPS-managed)
 │   ├── monitoring/
-│   │   ├── big-bear-scrutiny/  # S.M.A.R.T monitoring
-│   │   ├── big-bear-dockge/    # Compose management UI
-│   │   ├── big-bear-dockpeek/  # Container health dashboard
-│   │   └── compose.yaml        # Glances + homelab dashboard
+│   │   ├── big-bear-scrutiny/scrutiny.yml
+│   │   ├── big-bear-dockge/dockge.yml
+│   │   ├── big-bear-dockpeek/dockpeek.yml
+│   │   └── glances-dashboard.yml
 │   └── storage/
-│       └── README.md           # BTRFS RAID5 documentation
+│       └── README.md
 ├── services/
 │   ├── media/
-│   │   ├── media-management-compose.yaml  # Arr suite + Gluetun + qBittorrent
-│   │   ├── audiobookshelf/
-│   │   ├── immich/
-│   │   ├── navidrome/
-│   │   ├── pinchflat/
-│   │   ├── stremio/
-│   │   └── swingmusic/
+│   │   ├── arr-suite.yml              # Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun
+│   │   ├── audiobookshelf/audiobookshelf.yml
+│   │   ├── immich/immich.yml
+│   │   ├── navidrome/navidrome.yml
+│   │   ├── pinchflat/pinchflat.yml
+│   │   ├── stremio/stremio.yml
+│   │   └── swingmusic/swingmusic.yml
 │   ├── productivity/
-│   │   ├── compose.yaml              # Nextcloud + Collabora + Talk HPB
-│   │   ├── big-bear-joplin/
-│   │   ├── big-bear-linkwarden/
-│   │   ├── big-bear-paperless-ngx/
-│   │   ├── big-bear-wallos/
-│   │   └── memos/
+│   │   ├── nextcloud.yml              # Nextcloud, Collabora, Talk HPB, Redis, PostgreSQL
+│   │   ├── big-bear-joplin/joplin.yml
+│   │   ├── big-bear-linkwarden/linkwarden.yml
+│   │   ├── big-bear-paperless-ngx/paperless.yml
+│   │   ├── big-bear-wallos/wallos.yml
+│   │   └── memos/memos.yml
 │   ├── management/
-│   │   ├── compose.yaml     # Stacks management compose
-│   │   ├── syncthing/
-│   │   └── searxng/
+│   │   ├── stacks.yml
+│   │   ├── syncthing/syncthing.yml
+│   │   └── searxng/searxng.yml
 │   └── development/
-│       └── ...              # D-PlaneOS portfolio app (Next.js + FastAPI)
+│       ├── d-planeos-website.yml
+│       ├── aptifolio.yml
+│       └── aptifolio-dockge.yml
 ├── scripts/
 │   └── export-all-compose.sh
 ├── docs/
@@ -248,13 +254,13 @@ homelab/
 | Layer | Technology |
 |---|---|
 | Operating system | NixOS — declarative, reproducible, atomic OTA |
-| NAS management | D-PlaneOS v3.3.1 — ZFS/BTRFS pools, SMB/NFS, Docker, web UI |
+| NAS management | [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) — ZFS pool management, SMB/NFS, Docker orchestration, web UI |
 | Container orchestration | Docker Compose |
 | Reverse proxy | Traefik v3 — TLS 1.3, automatic Let's Encrypt |
 | Tunnel | [Pangolin](https://github.com/fosrl/pangolin) — self-hosted WireGuard |
 | Security | CrowdSec IDS/IPS |
 | DNS | Pi-hole |
-| Storage | BTRFS on mdadm RAID5 — 33 TB |
+| Storage | ZFS RAID-Z2 (target) — migrating from BTRFS on mdadm RAID5 — 33 TB |
 | Databases | PostgreSQL 14 (×8 instances), Redis Alpine (×3 instances) |
 | Hardware | Intel i3-13100 / 32 GB DDR4-3200 / 120 GB NVMe |
 | VPS gateway | IONOS Berlin — 2 vCPU / 2 GB / 80 GB NVMe |
@@ -330,11 +336,11 @@ $EDITOR .env   # fill in domains, passwords, IPs
 
 # Deploy a stack — example: Nextcloud
 cd services/productivity
-docker compose up -d
+docker compose -f nextcloud.yml up -d
 
 # Deploy monitoring
 cd infrastructure/monitoring
-docker compose -f compose.yaml up -d
+docker compose -f glances-dashboard.yml up -d
 ```
 
 For the full external access setup (Pangolin tunnel + Traefik + CrowdSec on VPS), start with [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md).
