@@ -1,28 +1,22 @@
-# Docker Compose Configurations
+# docker/ — Legacy Source Directory
 
-This directory contains all Docker Compose configurations for my homelab infrastructure.
+> **Note:** This directory is preserved as the original source. All compose files have been
+> reorganised into the canonical structure at the repo root:
+>
+> - `infrastructure/` — networking, security, monitoring, storage
+> - `services/` — media, productivity, management, development
+>
+> The `docker/` tree will be removed in a future cleanup commit once all paths
+> have been validated in production. Do not add new stacks here.
 
-## Structure
+## Canonical locations
 
-- **media-management/** - Arr stack (Sonarr, Radarr, etc.) and download clients
-- **media-servers/** - Media servers (Emby, Immich, music services)
-- **productivity/** - Productivity apps (Nextcloud, Paperless-ngx, notes)
-- **development/** - Development projects and portfolios
-- **security/** - Security tools (Vaultwarden, Pi-hole)
-- **monitoring/** - System monitoring and management
-- **infrastructure/** - Core infrastructure services
-- **networking/** - Network-related services
-
-## Usage
-
-Each subdirectory contains compose files for specific services. To deploy:
-```bash
-cd docker/<category>/<service>
-docker compose up -d
-```
-
-## Notes
-
-- Sensitive values (passwords, API keys) should be stored in `.env` files
-- `.env` files are gitignored for security
-- `.env.example` files show required variables
+| Old path | New path |
+|---|---|
+| `docker/media-management/` | `services/media/` |
+| `docker/media-servers/` | `services/media/` |
+| `docker/productivity/` | `services/productivity/` |
+| `docker/security/` | `infrastructure/security/` + `infrastructure/networking/` |
+| `docker/monitoring/` | `infrastructure/monitoring/` |
+| `docker/infrastructure/` | `services/management/` |
+| `docker/development/` | `services/development/` |

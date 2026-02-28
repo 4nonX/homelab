@@ -1,0 +1,73 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: aptifolio-db
+    environment:
+      POSTGRES_USER: aptifolio
+      POSTGRES_PASSWORD: changeme_secure_password
+      POSTGRES_DB: aptifolio
+    volumes:
+      - ./postgres-data:/var/lib/postgresql/data
+    networks:
+      - aptifolio-network
+    restart: unless-stopped
+
+  backend:
+    build: ./backend
+    container_name: aptifolio-backend
+    environment:
+      DATABASE_URL: postgresql://aptifolio:changeme_secure_password@postgres:5432/aptifolio
+      JWT_SECRET: changeme_jwt_secret_key_min_32_chars
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      UPLOAD_DIR: /uploads
+      FRONTEND_URL: http://localhost:3000
+    volumes:
+      - ./uploads:/uploads
+      - ./backend:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+    networks:
+      - aptifolio-network
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    container_name: aptifolio-frontend
+    environment:
+      NEXT_PUBLIC_API_URL: http://localhost:8000
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - aptifolio-network
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2-alpine
+    container_name: aptifolio-caddy
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./caddy/Caddyfile:/etc/caddy/Caddyfile
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - frontend
+      - backend
+    networks:
+      - aptifolio-network
+    restart: unless-stopped
+
+networks:
+  aptifolio-network:
+    driver: bridge
+
+volumes:
+  caddy_data:
+  caddy_config:

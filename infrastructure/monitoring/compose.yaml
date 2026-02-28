@@ -1,0 +1,78 @@
+version: '3.8'
+
+services:
+  glances:
+    image: nicolargo/glances:latest-full
+    container_name: homelab-glances
+    restart: unless-stopped
+    pid: host
+    privileged: true
+    ports:
+      - "61208:61208"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - /etc/os-release:/etc/os-release:ro
+      - /DATA:/DATA:ro
+      - /:/rootfs:ro
+    environment:
+      - GLANCES_OPT=-w --disable-plugin ports
+    networks:
+      - homelab
+
+  php:
+    image: php:8.2-fpm-alpine
+    container_name: homelab-dashboard-php
+    restart: unless-stopped
+    volumes:
+      - /DATA/AppData/homelab-dashboard/html:/usr/share/nginx/html
+      - /DATA/AppData/homelab-dashboard/data:/usr/share/nginx/data
+    networks:
+      - homelab
+    command: sh -c "apk add --no-cache curl && php-fpm"
+
+  dashboard:
+    image: nginx:alpine
+    container_name: homelab-dashboard
+    restart: unless-stopped
+    ports:
+      - "8654:80"
+    volumes:
+      - /DATA/AppData/homelab-dashboard/html:/usr/share/nginx/html
+      - /DATA/AppData/homelab-dashboard/data:/usr/share/nginx/data
+    networks:
+      - homelab
+    depends_on:
+      - php
+      - glances
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.dashboard.rule=Host(`dashboard.d-net.me`)
+      - traefik.http.routers.dashboard.entrypoints=websecure
+      - traefik.http.routers.dashboard.tls.certresolver=letsencrypt
+      - traefik.http.services.dashboard.loadbalancer.server.port=80
+    command: >
+      sh -c "echo 'server {
+        listen 80;
+        server_name localhost;
+        root /usr/share/nginx/html;
+        index index.html index.php;
+        location / { try_files \$$uri \$$uri/ /index.html; }
+        location ~ \.php$$ {
+          fastcgi_pass php:9000;
+          fastcgi_index index.php;
+          fastcgi_param SCRIPT_FILENAME \$$document_root\$$fastcgi_script_name;
+          include fastcgi_params;
+        }
+        location ~* \.(jpg|jpeg|png|gif|ico|css|js|svg)$$ {
+          expires 1y;
+          add_header Cache-Control \"public, immutable\";
+        }
+        gzip on;
+        gzip_vary on;
+        gzip_min_length 1024;
+        gzip_types text/plain text/css text/xml text/javascript application/x-javascript application/xml+rss application/json;
+      }' > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+
+networks:
+  homelab:
+    driver: bridge
