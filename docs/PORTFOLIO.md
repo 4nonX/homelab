@@ -207,7 +207,6 @@ Internet → Router → Pi-hole (DNS) → Services
 ## 🚀 Future Enhancements
 
 ### Short-term
-- [ ] Implement reverse proxy (Traefik/Nginx)
 - [ ] Deploy monitoring stack (Prometheus + Grafana)
 - [ ] Set up centralized logging (Loki)
 - [ ] Configure automated SSL certificates
@@ -215,7 +214,6 @@ Internet → Router → Pi-hole (DNS) → Services
 ### Long-term
 - [ ] Implement container orchestration (K3s)
 - [ ] Build CI/CD pipeline for infrastructure
-- [ ] Advanced security monitoring (IDS/IPS)
 - [ ] Multi-site replication for disaster recovery
 
 ## 🎓 Learning Outcomes
