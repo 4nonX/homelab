@@ -6,7 +6,7 @@
 [![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=for-the-badge&logo=nixos)](https://nixos.org)
 [![NAS](https://img.shields.io/badge/NAS-D--PlaneOS-blueviolet?style=for-the-badge)](https://github.com/4nonX/D-PlaneOS)
 
-> **Production-grade personal cloud infrastructure** built from scratch, demonstrating enterprise-level architecture, security, and operational practices at homelab scale.
+> **Self-hosted infrastructure platform (40+ services, 33TB ZFS) used as a proving ground for storage, automation, and systems design experiments.
 
 ---
 
