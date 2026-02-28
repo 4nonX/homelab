@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="de" x-data="{ lang: 'de', state: 'idle', showPortfolio: false, showLegal: false }">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dan Dreßen | Portfolio</title>
+    
+    <meta property="og:title" content="Dan Dreßen – Translation, Design & Infrastructure">
+    <meta property="og:description" content="Staatlich geprüfter Übersetzer, UI/UX Designer & Infrastructure Specialist aus München.">
+    <meta property="og:image" content="https://dandressen.d-net.me/og-preview.png">
+    <meta property="og:url" content="https://dandressen.d-net.me">
+    <meta property="og:type" content="website">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Dan Dreßen – Translation, Design & Infrastructure">
+    <meta name="twitter:description" content="Staatlich geprüfter Übersetzer, UI/UX Designer & Infrastructure Specialist aus München.">
+    <meta name="twitter:image" content="https://dandressen.d-net.me/og-preview.png">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;500;800&family=Space+Grotesk:wght@300;600;700&display=swap" rel="stylesheet">
+    <style>
+        [x-cloak] { display: none !important; }
+        body { background: #050505; color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; overflow-x: hidden; margin: 0; scroll-behavior: smooth; }
+        .font-tech { font-family: 'Space Grotesk', sans-serif; }
+        #scroll-progress-bar { position: fixed; right: 0; top: 0; width: 3px; background: #2563eb; box-shadow: 0 0 15px #2563eb; z-index: 1000; transition: height 0.1s; }
+        .journey-line { position: absolute; left: 50%; width: 2px; background: linear-gradient(to bottom, transparent, rgba(37, 99, 235, 0.2) 10%, rgba(37, 99, 235, 0.2) 90%, transparent); height: 100%; z-index: 0; transform: translateX(-50%); }
+        .glow { position: fixed; width: 80vw; height: 80vw; background: radial-gradient(circle, rgba(37, 99, 235, 0.05) 0%, transparent 70%); border-radius: 50%; pointer-events: none; z-index: 0; transform: translate(-50%, -50%); }
+        .air-panel { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(30px); border: 1px solid rgba(255, 255, 255, 0.1); border-radius: 1.5rem; transition: all 0.8s ease-out; position: relative; z-index: 10; }
+        @media (min-width: 768px) { .air-panel { border-radius: 2.5rem; } }
+        .observer-element { opacity: 0; transform: translateY(40px); }
+        .observer-element.visible { opacity: 1; transform: translateY(0); }
+        input, textarea { background: transparent; border-bottom: 2px solid rgba(255,255,255,0.1); padding: 1rem 0; width: 100%; color: white; border-radius: 0; }
+        input:focus, textarea:focus { outline: none; border-color: #2563eb; }
+        .modal-container { position: fixed; inset: 0; z-index: 2000; display: flex; align-items: center; justify-content: center; padding: 1rem; }
+    </style>
+</head>
+<body class="antialiased" :class="(showPortfolio || showLegal) ? 'overflow-hidden' : ''">
+
+    <div class="glow" id="mouse-glow"></div>
+    <div id="scroll-progress-bar" style="height: 0%"></div>
+
+    <nav class="fixed top-0 w-full z-[100] px-6 py-6 md:px-12 md:py-10 flex justify-between items-center bg-black/50 backdrop-blur-2xl border-b border-white/10">
+        <span class="text-xl md:text-2xl font-bold font-tech uppercase tracking-tighter">Dan <span class="text-blue-600">Dreßen</span></span>
+        <div class="flex items-center gap-4 md:gap-10 text-[10px] md:text-sm font-bold uppercase font-tech tracking-widest">
+            <a href="https://dandressen.d-net.me" class="hover:text-blue-500 transition-colors" x-text="lang === 'de' ? 'Über mich' : 'About Me'"></a>
+            <button @click="showPortfolio = true" class="hover:text-blue-500 transition-colors" x-text="lang === 'de' ? 'Projekte' : 'Projects'"></button>
+            <div class="flex gap-3 md:gap-4 border-l border-white/20 pl-4 md:pl-8">
+                <button @click="lang = 'de'" :class="lang === 'de' ? 'text-blue-500' : 'text-white/30'" class="hover:text-white transition-colors">DE</button>
+                <button @click="lang = 'en'" :class="lang === 'en' ? 'text-blue-500' : 'text-white/30'" class="hover:text-white transition-colors">EN</button>
+            </div>
+        </div>
+    </nav>
+
+    <header class="h-screen flex items-center px-6 md:px-24">
+        <h1 class="text-[12vw] md:text-[8vw] font-light leading-[1.1] uppercase tracking-tighter italic font-tech relative z-10">
+            <span x-show="lang === 'de'">Präzision in <br> Wort, Design & <br> <span class="text-blue-600 font-normal">System.</span></span>
+            <span x-show="lang === 'en'" x-cloak>Precision in <br> Word, Design & <br> <span class="text-blue-600 font-normal">Systems.</span></span>
+        </h1>
+    </header>
+
+    <main class="relative flex flex-col gap-32 md:gap-64 pb-32 md:pb-64">
+        <div class="journey-line hidden md:block"></div>
+
+        <section class="px-6 md:px-24 relative">
+            <div class="max-w-5xl air-panel p-8 md:p-16 observer-element">
+                <span class="text-blue-500 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] mb-4 md:mb-6 block font-tech">01 / Translation</span>
+                <h2 class="text-2xl md:text-4xl font-tech uppercase mb-4 md:mb-6" x-text="lang === 'de' ? 'Beglaubigte Übersetzung' : 'Certified Translation'"></h2>
+                <p class="text-base md:text-xl text-white/50 leading-relaxed">
+                    <span x-show="lang === 'de'">Als staatlich geprüfter Übersetzer biete ich rechtssichere Fachübersetzungen für Kanzleien, Notariate und Unternehmen an. Mein Fokus liegt auf der terminologischen Präzision in den Bereichen Recht, Wirtschaft und Technik. Jede Übersetzung wird unter Berücksichtigung der strengsten Qualitätsnormen angefertigt und ist zur Vorlage bei Behörden, Gerichten und internationalen Institutionen offiziell beglaubigt. Ich garantiere absolute Vertraulichkeit und termingerechte Lieferung Ihrer Dokumente.</span>
+                    <span x-show="lang === 'en'" x-cloak>As a state-certified translator, I provide legally sound technical translations for law firms, notaries, and corporations. My focus lies on terminological precision in the fields of law, business, and technology. Every translation is prepared according to the strictest quality standards and is officially certified for submission to authorities, courts, and international institutions. I guarantee absolute confidentiality and timely delivery of your documents.</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="px-6 md:px-24 flex justify-end relative">
+            <div class="max-w-5xl air-panel p-8 md:p-16 observer-element">
+                <span class="text-blue-500 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] mb-4 md:mb-6 block font-tech">02 / Design</span>
+                <h2 class="text-2xl md:text-4xl font-tech uppercase mb-4 md:mb-6" x-text="lang === 'de' ? 'Digital- & Print-Portfolio' : 'Digital & Print Portfolio'"></h2>
+                <p class="text-base md:text-xl text-white/50 leading-relaxed">
+                    <span x-show="lang === 'de'">Ich entwickle ganzheitliche Markenerlebnisse, die technische Komplexität in klares Design übersetzen. Von responsiven Web-Systemen mit Fokus auf UI/UX-Exzellenz bis hin zu hochwertigen Print-Medien für die Unternehmenskommunikation: Mein Ansatz vereint Ästhetik mit funktionaler Tiefe, um Ihre Expertise visuell und haptisch greifbar zu machen. Jedes Projekt wird individuell auf Ihre Zielgruppe zugeschnitten.</span>
+                    <span x-show="lang === 'en'" x-cloak>I develop holistic brand experiences that translate technical complexity into clear design. From responsive web systems focused on UI/UX excellence to high-quality print media for corporate communication: My approach combines aesthetics with functional depth to make your expertise visually and haptically tangible. Each project is individually tailored to your target audience.</span>
+                </p>
+            </div>
+        </section>
+
+        <section class="px-6 md:px-24 relative">
+            <div class="max-w-5xl air-panel p-8 md:p-16 observer-element">
+                <span class="text-blue-500 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.4em] mb-4 md:mb-6 block font-tech">03 / Infrastructure</span>
+                <h2 class="text-2xl md:text-4xl font-tech uppercase mb-4 md:mb-6" x-text="lang === 'de' ? 'Eigene Infrastruktur' : 'Private Infrastructure'"></h2>
+                <p class="text-base md:text-xl text-white/50 leading-relaxed mb-8 md:mb-10">
+                    <span x-show="lang === 'de'">Souveräner Betrieb ohne Kompromisse. Ich stelle Ihre digitalen Systeme auf eigener, hochverfügbarer Infrastruktur bereit – wartungsfrei, schlüsselfertig und unter Ihrer vollen Kontrolle. Durch den Einsatz moderner Cloud-Native-Technologien und Docker garantiere ich maximale Sicherheit, Datensouveränität und Unabhängigkeit von großen Cloud-Anbietern.</span>
+                    <span x-show="lang === 'en'" x-cloak>Sovereign operation without compromise. I deploy your digital systems on private, high-availability infrastructure – maintenance-free, turnkey, and under your full control. By using modern cloud-native technologies and Docker, I guarantee maximum security, data sovereignty, and independence from major cloud providers.</span>
+                </p>
+                <button @click="showPortfolio = true" class="w-full md:w-auto px-8 py-4 border border-blue-500 text-white font-tech uppercase text-[10px] tracking-widest rounded-full hover:bg-blue-600 transition-all" x-text="lang === 'de' ? 'Projekte ansehen' : 'View Projects'"></button>
+            </div>
+        </section>
+
+        <section id="anfrage" class="px-6 md:px-24 flex justify-center relative">
+            <div class="max-w-3xl w-full air-panel p-8 md:p-16 observer-element text-center">
+                <h2 class="text-4xl md:text-6xl font-tech uppercase mb-8 md:mb-12" x-text="lang === 'de' ? 'Kontakt' : 'Contact'"></h2>
+                <form @submit.prevent="state = 'sending'; fetch('send.php', { method: 'POST', body: new FormData($el) }).then(res => res.ok ? (state = 'success', $el.reset()) : state = 'error')">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-8 mb-6 md:mb-8 text-left">
+                        <input type="text" name="name" :placeholder="lang === 'de' ? 'Ihr Name' : 'Your Name'" required>
+                        <input type="email" name="email" :placeholder="lang === 'de' ? 'E-Mail Adresse' : 'Email Address'" required>
+                    </div>
+                    <textarea name="message" rows="3" class="mb-6 md:mb-8" :placeholder="lang === 'de' ? 'Nachricht...' : 'Message...'" required></textarea>
+                    <button type="submit" class="w-full py-5 md:py-6 bg-blue-600 text-white font-tech font-bold uppercase text-[10px] md:text-xs tracking-widest hover:bg-blue-500 transition-all">
+                        <span x-show="state === 'idle'" x-text="lang === 'de' ? 'Senden' : 'Send'"></span>
+                        <span x-show="state === 'sending'" x-text="lang === 'de' ? 'Übertragung...' : 'Sending...'"></span>
+                        <span x-show="state === 'success'" x-text="lang === 'de' ? '✓ Nachricht gesendet' : '✓ Message sent'"></span>
+                    </button>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <template x-if="showPortfolio">
+        <div class="modal-container" x-cloak>
+            <div @click="showPortfolio = false" class="absolute inset-0 bg-black/95 backdrop-blur-2xl"></div>
+            <div class="relative bg-[#0a0a0a] border border-white/10 w-full max-w-6xl max-h-[90vh] overflow-y-auto p-8 md:p-20 rounded-[2rem] shadow-2xl">
+                <div class="flex justify-between items-center mb-10 md:mb-16">
+                    <h2 class="text-3xl md:text-5xl font-tech uppercase" x-text="lang === 'de' ? 'Ausgewählte Projekte' : 'Selected Projects'"></h2>
+                    <button @click="showPortfolio = false" class="text-white/30 hover:text-white font-tech uppercase text-[10px]">Close [×]</button>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 text-left">
+                    <div class="bg-white/5 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/5 overflow-hidden flex flex-col group">
+                        <div class="h-64 overflow-hidden relative">
+                            <img src="homelab_github.png" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="Homelab">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+                        </div>
+                        <div class="p-8 md:p-12">
+                            <h3 class="text-2xl md:text-3xl font-tech uppercase mb-4 text-white">HOMELAB INFRASTRUCTURE</h3>
+                            <p class="text-sm md:text-lg text-gray-400 leading-relaxed mb-6">
+                                <span x-show="lang === 'de'">Aufbau und Administration einer hochverfügbaren Infrastruktur auf Basis von 33TB BTRFS-Speicher. Aktuelle Migration zu NixOS für eine deklarative Serverumgebung. Betrieb von über 40 Docker-Containern mit verschlüsselten Backups.</span>
+                                <span x-show="lang === 'en'" x-cloak>Development and administration of a high-availability infrastructure based on 33TB BTRFS storage. Currently migrating to NixOS for a declarative server environment. Operating 40+ Docker containers with encrypted backups.</span>
+                            </p>
+                            <a href="https://github.com/4nonX/homelab/" target="_blank" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest hover:underline">GitHub →</a>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/5 overflow-hidden flex flex-col group">
+                        <div class="h-64 overflow-hidden relative">
+                            <img src="D-PlaneOS-website.png" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="D-PlaneOS">
+                            <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
+                        </div>
+                        <div class="p-8 md:p-12">
+                            <h3 class="text-2xl md:text-3xl font-tech uppercase mb-4 text-white">D-PLANEOS</h3>
+                            <p class="text-sm md:text-lg text-gray-400 leading-relaxed mb-6">
+                                <span x-show="lang === 'de'">Professionelles Speichermanagement mit ZFS, Docker, nativer Verschlüsselung und einem Web-Dashboard. Einfaches NAS-Management, entwickelt für Homelab-Enthusiasten.</span>
+                                <span x-show="lang === 'en'" x-cloak>Production-grade storage management with ZFS, Docker, native encryption, and a web dashboard. Simple NAS Management Built for Homelabbers.</span>
+                            </p>
+                            <div class="flex gap-6">
+                                <a href="https://dplaneos.d-net.me" target="_blank" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest hover:underline">Live Demo →</a>
+                                <a href="https://github.com/4nonX/D-PlaneOS" target="_blank" class="text-[10px] font-bold text-white/20 uppercase tracking-widest hover:text-white">GitHub</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <template x-if="showLegal">
+        <div class="modal-container" x-cloak>
+            <div @click="showLegal = false" class="absolute inset-0 bg-black/95 backdrop-blur-2xl"></div>
+            <div class="relative bg-[#0a0a0a] border border-white/10 w-full max-w-4xl max-h-[90vh] overflow-y-auto p-8 md:p-20 rounded-[2rem] shadow-2xl text-left">
+                <button @click="showLegal = false" class="absolute top-6 right-6 text-white/30 hover:text-blue-500 font-tech uppercase text-[9px] border border-white/10 px-4 py-2 rounded-full">Close [×]</button>
+                
+                <div x-show="lang === 'de'">
+                    <h2 class="text-4xl font-tech font-bold text-white uppercase mb-8">Impressum</h2>
+                    <p class="text-gray-300"><strong>Angaben gemäß § 5 TMG:</strong><br>Dan Dreßen<br>Ammergauer Str. 13<br>86989 Steingaden<br><br><strong>Kontakt:</strong><br>E-Mail: dan@d-net.me</p>
+                    
+                    <div class="mt-8 text-sm text-gray-400 border-t border-white/5 pt-8 space-y-6">
+                        <div>
+                            <p class="font-bold text-white mb-2 uppercase tracking-widest">Haftung für Inhalte</p>
+                            <p>Als Diensteanbieter sind wir gemäß § 7 Abs.1 TMG für eigene Inhalte auf diesen Seiten nach den allgemeinen Gesetzen verantwortlich. Nach §§ 8 bis 10 TMG sind wir als Diensteanbieter jedoch nicht verpflichtet, übermittelte oder gespeicherte fremde Informationen zu überwachen oder nach Umständen zu forschen, die auf eine rechtswidrige Tätigkeit hinweisen. Verpflichtungen zur Entfernung oder Sperrung der Nutzung von Informationen nach den allgemeinen Gesetzen bleiben hiervon unberührt. Eine diesbezügliche Haftung ist jedoch erst ab dem Zeitpunkt der Kenntnis einer konkreten Rechtsverletzung möglich. Bei Bekanntwerden von entsprechenden Rechtsverletzungen werden wir diese Inhalte umgehend entfernen.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white mb-2 uppercase tracking-widest">Haftung für Links</p>
+                            <p>Unser Angebot enthält Links zu externen Websites Dritter, auf deren Inhalte wir keinen Einfluss haben. Deshalb können wir für diese fremden Inhalte auch keine Gewähr übernehmen. Für die Inhalte der verlinkten Seiten ist stets der jeweilige Anbieter oder Betreiber der Seiten verantwortlich. Die verlinkten Seiten wurden zum Zeitpunkt der Verlinkung auf mögliche Rechtsverstöße überprüft. Rechtswidrige Inhalte waren zum Zeitpunkt der Verlinkung nicht erkennbar. Eine permanente inhaltliche Kontrolle der verlinkten Seiten ist jedoch ohne konkrete Anhaltspunkte einer Rechtsverletzung nicht zumutbar. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Links umgehend entfernen.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white mb-2 uppercase tracking-widest">Urheberrecht</p>
+                            <p>Die durch die Seitenbetreiber erstellten Inhalte und Werke auf diesen Seiten unterliegen dem deutschen Urheberrecht. Die Vervielfältigung, Bearbeitung, Verbreitung und jede Art der Verwertung außerhalb der Grenzen des Urheberrechtes bedürfen der schriftlichen Zustimmung des jeweiligen Autors bzw. Erstellers. Downloads und Kopien dieser Seite sind nur für den privaten, nicht kommerziellen Gebrauch gestattet. Soweit die Inhalte auf dieser Seite nicht vom Betreiber erstellt wurden, werden die Urheberrechte Dritter beachtet. Insbesondere werden Inhalte Dritter als solche gekennzeichnet. Sollten Sie trotzdem auf eine Urheberrechtsverletzung aufmerksam werden, bitten wir um einen entsprechenden Hinweis. Bei Bekanntwerden von Rechtsverletzungen werden wir derartige Inhalte umgehend entfernen.</p>
+                        </div>
+                        <div class="bg-white/5 p-6 rounded-xl">
+                            <p class="font-bold text-white mb-2 uppercase tracking-widest">Datenschutz</p>
+                            <p>Die Nutzung unserer Webseite ist in der Regel ohne Angabe personenbezogener Daten möglich. Soweit auf unseren Seiten personenbezogene Daten (beispielsweise Name, Anschrift oder E-Mail-Adressen) erhoben werden, erfolgt dies, soweit möglich, stets auf freiwilliger Basis. Diese Daten werden ohne Ihre ausdrückliche Zustimmung nicht an Dritte weitergegeben. Wir weisen darauf hin, dass die Datenübertragung im Internet (z.B. bei der Kommunikation per E-Mail) Sicherheitslücken aufweisen kann. Ein lückenloser Schutz der Daten vor dem Zugriff durch Dritte ist nicht möglich.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div x-show="lang === 'en'" x-cloak>
+                    <h2 class="text-4xl font-tech font-bold text-white uppercase mb-8">Legal Notice</h2>
+                    <p class="text-gray-300"><strong>Information pursuant to Section 5 TMG:</strong><br>Dan Dreßen<br>Ammergauer Str. 13<br>86989 Steingaden, Germany<br><br><strong>Contact:</strong><br>Email: dan@d-net.me</p>
+                    
+                    <div class="mt-8 text-sm text-gray-400 border-t border-white/5 pt-8 space-y-6">
+                        <div>
+                            <p class="font-bold text-white mb-2 uppercase tracking-widest">Liability for Content</p>
+                            <p>As a service provider, we are responsible for our own content on these pages under general law in accordance with Section 7, Subsection 1 TMG. However, pursuant to Sections 8 to 10 TMG, we are not obligated to monitor transmitted or stored third-party information or to investigate circumstances that indicate illegal activity. Obligations to remove or block the use of information under general law remain unaffected by this. However, liability in this regard is only possible from the point in time at which knowledge of a specific legal violation is obtained. Upon becoming aware of such legal violations, we will remove this content immediately.</p>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white mb-2 uppercase tracking-widest">Liability for Links</p>
+                            <p>Our offer contains links to external websites of third parties, on whose contents we have no influence. Therefore, we cannot assume any liability for these external contents. The respective provider or operator of the pages is always responsible for the contents of the linked pages. The linked pages were checked for possible legal violations at the time of linking. Illegal contents were not recognizable at the time of linking. However, a permanent control of the contents of the linked pages is not reasonable without concrete evidence of a violation of the law. If we become aware of any infringements, we will remove such links immediately.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <footer class="relative z-[60] py-12 text-center flex flex-col items-center gap-4">
+        <div class="opacity-30 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.5em]">
+            © 2026 Dan Dreßen — <button type="button" @click="showLegal = true" class="underline hover:text-blue-500 cursor-pointer">Impressum & Datenschutz</button>
+        </div>
+    </footer>
+
+    <script>
+        const glow = document.getElementById('mouse-glow');
+        window.addEventListener('mousemove', (e) => { glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px'; });
+        window.addEventListener('scroll', () => {
+            const bar = document.getElementById('scroll-progress-bar');
+            const height = document.documentElement.scrollHeight - window.innerHeight;
+            bar.style.height = (window.scrollY / height) * 100 + '%';
+        });
+        const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.05 });
+        document.querySelectorAll('.observer-element').forEach(el => observer.observe(el));
+    </script>
+</body>
+</html>

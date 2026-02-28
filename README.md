@@ -1,427 +1,344 @@
-# 🏠 Homelab Infrastructure
-[![Status](https://img.shields.io/badge/status-production-success?style=for-the-badge)](https://github.com/4nonX/homelab)
-[![Uptime](https://img.shields.io/badge/uptime-90%25-brightgreen?style=for-the-badge)](https://github.com/4nonX/homelab)
-[![Services](https://img.shields.io/badge/services-40+-blue?style=for-the-badge)](https://github.com/4nonX/homelab)
-[![Storage](https://img.shields.io/badge/storage-33TB-orange?style=for-the-badge)](https://github.com/4nonX/homelab)
-[![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=for-the-badge&logo=nixos)](https://nixos.org)
-[![NAS](https://img.shields.io/badge/NAS-D--PlaneOS-blueviolet?style=for-the-badge)](https://github.com/4nonX/D-PlaneOS)
+# Homelab Infrastructure
 
-> **Self-hosted infrastructure platform (40+ services, 33TB ZFS) used as a proving ground for storage, automation, and systems design experiments.
+[![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
+[![Services](https://img.shields.io/badge/services-40+-blue?style=flat-square)](https://github.com/4nonX/homelab)
+[![Storage](https://img.shields.io/badge/storage-33TB_BTRFS_RAID5-orange?style=flat-square)](https://github.com/4nonX/homelab)
+[![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
+[![NAS](https://img.shields.io/badge/NAS_layer-D--PlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/D-PlaneOS)
 
----
+A reference implementation of a self-hosted home infrastructure stack: 40+ containerised services, 33 TB BTRFS RAID5 storage, zero port-forwarding. Runs on NixOS with [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) as the NAS management layer.
 
-## 🖥️ Current Stack: NixOS + D-PlaneOS
-
-The homelab runs **NixOS** as the base OS with **D-PlaneOS** as the NAS management layer — a combination I'm actively developing and dogfooding in production.
-
-**Why this stack?**
-- 🔧 NixOS provides declarative, reproducible system configuration with atomic OTA updates and A/B slot boot
-- 🗄️ D-PlaneOS provides the NAS management layer — ZFS pool management, SMB/NFS shares, Docker orchestration, user management, and a full web UI — purpose-built to run on NixOS
-- ♻️ Full rollback capability at both the OS level (NixOS generations) and storage level (ZFS snapshots)
-- 📦 System state is separated from data — the OS is ephemeral, data lives on ZFS pools
-
-**Current Status:** Active testing | D-PlaneOS v3.3.1
-
-<div align="center">
-
-### 🛩️ Interested in the NAS layer?
-
-[![D-PlaneOS](https://img.shields.io/badge/D--PlaneOS-Open_Source_NAS_OS-blueviolet?style=for-the-badge&logo=github)](https://github.com/4nonX/D-PlaneOS)
-
-*The NAS operating system powering this homelab — ZFS management, Docker orchestration, SMB/NFS shares, and a full web UI, purpose-built for NixOS.*
-
-</div>
+This repo documents one specific production setup. The compose files, architecture decisions, and configuration notes are intended to be useful as a reference for anyone building something similar — not as a drop-in kit. Adapt what's relevant to your own hardware and network topology.
 
 ---
 
-## 📋 Table of Contents
+## Contents
 
-- [Overview](#-overview)
-- [Quick Start](#-quick-start)
-- [Architecture](#️-architecture)  
-- [Services](#-services)
-- [Documentation](#-documentation)
-- [Tech Stack](#️-tech-stack)
-- [Getting Started](#-getting-started)
-
----
-
-## 🎯 Overview
-
-**What:** Self-hosted cloud infrastructure replacing €580+/year in SaaS subscriptions  
-**Scale:** 40+ containerized services, 33TB storage, 90%+ uptime  
-**Goal:** Complete data ownership, unlimited storage, learning experience  
-**Result:** Enterprise-grade infrastructure at homelab cost
-
-### Key Features
-
-✅ **Zero Port Forwarding** - Secure external access via self-hosted [Pangolin](https://github.com/fosrl/pangolin) tunnel  
-✅ **Automatic SSL** - Let's Encrypt certificates managed by [Traefik](https://traefik.io/)  
-✅ **Multi-Layer Security** - CrowdSec IDS/IPS, encryption, network isolation  
-✅ **Container-First** - Docker Compose orchestration  
-✅ **High Availability** - RAID5 storage, automated backups, monitoring  
-✅ **Cost Effective** - Break-even in 3.5 years vs. SaaS
-
-### Hardware
-
-```
-Server Specifications:
-├─ CPU: Intel Core i3-13100 (4C/8T, up to 4.5 GHz)
-├─ RAM: 32 GB DDR4-3200
-├─ Storage: 33TB BTRFS RAID5 + 120GB NVMe
-├─ OS: ZimaOS v1.5.2 (Ubuntu 24.04 base)
-└─ Power: ~30W average, ~60W peak
-
-VPS Gateway (External Access):
-├─ Provider: IONOS (Berlin, Germany)
-├─ Specs: 2 vCPU, 2GB RAM, 80GB NVMe
-└─ Stack: Pangolin + Traefik + CrowdSec
-```
+- [Architecture](#architecture)
+- [Security model](#security-model)
+- [Service matrix](#service-matrix)
+- [Storage strategy](#storage-strategy)
+- [Repository structure](#repository-structure)
+- [Tech stack](#tech-stack)
+- [Cost analysis](#cost-analysis)
+- [Documentation](#documentation)
+- [Quick start](#quick-start)
 
 ---
 
-## 🚀 Quick Start
-
-### For Recruiters/Employers
-
-Start here to understand the project scope and skills demonstrated:
-
-1. 📊 **[Executive Summary](EXECUTIVE_SUMMARY.md)** - Quick overview and key achievements
-2. 🎯 **[Portfolio Showcase](PORTFOLIO.md)** - Skills and technical implementation
-3. 📖 **[Complete Journey](homelab-complete-journey.md)** - Full build story
-
-### For Technical Deep-Dive
-
-Explore specific technical implementations:
-
-- **[Hardware Specifications](hardware-specs.md)** - DIY build details and performance
-- **[Docker Infrastructure](docker-infrastructure.md)** - Container architecture and best practices
-- **[Remote Access Strategy](network-remote-access.md)** - Multi-layered VPN architecture, Pangolin/Tailscale/ZeroTier comparison, security integration
-- **[Pangolin Tunnel](pangolin-infrastructure.md)** - Self-hosted external access solution
-- **[Network Security](network-security.md)** - Multi-layer security architecture
-  
----
-
-## 🏗️ Architecture
-
-### System Diagram
+## Architecture
 
 ```
 Internet
-    │
-    ├─── VPS Gateway (Berlin, Germany)
-    │      ├─ Traefik (HTTPS Proxy)
-    │      ├─ Gerbil (Wireguard)
-    │      ├─ CrowdSec (Security)
-    │      └─ Newt Relay Client
-    │           ↓
-    │      [Wireguard Tunnel - Encrypted]
-    │           ↓
-    └─── Raspberry Pi 5 Hub (Pangolin Brain)
-           ├─ Pangolin Server (SSL/Identity)
-           ├─ Newt Tunnel Termination
-           └─ Traefik Routing
-                ↓
-           Home Network (10.XXX.0.0/24)
-                │
-                ├─ NAS Server (10.XXX.0.1)
-                │   ├─ Docker (40+ containers)
-                │   └─ Storage (33TB RAID5)
-                │
-                ├─ Pi-hole (10.XXX.0.2)
-                │   └─ DNS + Ad-blocking
-                │
-                └─ Client Devices
+  │
+  ▼
+VPS — IONOS, Berlin (2 vCPU / 2 GB RAM / 80 GB NVMe)
+  ├─ UFW firewall        ports 80, 443, 51820 only
+  ├─ CrowdSec IDS/IPS   community blocklists, Traefik bouncer
+  ├─ Traefik v3          TLS 1.3 termination, Let's Encrypt
+  └─ Gerbil              WireGuard endpoint (Pangolin component)
+            │
+            │  WireGuard tunnel — ChaCha20-Poly1305, encrypted
+            ▼
+Raspberry Pi 5 — local LAN hub (Pangolin brain)
+  ├─ Pangolin server     identity, routing control plane
+  ├─ Newt                tunnel termination
+  └─ Traefik (inner)     internal routing → services
+            │
+            ▼
+Home network — 10.XXX.0.0/24
+  ├─ NAS server (10.XXX.0.1)     40+ containers, 33 TB storage
+  └─ Pi-hole  (10.XXX.0.2)       DNS, ad-blocking
 ```
 
-**📊 [View Interactive Architecture Diagram](https://4nonx.github.io/homelab/architecture-diagram.html)**
+> **Key design decision:** Pangolin tunnel instead of port-forwarding means the home IP is never
+> exposed, there is no dynamic DNS dependency, and the home router attack surface is zero.
 
-**🛡️ [View Security Layers Diagram](https://4nonx.github.io/homelab/security-diagram.html)**
-
-**🔄 [View Data Flow Diagram](https://4nonx.github.io/homelab/dataflow-diagram.html)**
-
-### Security Layers
-
-```
-Layer 1: VPS Perimeter
-  ├─ UFW Firewall
-  ├─ CrowdSec IDS/IPS
-  └─ DDoS Protection
-
-Layer 2: Encrypted Transport
-  ├─ Wireguard Tunnel
-  ├─ TLS 1.3 (Traefik)
-  └─ Let's Encrypt SSL
-
-Layer 3: Network Isolation
-  ├─ Docker Networks
-  ├─ Service Segmentation
-  └─ Database Isolation
-
-Layer 4: Application Security
-  ├─ Service Authentication
-  ├─ 2FA (where available)
-  └─ Access Control
-
-Layer 5: Data Protection
-  ├─ BTRFS Checksumming
-  ├─ RAID5 Redundancy
-  └─ Encrypted Backups
-```
-
-**🛡️ [View Interactive Security Architecture](https://4nonx.github.io/homelab/security-diagram.html)**
----
-
-## 📦 Services
-
-### Media Management (12 containers)
-
-| Service | Purpose | Link |
-|---------|---------|------|
-| **Emby** | Media server | [emby.media](https://emby.media/) |
-| **Sonarr** | TV automation | [sonarr.tv](https://sonarr.tv/) |
-| **Radarr** | Movie automation | [radarr.video](https://radarr.video/) |
-| **Lidarr** | Music automation | [lidarr.audio](https://lidarr.audio/) |
-| **Prowlarr** | Indexer mgmt | [prowlarr.com](https://prowlarr.com/) |
-| **Bazarr** | Subtitles | [bazarr.media](https://www.bazarr.media/) |
-| **qBittorrent** | Downloads | [qbittorrent.org](https://www.qbittorrent.org/) |
-| **Gluetun** | VPN gateway | [GitHub](https://github.com/qdm12/gluetun) |
-| **SwingMusic** | Music player | [GitHub](https://github.com/swingmx/swingmusic) |
-| **Kavita** | eBook reader | [kavitareader.com](https://www.kavitareader.com/) |
-| **Pinchflat** | YouTube archive | [GitHub](https://github.com/kieraneglin/pinchflat) |
-| **Ombi** | Requests | [ombi.io](https://ombi.io/) |
-
-### Productivity & Cloud (15 containers)
-
-| Service | Purpose | Link |
-|---------|---------|------|
-| **Nextcloud** | File sync/share | [nextcloud.com](https://nextcloud.com/) |
-| **Immich** | Photo mgmt | [immich.app](https://immich.app/) |
-| **Paperless-NGX** | Document OCR | [docs.paperless-ngx.com](https://docs.paperless-ngx.com/) |
-| **Vaultwarden** | Password mgr | [GitHub](https://github.com/dani-garcia/vaultwarden) |
-| **Joplin Server** | Note sync | [joplinapp.org](https://joplinapp.org/) |
-| **Memos** | Quick notes | [usememos.com](https://usememos.com/) |
-| **Linkwarden** | Bookmarks | [linkwarden.app](https://linkwarden.app/) |
-| **Cal.com** | Scheduling | [cal.com](https://cal.com/) |
-| **Audiobookshelf** | Audiobooks | [audiobookshelf.org](https://www.audiobookshelf.org/) |
-| **Stirling-PDF** | PDF tools | [GitHub](https://github.com/Stirling-Tools/Stirling-PDF) |
-
-### Security & Network (4 containers)
-
-| Service | Purpose | Link |
-|---------|---------|------|
-| **Pi-hole** | DNS + Ad-block | [pi-hole.net](https://pi-hole.net/) |
-| **Pangolin** | Tunnel server | [GitHub](https://github.com/fosrl/pangolin) · [Docs](https://docs.pangolin.net) |
-| **Gerbil** | WG gateway | [GitHub](https://github.com/fosrl/pangolin) |
-| **CrowdSec** | IDS/IPS | [crowdsec.net](https://www.crowdsec.net/) |
-
-### Infrastructure (14 containers)
-
-| Service | Purpose | Link |
-|---------|---------|------|
-| **Traefik** | Reverse proxy | [traefik.io](https://traefik.io/) · [Docs](https://doc.traefik.io/traefik/) |
-| **Dockge** | Container mgmt | [GitHub](https://github.com/louislam/dockge) |
-| **Syncthing** | File sync | [syncthing.net](https://syncthing.net/) |
-| **PostgreSQL** | Database (8x) | [postgresql.org](https://www.postgresql.org/) |
-| **Redis** | Cache (3x) | [redis.io](https://redis.io/) |
+Interactive diagrams: [Architecture](https://4nonx.github.io/homelab/architecture-diagram.html) · [Security layers](https://4nonx.github.io/homelab/security-diagram.html) · [Data flow](https://4nonx.github.io/homelab/dataflow-diagram.html)
 
 ---
 
-## 📚 Documentation
+## Security model
 
-### Primary Documentation
-
-| Document | Description | Lines | Read Time |
-|----------|-------------|-------|-----------|
-| **[📊 Executive Summary](EXECUTIVE_SUMMARY.md)** | Quick reference | 300 | 5 min |
-| **[🎯 Portfolio](PORTFOLIO.md)** | Skills showcase | 400 | 8 min |
-| **[📖 Complete Journey](homelab-complete-journey.md)** | Full story | 1,790 | 45 min |
-| **[📇 Index](INDEX.md)** | Doc index | 250 | 5 min |
-
-### Technical Documentation
-
-| Category | Documents |
-|----------|-----------|
-| **Hardware** | [Hardware Specs](hardware-specs.md) |
-| **Docker** | [Docker Infrastructure](docker-infrastructure.md) |
-| **Services** | [Media Stack](media-stack.md) · [Productivity](productivity-services.md) |
-| **Network** | [Network Security](network-security.md) · [Remote Access](remote-access.md) |
-| **Pangolin** | [Infrastructure](pangolin-infrastructure.md) · [Configs](pangolin-configurations.md) · [Deployment](pangolin-deployment-guide.md) |
-
----
-
-## 🛠️ Tech Stack
-
-### Core Technologies
-
-![Docker](https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-![Linux](https://img.shields.io/badge/Linux-FCC624?style=for-the-badge&logo=linux&logoColor=black)
-![Ubuntu](https://img.shields.io/badge/Ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white)
-![Traefik](https://img.shields.io/badge/Traefik-24A1C1?style=for-the-badge&logo=traefikproxy&logoColor=white)
-![Wireguard](https://img.shields.io/badge/Wireguard-88171A?style=for-the-badge&logo=wireguard&logoColor=white)
-![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=for-the-badge&logo=postgresql&logoColor=white)
-![Redis](https://img.shields.io/badge/Redis-DC382D?style=for-the-badge&logo=redis&logoColor=white)
-
-- **Container Orchestration:** Docker Compose
-- **Reverse Proxy:** Traefik v3 with automatic SSL
-- **Tunnel:** [Pangolin](https://github.com/fosrl/pangolin) (self-hosted)
-- **VPN:** Wireguard
-- **Storage:** BTRFS on mdadm RAID5
-- **Security:** CrowdSec IDS/IPS
-- **DNS:** Pi-hole
-
----
-
-## 💰 Cost Analysis
-
-### Investment & Operating Costs
+Defense in depth: each layer is independently hardened and does not rely on the correctness of outer layers.
 
 ```
-Initial Investment:
-  Hardware:          €1,290
-  VPS (3y):            €180
-  Domain (3y):          €36
-  ───────────────────────
-  Total:            €1,506
+Layer 1 — Perimeter (VPS)
+  UFW: only ports 80, 443, 51820 reachable from internet
+  CrowdSec: IP reputation, automated banning, community threat feeds
+  DDoS mitigation: IONOS network-level
 
-Annual Operating:
-  Electricity:         €75
-  VPS:                 €60
-  Domain:              €12
-  ───────────────────────
-  Total:              €147/year (€12/month)
-```
+Layer 2 — Transport
+  WireGuard: encrypted tunnel between VPS and home network
+  TLS 1.3: enforced at both outer (VPS Traefik) and inner (Pi Traefik) layers
+  Let's Encrypt: certificates auto-renewed, HSTS enabled
 
-### Replaced SaaS Services
+Layer 3 — Network isolation
+  Docker bridge networks scoped per service group
+  Databases not exposed to host network interface
+  Services communicate only via explicitly defined networks
 
-```
-Before (Annual):
-  Google One:          €30
-  Dropbox Plus:       €120
-  1Password:           €60
-  Spotify:            €180
-  Netflix:            €156
-  iCloud+:             €36
-  ───────────────────────
-  Total:              €582/year
+Layer 4 — Application
+  Per-service authentication; OIDC where supported
+  2FA enforced on Vaultwarden and Nextcloud
+  Vaultwarden for shared credential management
 
-Savings: €582/year - €147/year = €435/year
-```
-
-### ROI Timeline
-
-```
-Year 1:  -€1,071  (investment)
-Year 2:    -€636  (cumulative)
-Year 3:    -€201  (cumulative)  
-Year 4:    +€234  ✅ Break-even!
-Year 5:    +€669  (profit)
+Layer 5 — Data integrity
+  BTRFS checksumming: silent corruption detected and repaired via RAID5 parity
+  RAID5 redundancy: single-disk fault tolerance
+  Scheduled scrubs verify the full pool
 ```
 
 ---
 
-## 🎓 Skills Demonstrated
+## Service matrix
 
-### Infrastructure
-- Hardware selection & assembly
-- Linux system administration (Ubuntu/ZimaOS)
-- Storage architecture (BTRFS, RAID5)
-- Performance optimization
+### Media
 
-### Networking
-- Multi-server architecture (VPS + Homelab)
-- VPN tunneling (Wireguard)
-- Reverse proxy (Traefik + SSL)
-- DNS management (Pi-hole)
-- Network segmentation
+| Service | Purpose | Compose |
+|---|---|---|
+| Emby | Media server | `services/media/` |
+| Sonarr | TV show automation | `services/media/media-management-compose.yaml` |
+| Radarr | Movie automation | `services/media/media-management-compose.yaml` |
+| Lidarr | Music automation | `services/media/media-management-compose.yaml` |
+| Prowlarr | Indexer management | `services/media/media-management-compose.yaml` |
+| Bazarr | Subtitle automation | `services/media/media-management-compose.yaml` |
+| qBittorrent | Download client (via Gluetun VPN) | `services/media/media-management-compose.yaml` |
+| Gluetun | WireGuard VPN gateway for downloads | `services/media/media-management-compose.yaml` |
+| SwingMusic | Self-hosted music player | `services/media/swingmusic/` |
+| Navidrome | Music streaming (Subsonic API) | `services/media/navidrome/` |
+| Audiobookshelf | Audiobooks + podcast server | `services/media/audiobookshelf/` |
+| Pinchflat | YouTube archiver | `services/media/pinchflat/` |
+| Stremio Server | Streaming add-on server | `services/media/stremio/` |
 
-### Security
-- Defense in depth (6 layers)
-- IDS/IPS (CrowdSec)
-- Encryption (data at rest & in transit)
-- Access control & hardening
-- Security monitoring
+### Productivity & cloud
 
-### DevOps
-- Docker & Docker Compose
-- Infrastructure as Code
-- Automated backups
-- CI/CD concepts (Watchtower)
-- Monitoring & logging
+| Service | Purpose | Compose |
+|---|---|---|
+| Nextcloud + Collabora | File sync, cloud office suite | `services/productivity/compose.yaml` |
+| Nextcloud Talk HPB | High-performance video call backend | `services/productivity/compose.yaml` |
+| Immich | Google Photos replacement | `services/media/immich/` |
+| Paperless-NGX | Document OCR and archive | `services/productivity/big-bear-paperless-ngx/` |
+| Vaultwarden | Self-hosted Bitwarden server | `infrastructure/security/vaultwarden/` |
+| Joplin Server | Note sync backend | `services/productivity/big-bear-joplin/` |
+| Memos | Lightweight notes / journal | `services/productivity/memos/` |
+| Linkwarden | Bookmark archiver with full-page capture | `services/productivity/big-bear-linkwarden/` |
+| Wallos | Subscription and expense tracker | `services/productivity/big-bear-wallos/` |
 
-### Documentation
-- Technical writing (5,000+ lines)
-- Architecture diagrams
-- Deployment guides
-- Best practices
+### Infrastructure & management
+
+| Service | Purpose | Compose |
+|---|---|---|
+| Pi-hole | Network-wide DNS + ad-blocking | `infrastructure/networking/pihole/` |
+| Traefik v3 | Reverse proxy, TLS termination | VPS-managed — see `infrastructure/networking/traefik/` |
+| Pangolin + Gerbil | Self-hosted WireGuard tunnel | VPS + Pi — see `infrastructure/networking/pangolin/` |
+| CrowdSec | IDS/IPS, collaborative threat intel | VPS-managed — see `infrastructure/security/crowdsec/` |
+| Dockge | Docker Compose management UI | `infrastructure/monitoring/big-bear-dockge/` |
+| Dockpeek | Container health dashboard | `infrastructure/monitoring/big-bear-dockpeek/` |
+| Scrutiny | S.M.A.R.T disk health monitoring | `infrastructure/monitoring/big-bear-scrutiny/` |
+| Glances | System resource monitoring | `infrastructure/monitoring/compose.yaml` |
+| Syncthing | Peer-to-peer file sync (config backup) | `services/management/syncthing/` |
+| SearXNG | Self-hosted metasearch engine | `services/management/searxng/` |
+| PostgreSQL (×8) | Relational database instances | Per-service |
+| Redis (×3) | In-memory cache instances | Per-service |
+
+### Development
+
+| Service | Purpose | Location |
+|---|---|---|
+| D-PlaneOS portfolio app | Next.js frontend + FastAPI backend + PDF resume parser | `services/development/` |
 
 ---
 
-## 📈 Statistics
+## Storage strategy
+
+> Full details: [infrastructure/storage/README.md](infrastructure/storage/README.md)
+
+**33 TB usable capacity** — four HDDs in mdadm RAID5 with BTRFS on top.
 
 ```
-Timeline:           6+ months
-Services:           40+ containers
-Storage:            33TB RAID5 (10% used)
-RAM:                32GB (31% used)
-Uptime:             ~90%+
-Power:              30W avg, 60W peak
-Documentation:      5,000+ lines, 17 files
+/dev/md0  (BTRFS RAID5)
+├── @           system root subvolume
+├── @home       user home directories
+├── @appdata    /DATA/AppData — all container bind-mount volumes
+└── @media      /DATA/Media  — media library
+```
+
+BTRFS brings self-healing (checksums + RAID5 parity repair), copy-on-write snapshots, and `zstd` inline compression. Every data and metadata block is checksummed; weekly `btrfs scrub` validates the full pool. Silent bit-rot is caught and repaired automatically.
+
+Performance: ~400–500 MB/s sequential read, ~350–450 MB/s sequential write (HDD-limited). BTRFS CoW overhead is ~5–10%.
+
+The NixOS migration plan separates the OS/boot pool (ZFS, NVMe) from the data pool (BTRFS, retaining existing drives). See [docs/NIXOS-MIGRATION.md](docs/NIXOS-MIGRATION.md).
+
+---
+
+## Repository structure
+
+```
+homelab/
+├── infrastructure/
+│   ├── networking/
+│   │   ├── pihole/           # Pi-hole DNS + ad-blocking (compose)
+│   │   ├── traefik/          # Traefik config notes (VPS-managed)
+│   │   └── pangolin/         # Pangolin tunnel docs + component map
+│   ├── security/
+│   │   ├── vaultwarden/      # Vaultwarden compose
+│   │   └── crowdsec/         # CrowdSec notes (VPS-managed)
+│   ├── monitoring/
+│   │   ├── big-bear-scrutiny/  # S.M.A.R.T monitoring
+│   │   ├── big-bear-dockge/    # Compose management UI
+│   │   ├── big-bear-dockpeek/  # Container health dashboard
+│   │   └── compose.yaml        # Glances + homelab dashboard
+│   └── storage/
+│       └── README.md           # BTRFS RAID5 documentation
+├── services/
+│   ├── media/
+│   │   ├── media-management-compose.yaml  # Arr suite + Gluetun + qBittorrent
+│   │   ├── audiobookshelf/
+│   │   ├── immich/
+│   │   ├── navidrome/
+│   │   ├── pinchflat/
+│   │   ├── stremio/
+│   │   └── swingmusic/
+│   ├── productivity/
+│   │   ├── compose.yaml              # Nextcloud + Collabora + Talk HPB
+│   │   ├── big-bear-joplin/
+│   │   ├── big-bear-linkwarden/
+│   │   ├── big-bear-paperless-ngx/
+│   │   ├── big-bear-wallos/
+│   │   └── memos/
+│   ├── management/
+│   │   ├── compose.yaml     # Stacks management compose
+│   │   ├── syncthing/
+│   │   └── searxng/
+│   └── development/
+│       └── ...              # D-PlaneOS portfolio app (Next.js + FastAPI)
+├── scripts/
+│   └── export-all-compose.sh
+├── docs/
+│   ├── hardware-specs.md
+│   ├── homelab-complete-journey.md
+│   ├── docker-infrastructure.md
+│   ├── network-security.md
+│   ├── network-remote-access.md
+│   ├── media-stack.md
+│   ├── productivity-services.md
+│   ├── nextcloud-optimization-guide.md
+│   ├── homelab-dashboard-guide.md
+│   ├── pangolin-infrastructure.md
+│   ├── pangolin-deployment-guide.md
+│   ├── pangolin-configurations.md
+│   ├── pangolin-vps-relay-guide.md
+│   ├── pangolin-upgrade-guide.md
+│   ├── pangolin-z-performance-tuning.md
+│   ├── pangolin-traefikdashboard-guide.md
+│   ├── NIXOS-MIGRATION.md
+│   ├── DOCKER-SERVICES.md
+│   ├── INDEX.md
+│   └── *.html               # Interactive architecture diagrams
+├── docker/                  # Legacy source tree — see docker/README.md
+├── .env.example             # All required environment variables
+└── README.md
 ```
 
 ---
 
-## 🚀 Getting Started
+## Tech stack
 
-### Learn More
-
-1. Read the **[Complete Journey](homelab-complete-journey.md)** - Full walkthrough
-2. Follow **[Pangolin Deployment Guide](pangolin-deployment-guide.md)** - Step-by-step
-3. Check **[Docker Best Practices](docker-infrastructure.md)** - Architecture patterns
-
-### Community Resources
-
-- **r/selfhosted:** [reddit.com/r/selfhosted](https://reddit.com/r/selfhosted)
-- **r/homelab:** [reddit.com/r/homelab](https://reddit.com/r/homelab)
-- **Awesome Selfhosted:** [github.com/awesome-selfhosted](https://github.com/awesome-selfhosted/awesome-selfhosted)
-
----
-
-## 🙏 Acknowledgments
-
-Special thanks to:
-
-- **[Pangolin](https://github.com/fosrl/pangolin)** - Self-hosted tunnel solution
-- **[LinuxServer.io](https://linuxserver.io)** - Quality container images
-- **[Traefik](https://traefik.io/)** - Modern reverse proxy
-- **[CrowdSec](https://crowdsec.net)** - Community security
-- All open-source self-hosted projects
+| Layer | Technology |
+|---|---|
+| Operating system | NixOS — declarative, reproducible, atomic OTA |
+| NAS management | D-PlaneOS v3.3.1 — ZFS/BTRFS pools, SMB/NFS, Docker, web UI |
+| Container orchestration | Docker Compose |
+| Reverse proxy | Traefik v3 — TLS 1.3, automatic Let's Encrypt |
+| Tunnel | [Pangolin](https://github.com/fosrl/pangolin) — self-hosted WireGuard |
+| Security | CrowdSec IDS/IPS |
+| DNS | Pi-hole |
+| Storage | BTRFS on mdadm RAID5 — 33 TB |
+| Databases | PostgreSQL 14 (×8 instances), Redis Alpine (×3 instances) |
+| Hardware | Intel i3-13100 / 32 GB DDR4-3200 / 120 GB NVMe |
+| VPS gateway | IONOS Berlin — 2 vCPU / 2 GB / 80 GB NVMe |
 
 ---
 
-## 📄 License
+## Cost analysis
 
-This documentation is available for **educational purposes**.
+```
+Initial investment
+  Hardware            €1,290
+  VPS (3 yr)            €180
+  Domain (3 yr)          €36
+  ────────────────────────────
+  Total               €1,506
 
-✅ Reference and learn from this architecture  
-✅ Adapt concepts for your own projects  
-⚠️ Replace all placeholder values before use
+Annual operating cost
+  Electricity           €75    (~30 W average, €0.30/kWh)
+  VPS                   €60
+  Domain                €12
+  ────────────────────────────
+  Total                €147/yr  (€12/month)
+
+Replaced SaaS (annual)
+  Google One            €30
+  Dropbox Plus         €120
+  1Password             €60
+  Spotify              €180
+  Netflix              €156
+  iCloud+               €36
+  ────────────────────────────
+  Total replaced       €582/yr
+
+Net savings: €435/yr → break-even Year 4
+```
 
 ---
 
-## 📞 Connect
+## Documentation
 
-[![GitHub](https://img.shields.io/badge/GitHub-4nonX-181717?style=for-the-badge&logo=github)](https://github.com/4nonX)
-[![LinkedIn](https://img.shields.io/badge/LinkedIn-Connect-0A66C2?style=for-the-badge&logo=linkedin)](https://linkedin.com/in/dan-dressen)
+| Document | Description |
+|---|---|
+| [Complete Journey](docs/homelab-complete-journey.md) | Full build narrative, decisions, and lessons learned |
+| [Hardware Specs](docs/hardware-specs.md) | Component list, benchmarks, power draw |
+| [Docker Infrastructure](docs/docker-infrastructure.md) | Container architecture and patterns |
+| [Network Security](docs/network-security.md) | Security layer detail |
+| [Remote Access](docs/network-remote-access.md) | VPN comparison, Pangolin vs Tailscale vs ZeroTier |
+| [Pangolin Infrastructure](docs/pangolin-infrastructure.md) | Tunnel architecture deep-dive |
+| [Pangolin Deployment Guide](docs/pangolin-deployment-guide.md) | Step-by-step VPS setup |
+| [Pangolin Configurations](docs/pangolin-configurations.md) | Config file reference |
+| [Pangolin VPS Relay](docs/pangolin-vps-relay-guide.md) | Relay server setup |
+| [Pangolin Upgrade Guide](docs/pangolin-upgrade-guide.md) | Version upgrade procedures |
+| [Pangolin Performance Tuning](docs/pangolin-z-performance-tuning.md) | Kernel sysctl optimisations |
+| [Pangolin Traefik Dashboard](docs/pangolin-traefikdashboard-guide.md) | Dashboard configuration |
+| [Media Stack](docs/media-stack.md) | Arr suite + Emby configuration |
+| [Productivity Services](docs/productivity-services.md) | Nextcloud, Immich, Paperless setup |
+| [Nextcloud Optimisation](docs/nextcloud-optimization-guide.md) | PostgreSQL + Redis + PHP tuning |
+| [Dashboard Guide](docs/homelab-dashboard-guide.md) | Homelab dashboard setup |
+| [NixOS Migration Plan](docs/NIXOS-MIGRATION.md) | ZimaOS → NixOS migration roadmap |
+| [Service Index](docs/DOCKER-SERVICES.md) | Full service inventory |
 
 ---
 
-<div align="center">
+## Quick start
 
-**Built with** ❤️ **and** ☕
+```bash
+# Clone
+git clone https://github.com/4nonX/homelab
 
-**Powered by** 🐳 Docker · 🐧 Linux · 🔒 Self-Hosted
+# Set up environment variables
+cp .env.example .env
+$EDITOR .env   # fill in domains, passwords, IPs
 
-⭐ **Star this repo if you found it useful!** ⭐
+# Deploy a stack — example: Nextcloud
+cd services/productivity
+docker compose up -d
 
-</div>
+# Deploy monitoring
+cd infrastructure/monitoring
+docker compose -f compose.yaml up -d
+```
+
+For the full external access setup (Pangolin tunnel + Traefik + CrowdSec on VPS), start with [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md).
+
+---
+
+[![D-PlaneOS](https://img.shields.io/badge/D--PlaneOS-open_source_NAS_OS-blueviolet?style=flat-square&logo=github)](https://github.com/4nonX/D-PlaneOS)

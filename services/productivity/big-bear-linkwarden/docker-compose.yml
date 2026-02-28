@@ -1,0 +1,87 @@
+name: big-bear-linkwarden
+services:
+    linkwarden:
+        cpu_shares: 90
+        command: []
+        container_name: big-bear-linkwarden
+        deploy:
+            resources:
+                limits:
+                    memory: "33416249344"
+                reservations: {}
+        environment:
+            DATABASE_URL: postgresql://casaos:casaospassword@big-bear-linkwarden-db:5432/big-bear-linkwarden
+            NEXT_PUBLIC_DISABLE_REGISTRATION: ""
+            NEXTAUTH_SECRET: XXXXXXXXXXXXXXXXXXXXXXXXXXX
+            NEXTAUTH_URL: http://localhost/api/v1/auth
+        image: ghcr.io/linkwarden/linkwarden:latest
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/linkwarden.png
+        networks:
+            linkwarden_network: null
+        ports:
+            - mode: ingress
+              target: 3000
+              published: "3335"
+              protocol: tcp
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /DATA/AppData/big-bear-linkwarden/data/linkwarden
+              target: /data/data
+              bind:
+                create_host_path: true
+    linkwarden-db:
+        cpu_shares: 90
+        command: []
+        container_name: big-bear-linkwarden-db
+        deploy:
+            resources:
+                limits:
+                    memory: "33416249344"
+                reservations: {}
+        environment:
+            POSTGRES_DB: big-bear-linkwarden
+            POSTGRES_PASSWORD: XXXXXXXXXXX
+            POSTGRES_USER: XXXXXXXXX
+        image: postgres:16
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/linkwarden.png
+        networks:
+            linkwarden_network: null
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /DATA/AppData/big-bear-linkwarden/data/postgres
+              target: /var/lib/postgresql/data
+              bind:
+                create_host_path: true
+networks:
+    default:
+        name: big-bear-linkwarden_default
+    linkwarden_network:
+        name: big-bear-linkwarden_linkwarden_network
+        driver: bridge
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+    author: BigBearTechWorld
+    category: BigBearCasaOS
+    description:
+        en_us: ⚡️⚡️⚡️Self-hosted collaborative bookmark manager to collect, organize, and preserve webpages and articles.
+    developer: linkwarden
+    hostname: ""
+    icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/linkwarden.png
+    index: /
+    is_uncontrolled: false
+    main: linkwarden
+    port_map: "3335"
+    scheme: http
+    store_app_id: big-bear-linkwarden
+    tagline:
+        en_us: Linkwarden
+    thumbnail: ""
+    title:
+        custom: ""
+        en_us: Linkwarden

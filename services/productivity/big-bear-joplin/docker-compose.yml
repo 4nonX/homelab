@@ -1,0 +1,139 @@
+name: big-bear-joplin
+services:
+    big-bear-joplin:
+        cpu_shares: 90
+        command: []
+        container_name: big-bear-joplin
+        depends_on:
+            big-bear-joplin-db:
+                condition: service_started
+                required: true
+        deploy:
+            resources:
+                limits:
+                    memory: "33416249344"
+                reservations: {}
+        environment:
+            APP_BASE_URL: https://joplin.d-net.me
+            APP_PORT: "22300"
+            DB_CLIENT: pg
+            MAX_TIME_DRIFT: "0"
+            POSTGRES_DATABASE: joplin
+            POSTGRES_HOST: big-bear-joplin-db
+            POSTGRES_PASSWORD: 27a1d42a-a15d-43dd-903c-2a73538647fe
+            POSTGRES_PORT: "5432"
+            POSTGRES_USER: bigbear
+        image: joplin/server:3.5.2
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/joplin.png
+        networks:
+            big-bear-joplin: null
+        ports:
+            - mode: ingress
+              target: 22300
+              published: "22300"
+              protocol: tcp
+        restart: unless-stopped
+        x-casaos:
+            envs:
+                - container: APP_PORT
+                  description:
+                    en_us: 'Container Variable: APP_PORT'
+                - container: APP_BASE_URL
+                  description:
+                    en_us: 'Container Variable: APP_BASE_URL'
+                - container: DB_CLIENT
+                  description:
+                    en_us: 'Container Variable: DB_CLIENT'
+                - container: POSTGRES_PASSWORD
+                  description:
+                    en_us: 'Container Variable: POSTGRES_PASSWORD'
+                - container: POSTGRES_USER
+                  description:
+                    en_us: 'Container Variable: POSTGRES_USER'
+                - container: POSTGRES_DATABASE
+                  description:
+                    en_us: 'Container Variable: POSTGRES_DATABASE'
+                - container: POSTGRES_PORT
+                  description:
+                    en_us: 'Container Variable: POSTGRES_PORT'
+                - container: POSTGRES_HOST
+                  description:
+                    en_us: 'Container Variable: POSTGRES_HOST'
+                - container: MAX_TIME_DRIFT
+                  description:
+                    en_us: 'Container Variable: MAX_TIME_DRIFT'
+            ports:
+                - container: "22300"
+                  description:
+                    en_us: 'Container Port: 22300'
+    big-bear-joplin-db:
+        cpu_shares: 90
+        command: []
+        container_name: big-bear-joplin-db
+        deploy:
+            resources:
+                limits:
+                    memory: "33416249344"
+                reservations: {}
+        environment:
+            POSTGRES_DB: joplin
+            POSTGRES_PASSWORD: 27a1d42a-a15d-43dd-903c-2a73538647fe
+            POSTGRES_USER: bigbear
+        image: postgres:14.2
+        labels:
+            icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/joplin.png
+        networks:
+            big-bear-joplin: null
+        restart: unless-stopped
+        volumes:
+            - type: bind
+              source: /DATA/AppData/big-bear-joplin/postgresql/data
+              target: /var/lib/postgresql/data
+              bind:
+                create_host_path: true
+        x-casaos:
+            envs:
+                - container: POSTGRES_PASSWORD
+                  description:
+                    en_us: 'Container Variable: POSTGRES_PASSWORD'
+                - container: POSTGRES_USER
+                  description:
+                    en_us: 'Container Variable: POSTGRES_USER'
+                - container: POSTGRES_DB
+                  description:
+                    en_us: 'Container Variable: POSTGRES_DB'
+            volumes:
+                - container: /var/lib/postgresql/data
+                  description:
+                    en_us: 'Container Path: /var/lib/postgresql/data'
+networks:
+    big-bear-joplin:
+        name: big-bear-joplin
+x-casaos:
+    architectures:
+        - amd64
+        - arm64
+    author: BigBearTechWorld
+    category: BigBearCasaOS
+    description:
+        en_us: Note taking and to-do application with synchronisation
+    developer: joplin
+    hostname: joplin.d-net.me
+    icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/joplin.png
+    index: /
+    is_uncontrolled: false
+    main: big-bear-joplin
+    port_map: "22300"
+    scheme: https
+    store_app_id: big-bear-joplin
+    tagline:
+        en_us: joplin
+    thumbnail: ""
+    tips:
+        before_install:
+            en_us: |
+                Read this before installing: https://community.bigbeartechworld.com/t/added-joplin-server-to-bigbearcasaos/800?u=dragonfire1119
+    title:
+        custom: ""
+        en_us: joplin

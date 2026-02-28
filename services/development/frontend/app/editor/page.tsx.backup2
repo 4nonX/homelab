@@ -1,0 +1,813 @@
+'use client';
+
+import { useState, useEffect, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { authAPI, portfolioAPI } from '@/lib/api';
+import toast from 'react-hot-toast';
+
+type Tab = 'basics' | 'experience' | 'education' | 'projects' | 'skills' | 'languages' | 'certifications';
+
+export default function EditorPage() {
+  const router = useRouter();
+  const [portfolio, setPortfolio] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+  const [username, setUsername] = useState('');
+  const [activeTab, setActiveTab] = useState<Tab>('basics');
+  const photoInputRef = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const init = async () => {
+      if (!authAPI.isAuthenticated()) {
+        router.push('/login');
+        return;
+      }
+
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const user = JSON.parse(userStr);
+        setUsername(user.username);
+      }
+
+      try {
+        const data = await portfolioAPI.getMyPortfolio();
+        setPortfolio(data);
+      } catch (error) {
+        toast.error('Failed to load');
+      } finally {
+        setLoading(false);
+      }
+    };
+    init();
+  }, [router]);
+
+  const handlePhotoUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    
+    if (file.size > 2 * 1024 * 1024) {
+      toast.error('Photo must be under 2MB');
+      return;
+    }
+    
+    const reader = new FileReader();
+    reader.onload = () => {
+      setPortfolio({ ...portfolio, profile_photo: reader.result });
+      toast.success('Photo uploaded! Remember to save.');
+    };
+    reader.readAsDataURL(file);
+  };
+
+  const handleSave = async () => {
+    try {
+      await portfolioAPI.updatePortfolio(portfolio);
+      toast.success('Saved!');
+    } catch (error) {
+      toast.error('Failed');
+    }
+  };
+
+  const addExperience = () => {
+    const newExp = {
+      company: '',
+      position: '',
+      location: '',
+      start_date: '',
+      end_date: '',
+      description: ''
+    };
+    setPortfolio({
+      ...portfolio,
+      experience: [...(portfolio.experience || []), newExp]
+    });
+  };
+
+  const updateExperience = (index: number, field: string, value: string) => {
+    const updated = [...portfolio.experience];
+    updated[index] = { ...updated[index], [field]: value };
+    setPortfolio({ ...portfolio, experience: updated });
+  };
+
+  const deleteExperience = (index: number) => {
+    const updated = portfolio.experience.filter((_: any, i: number) => i !== index);
+    setPortfolio({ ...portfolio, experience: updated });
+  };
+
+  const addEducation = () => {
+    const newEdu = {
+      institution: '',
+      degree: '',
+      location: '',
+      start_date: '',
+      end_date: '',
+      description: ''
+    };
+    setPortfolio({
+      ...portfolio,
+      education: [...(portfolio.education || []), newEdu]
+    });
+  };
+
+  const updateEducation = (index: number, field: string, value: string) => {
+    const updated = [...portfolio.education];
+    updated[index] = { ...updated[index], [field]: value };
+    setPortfolio({ ...portfolio, education: updated });
+  };
+
+  const deleteEducation = (index: number) => {
+    const updated = portfolio.education.filter((_: any, i: number) => i !== index);
+    setPortfolio({ ...portfolio, education: updated });
+  };
+
+  const addProject = () => {
+    const newProj = {
+      name: '',
+      description: '',
+      technologies: '',
+      url: ''
+    };
+    setPortfolio({
+      ...portfolio,
+      projects: [...(portfolio.projects || []), newProj]
+    });
+  };
+
+  const updateProject = (index: number, field: string, value: string) => {
+    const updated = [...portfolio.projects];
+    updated[index] = { ...updated[index], [field]: value };
+    setPortfolio({ ...portfolio, projects: updated });
+  };
+
+  const deleteProject = (index: number) => {
+    const updated = portfolio.projects.filter((_: any, i: number) => i !== index);
+    setPortfolio({ ...portfolio, projects: updated });
+  };
+
+  const addSkill = (skill: string) => {
+    if (!skill.trim()) return;
+    setPortfolio({
+      ...portfolio,
+      skills: [...(portfolio.skills || []), skill.trim()]
+    });
+  };
+
+  const deleteSkill = (index: number) => {
+    const updated = portfolio.skills.filter((_: any, i: number) => i !== index);
+    setPortfolio({ ...portfolio, skills: updated });
+  };
+
+  const addLanguage = () => {
+    const newLang = {
+      language: '',
+      proficiency: ''
+    };
+    setPortfolio({
+      ...portfolio,
+      languages_spoken: [...(portfolio.languages_spoken || []), newLang]
+    });
+  };
+
+  const updateLanguage = (index: number, field: string, value: string) => {
+    const updated = [...portfolio.languages_spoken];
+    updated[index] = { ...updated[index], [field]: value };
+    setPortfolio({ ...portfolio, languages_spoken: updated });
+  };
+
+  const deleteLanguage = (index: number) => {
+    const updated = portfolio.languages_spoken.filter((_: any, i: number) => i !== index);
+    setPortfolio({ ...portfolio, languages_spoken: updated });
+  };
+
+  const addCertification = () => {
+    const newCert = {
+      name: '',
+      issuer: '',
+      date: ''
+    };
+    setPortfolio({
+      ...portfolio,
+      certifications: [...(portfolio.certifications || []), newCert]
+    });
+  };
+
+  const updateCertification = (index: number, field: string, value: string) => {
+    const updated = [...portfolio.certifications];
+    updated[index] = { ...updated[index], [field]: value };
+    setPortfolio({ ...portfolio, certifications: updated });
+  };
+
+  const deleteCertification = (index: number) => {
+    const updated = portfolio.certifications.filter((_: any, i: number) => i !== index);
+    setPortfolio({ ...portfolio, certifications: updated });
+  };
+
+  if (loading || !portfolio) {
+    return (
+      <div className="min-h-screen bg-[#0F1419] flex items-center justify-center text-white">
+        Loading...
+      </div>
+    );
+  }
+
+  const url = `http://192.168.8.158:3000/${username}`;
+
+  const tabs = [
+    { id: 'basics' as Tab, label: 'Basics' },
+    { id: 'experience' as Tab, label: 'Experience' },
+    { id: 'education' as Tab, label: 'Education' },
+    { id: 'projects' as Tab, label: 'Projects' },
+    { id: 'skills' as Tab, label: 'Skills' },
+    { id: 'languages' as Tab, label: 'Languages' },
+    { id: 'certifications' as Tab, label: 'Certifications' }
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#0F1419] text-white p-8">
+      <div className="max-w-6xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold text-white">Portfolio Editor</h1>
+          <div className="flex gap-4">
+            <a href={url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-6 py-2 bg-[#1C2128] border border-gray-700 hover:border-gray-600 text-white rounded-lg font-semibold"
+            >
+              View Portfolio →
+            </a>
+            <button onClick={handleSave} className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white rounded-lg font-semibold">
+              Save Changes
+            </button>
+          </div>
+        </div>
+
+        <div className="flex gap-2 mb-6 border-b border-gray-800">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-6 py-3 font-medium transition-colors ${
+                activeTab === tab.id
+                  ? 'text-blue-400 border-b-2 border-blue-400'
+                  : 'text-gray-400 hover:text-gray-300'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+
+        <div className="bg-[#1C2128] p-8 rounded-xl border border-gray-800">
+          
+          {activeTab === 'basics' && (
+            <div className="space-y-6">
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Profile Photo</label>
+                <div className="flex items-center gap-4">
+                  {portfolio.profile_photo && (
+                    <img 
+                      src={portfolio.profile_photo} 
+                      alt="Profile" 
+                      className="w-24 h-24 rounded-full object-cover border-2 border-gray-700"
+                    />
+                  )}
+                  <button
+                    onClick={() => photoInputRef.current?.click()}
+                    className="px-4 py-2 bg-[#0F1419] border border-gray-700 rounded-lg text-white hover:border-gray-600"
+                  >
+                    {portfolio.profile_photo ? 'Change Photo' : 'Upload Photo'}
+                  </button>
+                  {portfolio.profile_photo && (
+                    <button
+                      onClick={() => setPortfolio({ ...portfolio, profile_photo: null })}
+                      className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg text-white"
+                    >
+                      Remove
+                    </button>
+                  )}
+                </div>
+                <p className="text-xs text-gray-500 mt-2">Max 2MB. Square images work best.</p>
+                <input
+                  ref={photoInputRef}
+                  type="file"
+                  accept="image/*"
+                  onChange={handlePhotoUpload}
+                  className="hidden"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Name</label>
+                <input
+                  type="text"
+                  value={portfolio.name || ''}
+                  onChange={(e) => setPortfolio({ ...portfolio, name: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Title</label>
+                <input
+                  type="text"
+                  value={portfolio.title || ''}
+                  onChange={(e) => setPortfolio({ ...portfolio, title: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Email</label>
+                <input
+                  type="email"
+                  value={portfolio.email || ''}
+                  onChange={(e) => setPortfolio({ ...portfolio, email: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Phone</label>
+                <input
+                  type="text"
+                  value={portfolio.phone || ''}
+                  onChange={(e) => setPortfolio({ ...portfolio, phone: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Location</label>
+                <input
+                  type="text"
+                  value={portfolio.location || ''}
+                  onChange={(e) => setPortfolio({ ...portfolio, location: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Summary</label>
+                <textarea
+                  value={portfolio.summary || ''}
+                  onChange={(e) => setPortfolio({ ...portfolio, summary: e.target.value })}
+                  rows={4}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                />
+              </div>
+
+              <div>
+                <label className="block mb-2 text-sm font-medium text-gray-300">Theme</label>
+                <select
+                  value={portfolio.theme || 'modern'}
+                  onChange={(e) => setPortfolio({ ...portfolio, theme: e.target.value })}
+                  className="w-full px-4 py-3 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                >
+                  <option value="modern">Modern</option>
+                  <option value="minimal">Minimal</option>
+                  <option value="professional">Professional</option>
+                  <option value="aurora">Aurora</option>
+                  <option value="dark-ocean">Dark Ocean</option>
+                  <option value="cosmic">Cosmic</option>
+                </select>
+              </div>
+            </div>
+          )}
+
+          {activeTab === 'experience' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Work Experience</h2>
+                <button
+                  onClick={addExperience}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+                >
+                  + Add Experience
+                </button>
+              </div>
+
+              {portfolio.experience?.map((exp: any, index: number) => (
+                <div key={index} className="p-6 bg-[#0F1419] border border-gray-700 rounded-lg space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium text-gray-300">Experience #{index + 1}</h3>
+                    <button
+                      onClick={() => deleteExperience(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Company</label>
+                      <input
+                        type="text"
+                        value={exp.company || ''}
+                        onChange={(e) => updateExperience(index, 'company', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Position</label>
+                      <input
+                        type="text"
+                        value={exp.position || ''}
+                        onChange={(e) => updateExperience(index, 'position', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Location</label>
+                      <input
+                        type="text"
+                        value={exp.location || ''}
+                        onChange={(e) => updateExperience(index, 'location', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Start Date</label>
+                      <input
+                        type="text"
+                        value={exp.start_date || ''}
+                        onChange={(e) => updateExperience(index, 'start_date', e.target.value)}
+                        placeholder="MM/YYYY"
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">End Date</label>
+                      <input
+                        type="text"
+                        value={exp.end_date || ''}
+                        onChange={(e) => updateExperience(index, 'end_date', e.target.value)}
+                        placeholder="MM/YYYY or Present"
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-400">Description</label>
+                    <textarea
+                      value={exp.description || ''}
+                      onChange={(e) => updateExperience(index, 'description', e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {(!portfolio.experience || portfolio.experience.length === 0) && (
+                <p className="text-center text-gray-500 py-8">No experience entries yet. Click "Add Experience" to start.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'education' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Education</h2>
+                <button
+                  onClick={addEducation}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+                >
+                  + Add Education
+                </button>
+              </div>
+
+              {portfolio.education?.map((edu: any, index: number) => (
+                <div key={index} className="p-6 bg-[#0F1419] border border-gray-700 rounded-lg space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium text-gray-300">Education #{index + 1}</h3>
+                    <button
+                      onClick={() => deleteEducation(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Institution</label>
+                      <input
+                        type="text"
+                        value={edu.institution || ''}
+                        onChange={(e) => updateEducation(index, 'institution', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Degree</label>
+                      <input
+                        type="text"
+                        value={edu.degree || ''}
+                        onChange={(e) => updateEducation(index, 'degree', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Location</label>
+                      <input
+                        type="text"
+                        value={edu.location || ''}
+                        onChange={(e) => updateEducation(index, 'location', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Start Date</label>
+                      <input
+                        type="text"
+                        value={edu.start_date || ''}
+                        onChange={(e) => updateEducation(index, 'start_date', e.target.value)}
+                        placeholder="YYYY"
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">End Date</label>
+                      <input
+                        type="text"
+                        value={edu.end_date || ''}
+                        onChange={(e) => updateEducation(index, 'end_date', e.target.value)}
+                        placeholder="YYYY"
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-400">Description</label>
+                    <textarea
+                      value={edu.description || ''}
+                      onChange={(e) => updateEducation(index, 'description', e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {(!portfolio.education || portfolio.education.length === 0) && (
+                <p className="text-center text-gray-500 py-8">No education entries yet.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'projects' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Projects</h2>
+                <button
+                  onClick={addProject}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+                >
+                  + Add Project
+                </button>
+              </div>
+
+              {portfolio.projects?.map((proj: any, index: number) => (
+                <div key={index} className="p-6 bg-[#0F1419] border border-gray-700 rounded-lg space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium text-gray-300">Project #{index + 1}</h3>
+                    <button
+                      onClick={() => deleteProject(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Project Name</label>
+                      <input
+                        type="text"
+                        value={proj.name || ''}
+                        onChange={(e) => updateProject(index, 'name', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">URL (optional)</label>
+                      <input
+                        type="text"
+                        value={proj.url || ''}
+                        onChange={(e) => updateProject(index, 'url', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-400">Description</label>
+                    <textarea
+                      value={proj.description || ''}
+                      onChange={(e) => updateProject(index, 'description', e.target.value)}
+                      rows={3}
+                      className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block mb-1 text-sm text-gray-400">Technologies</label>
+                    <textarea
+                      value={proj.technologies || ''}
+                      onChange={(e) => updateProject(index, 'technologies', e.target.value)}
+                      rows={2}
+                      className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                    />
+                  </div>
+                </div>
+              ))}
+
+              {(!portfolio.projects || portfolio.projects.length === 0) && (
+                <p className="text-center text-gray-500 py-8">No projects yet.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'skills' && (
+            <div className="space-y-6">
+              <div className="mb-4">
+                <h2 className="text-xl font-bold mb-4">Skills</h2>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    id="skillInput"
+                    placeholder="Add a skill..."
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        const input = e.target as HTMLInputElement;
+                        addSkill(input.value);
+                        input.value = '';
+                      }
+                    }}
+                    className="flex-1 px-4 py-2 bg-[#0F1419] border border-gray-700 rounded-lg text-white"
+                  />
+                  <button
+                    onClick={() => {
+                      const input = document.getElementById('skillInput') as HTMLInputElement;
+                      addSkill(input.value);
+                      input.value = '';
+                    }}
+                    className="px-6 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-wrap gap-3">
+                {portfolio.skills?.map((skill: string, index: number) => (
+                  <div
+                    key={index}
+                    className="px-4 py-2 bg-blue-600/20 text-blue-300 rounded-full border border-blue-500/30 flex items-center gap-2"
+                  >
+                    <span>{skill}</span>
+                    <button
+                      onClick={() => deleteSkill(index)}
+                      className="text-red-400 hover:text-red-300 ml-2"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
+
+              {(!portfolio.skills || portfolio.skills.length === 0) && (
+                <p className="text-center text-gray-500 py-8">No skills yet.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'languages' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Languages</h2>
+                <button
+                  onClick={addLanguage}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+                >
+                  + Add Language
+                </button>
+              </div>
+
+              {portfolio.languages_spoken?.map((lang: any, index: number) => (
+                <div key={index} className="p-6 bg-[#0F1419] border border-gray-700 rounded-lg space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium text-gray-300">Language #{index + 1}</h3>
+                    <button
+                      onClick={() => deleteLanguage(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Language</label>
+                      <input
+                        type="text"
+                        value={lang.language || ''}
+                        onChange={(e) => updateLanguage(index, 'language', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Proficiency</label>
+                      <input
+                        type="text"
+                        value={lang.proficiency || ''}
+                        onChange={(e) => updateLanguage(index, 'proficiency', e.target.value)}
+                        placeholder="e.g., Native, Fluent, Intermediate"
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {(!portfolio.languages_spoken || portfolio.languages_spoken.length === 0) && (
+                <p className="text-center text-gray-500 py-8">No languages yet.</p>
+              )}
+            </div>
+          )}
+
+          {activeTab === 'certifications' && (
+            <div className="space-y-6">
+              <div className="flex justify-between items-center mb-4">
+                <h2 className="text-xl font-bold">Certifications</h2>
+                <button
+                  onClick={addCertification}
+                  className="px-4 py-2 bg-blue-600 hover:bg-blue-700 rounded-lg text-white"
+                >
+                  + Add Certification
+                </button>
+              </div>
+
+              {portfolio.certifications?.map((cert: any, index: number) => (
+                <div key={index} className="p-6 bg-[#0F1419] border border-gray-700 rounded-lg space-y-4">
+                  <div className="flex justify-between items-start">
+                    <h3 className="text-lg font-medium text-gray-300">Certification #{index + 1}</h3>
+                    <button
+                      onClick={() => deleteCertification(index)}
+                      className="text-red-400 hover:text-red-300"
+                    >
+                      Delete
+                    </button>
+                  </div>
+
+                  <div className="grid grid-cols-3 gap-4">
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Name</label>
+                      <input
+                        type="text"
+                        value={cert.name || ''}
+                        onChange={(e) => updateCertification(index, 'name', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Issuer</label>
+                      <input
+                        type="text"
+                        value={cert.issuer || ''}
+                        onChange={(e) => updateCertification(index, 'issuer', e.target.value)}
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                    <div>
+                      <label className="block mb-1 text-sm text-gray-400">Date</label>
+                      <input
+                        type="text"
+                        value={cert.date || ''}
+                        onChange={(e) => updateCertification(index, 'date', e.target.value)}
+                        placeholder="YYYY"
+                        className="w-full px-3 py-2 bg-[#1C2128] border border-gray-700 rounded text-white"
+                      />
+                    </div>
+                  </div>
+                </div>
+              ))}
+
+              {(!portfolio.certifications || portfolio.certifications.length === 0) && (
+                <p className="text-center text-gray-500 py-8">No certifications yet.</p>
+              )}
+            </div>
+          )}
+
+        </div>
+      </div>
+    </div>
+  );
+}

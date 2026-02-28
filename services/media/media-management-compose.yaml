@@ -1,0 +1,225 @@
+version: "3.8"
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest
+    container_name: gluetun
+    cap_add:
+      - NET_ADMIN
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    ports:
+      - 8090:8080
+      - 6881:6881
+      - 6881:6881/udp
+    volumes:
+      - /DATA/AppData/gluetun:/gluetun
+    environment:
+      - VPN_SERVICE_PROVIDER=protonvpn
+      - VPN_TYPE=wireguard
+      - WIREGUARD_PRIVATE_KEY={wireguard_private_key}
+      - WIREGUARD_ADDRESSES=10.2.0.2/32
+      - SERVER_COUNTRIES=Germany
+      - VPN_PORT_FORWARDING=on
+      - VPN_PORT_FORWARDING_PROVIDER=protonvpn
+      - FIREWALL_VPN_INPUT_PORTS=51820
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  qbittorrent:
+    image: linuxserver/qbittorrent:latest
+    container_name: qbittorrent
+    network_mode: service:gluetun
+    volumes:
+      - /DATA/AppData/qbittorrent:/config
+      - /DATA/Downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - WEBUI_PORT=8080
+    depends_on:
+      - gluetun
+    restart: unless-stopped
+
+  emby:
+    image: emby/embyserver:latest
+    container_name: emby
+    ports:
+      - 8096:8096
+      - 8920:8920
+    volumes:
+      - /DATA/AppData/emby/config:/config
+      - /media/mainpool/embysvr/Series:/data/tvshows
+      - /media/mainpool/embysvr/Movies:/data/movies
+      - /media/mainpool/embysvr/Anime:/data/anime
+      - /media/mainpool/embysvr/Music:/data/music
+      - /media/mainpool/embysvr/UserData:/data/user
+    environment:
+      - UID=1000
+      - GID=1000
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  seerr:
+    image: seerr/seerr:latest
+    container_name: seerr
+    ports:
+      - 3579:5055
+    volumes:
+      - /DATA/AppData/seerr:/app/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  sonarr:
+    image: linuxserver/sonarr:latest
+    container_name: sonarr
+    ports:
+      - 8989:8989
+    volumes:
+      - /DATA/AppData/sonarr:/config
+      - /media/mainpool/embysvr/Series:/tv
+      - /media/mainpool/embysvr/Anime:/anime
+      - /DATA/Downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  radarr:
+    image: linuxserver/radarr:latest
+    container_name: radarr
+    ports:
+      - 7878:7878
+    volumes:
+      - /DATA/AppData/radarr:/config
+      - /media/mainpool/embysvr/Movies:/movies
+      - /DATA/Downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  lidarr:
+    image: linuxserver/lidarr:latest
+    container_name: lidarr
+    ports:
+      - 8686:8686
+    volumes:
+      - /DATA/AppData/lidarr:/config
+      - /media/mainpool/embysvr/Music:/music
+      - /DATA/Downloads:/downloads
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  bazarr:
+    image: linuxserver/bazarr:latest
+    container_name: bazarr
+    ports:
+      - 6767:6767
+    volumes:
+      - /DATA/AppData/bazarr:/config
+      - /media/mainpool/embysvr/Movies:/movies
+      - /media/mainpool/embysvr/Series:/tv
+      - /media/mainpool/embysvr/Anime:/anime
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  prowlarr:
+    image: linuxserver/prowlarr:latest
+    container_name: prowlarr
+    ports:
+      - 9696:9696
+    volumes:
+      - /DATA/AppData/prowlarr:/config
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:latest
+    container_name: flaresolverr
+    ports:
+      - 8191:8191
+    volumes:
+      - /DATA/AppData/flaresolverr:/config
+    environment:
+      - LOG_LEVEL=info
+      - LOG_HTML=false
+      - CAPTCHA_SOLVER=none
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr:latest
+    container_name: recyclarr
+    volumes:
+      - /DATA/AppData/recyclarr:/config
+    environment:
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  homarr:
+    image: ghcr.io/ajnart/homarr:latest
+    container_name: homarr
+    ports:
+      - 7575:7575
+    volumes:
+      - /DATA/AppData/homarr/configs:/app/data/configs
+      - /DATA/AppData/homarr/icons:/app/public/icons
+      - /DATA/AppData/homarr/data:/data
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+  maintainerr:
+    image: ghcr.io/jorenn92/maintainerr:latest
+    container_name: maintainerr
+    ports:
+      - 6246:6246
+    volumes:
+      - /DATA/AppData/maintainerr:/opt/data
+    environment:
+      - TZ=Europe/Berlin
+    restart: unless-stopped
+    networks:
+      - mediastack
+
+networks:
+  mediastack:
+    name: mediastack
+    driver: bridge
