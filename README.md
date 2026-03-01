@@ -1,7 +1,7 @@
 # Homelab Infrastructure
 
 [![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
-[![Services](https://img.shields.io/badge/services-40+-blue?style=flat-square)](https://github.com/4nonX/homelab)
+[![Services](https://img.shields.io/badge/services-30+-blue?style=flat-square)](https://github.com/4nonX/homelab)
 [![Storage](https://img.shields.io/badge/storage-33TB_→_ZFS_RAID--Z2-orange?style=flat-square)](infrastructure/storage/README.md)
 [![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
 [![NAS](https://img.shields.io/badge/NAS_layer-D--PlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/D-PlaneOS)
