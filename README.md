@@ -260,7 +260,7 @@ homelab/
 | NAS management | [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) *(self-developed)* — ZFS pool management, SMB/NFS, Docker orchestration, web UI |
 | Container orchestration | [Docker Compose](https://docs.docker.com/compose/) |
 | Reverse proxy | [Traefik](https://github.com/traefik/traefik) v3 — TLS 1.3, automatic Let's Encrypt |
-| Tunnel | [Pangolin](https://github.com/fosrl/pangolin) — self-hosted WireGuard |
+| Tunnel | [Pangolin](https://github.com/fosrl/pangolin) — self-hosted Cloudflare Tunnel |
 | Security | [CrowdSec](https://github.com/crowdsecurity/crowdsec) IDS/IPS |
 | DNS | [Pi-hole](https://github.com/pi-hole/pi-hole) |
 | Storage | [OpenZFS](https://github.com/openzfs/zfs) RAID-Z2 (target) — migrating from BTRFS on mdadm RAID5 — 33 TB |
