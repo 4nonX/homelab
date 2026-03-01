@@ -132,7 +132,7 @@ Layer 5 — Data integrity
 |---|---|---|
 | [Pi-hole](https://github.com/pi-hole/pi-hole) | Network-wide DNS + ad-blocking | [pihole.yml](infrastructure/networking/pihole/pihole.yml) |
 | [Traefik](https://github.com/traefik/traefik) v3 | Reverse proxy, TLS termination | VPS-managed — see [infrastructure/networking/traefik/](infrastructure/networking/traefik/README.md) |
-| [Pangolin](https://github.com/fosrl/pangolin) + [Gerbil](https://github.com/fosrl/gerbil) | Self-hosted WireGuard tunnel | VPS + Pi — see [infrastructure/networking/pangolin/](infrastructure/networking/pangolin/README.md) |
+| [Pangolin](https://github.com/fosrl/pangolin) + [Gerbil](https://github.com/fosrl/gerbil) | Self-hosted Cloudflare tunnel | VPS + Pi — see [infrastructure/networking/pangolin/](infrastructure/networking/pangolin/README.md) |
 | [CrowdSec](https://github.com/crowdsecurity/crowdsec) | IDS/IPS, collaborative threat intel | VPS-managed — see [infrastructure/security/crowdsec/](infrastructure/security/crowdsec/README.md) |
 | [Dockge](https://github.com/louislam/dockge) | Docker Compose management UI | [dockge.yml](infrastructure/monitoring/big-bear-dockge/dockge.yml) |
 | [Dockpeek](https://github.com/louislam/dockge) | Container health dashboard | [dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) |
