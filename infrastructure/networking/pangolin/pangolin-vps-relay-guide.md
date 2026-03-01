@@ -1,4 +1,4 @@
-# 🛡️ Pangolin Pi-Hub: The Transparent VPS Relay Guide
+# Pangolin Pi-Hub: The Transparent VPS Relay Guide
 
 [![Hardware](https://img.shields.io/badge/Hardware-Pi%205%208GB-BC1142?logo=raspberry-pi&logoColor=white)](#)
 [![Storage](https://img.shields.io/badge/Storage-NVMe%20Gen3-yellow?logo=ssm&logoColor=black)](#)
@@ -9,7 +9,7 @@ This guide documents the "Live Transplant" of the Pangolin Server from a VPS-hos
 
 ---
 
-## 📖 Table of Contents
+## Table of Contents
 - [Architecture Overview](#-architecture-overview)
 - [Phase 1: Hardware & OS Setup](#-phase-1-hardware--os-setup)
 - [Phase 2: Network Mounting (Static IP)](#-phase-2-network-mounting-static-ip)
@@ -20,7 +20,7 @@ This guide documents the "Live Transplant" of the Pangolin Server from a VPS-hos
 
 ---
 
-## 🏗️ Architecture Overview
+## Architecture Overview
 
 * **The Ingress (VPS):** A public entry point that forwards traffic without decrypting it.
 * **The Tunnel (Newt):** Encrypted link connecting the VPS to your home network.
@@ -30,7 +30,7 @@ This guide documents the "Live Transplant" of the Pangolin Server from a VPS-hos
 
 ---
 
-## 🛠️ Phase 1: Hardware & OS Setup
+## Phase 1: Hardware & OS Setup
 
 ### 1. Download Tools & OS
 * **Imager:** [Raspberry Pi Imager](https://www.raspberrypi.com/software/)
@@ -78,7 +78,7 @@ sudo systemctl restart cpufrequtils
 
 ---
 
-## 🏠 Phase 2: Network Mounting (Static IP)
+## Phase 2: Network Mounting (Static IP)
 
 The Pi requires a permanent internal address to prevent the VPS tunnel from breaking on reboot.
 
@@ -88,7 +88,7 @@ The Pi requires a permanent internal address to prevent the VPS tunnel from brea
 
 ---
 
-## 🧠 Phase 3: Installing the Pangolin Brain
+## Phase 3: Installing the Pangolin Brain
 
 Execute the official Pangolin Installer on the Pi 5.
 
@@ -97,7 +97,7 @@ sudo mkdir -p /opt/pangolin && cd /opt/pangolin
 curl -fsSL https://static.pangolin.net/get-installer.sh | bash
 ```
 
-### 📋 Installer Walkthrough:
+### Installer Walkthrough:
 * **Base Domain:** yourdomain.com
 * **Dashboard Domain:** pangolin.yourdomain.com
 * **Let's Encrypt Email:** your@email.com
@@ -106,7 +106,7 @@ curl -fsSL https://static.pangolin.net/get-installer.sh | bash
 
 ---
 
-## 🔗 Phase 4: Configuring the VPS Relay
+## Phase 4: Configuring the VPS Relay
 
 The VPS serves as the "Dumb Pipe" entry point into your home network.
 
@@ -127,7 +127,7 @@ docker run -d --name newt-relay \
 
 ---
 
-## 🚀 Phase 5: Live Cutover
+## Phase 5: Live Cutover
 
 1. **Verify Status:** In the Pi Dashboard, ensure the VPS-Relay site is Online.
 2. **Enable Ingress:** In Sites > VPS-Relay, toggle Public Ingress to ON.
@@ -136,7 +136,7 @@ docker run -d --name newt-relay \
 
 ---
 
-## 📊 Pro/Con Analysis
+## Pro/Con Analysis
 
 | Feature | Pi-Hub (Local Brain) | Legacy VPS |
 |---------|---------------------|------------|
@@ -147,7 +147,7 @@ docker run -d --name newt-relay \
 
 ---
 
-## 🏁 Verification
+## Verification
 
 Confirm your NVMe is optimized and achieving Gen 3 speeds:
 
@@ -156,5 +156,3 @@ dd if=/dev/zero of=/opt/pangolin/test.img bs=1G count=1 oflag=dsync
 ```
 
 ---
-
-**Maintained by Dan | ⭐ Star this repo if it helped!**
