@@ -1,4 +1,4 @@
-# 🆙 Pangolin Stack Migration: v1.14.1
+# Pangolin Stack Migration: v1.14.1
 
 This document details the migration process and network optimization for the homelab tunnel infrastructure.
 
@@ -46,17 +46,17 @@ This section covers specific considerations when upgrading from v1.12.2 to v1.14
 ### What Changed Between Versions
 
 **v1.12.2 → v1.14.0:**
-- 🔄 New WireGuard engine with improved performance
-- 🔒 Enhanced WebSocket Secure (WSS) handling
-- 📊 Better connection metrics and monitoring
-- 🐛 Critical bug fixes for edge cases
-- ⚡ Optimized packet routing in Gerbil relay
+- New WireGuard engine with improved performance
+- Enhanced WebSocket Secure (WSS) handling
+- Better connection metrics and monitoring
+- Critical bug fixes for edge cases
+- Optimized packet routing in Gerbil relay
 
 **v1.14.0 → v1.14.1:**
-- 🐛 Hotfix for reconnection logic
-- 🔧 Minor performance improvements
-- 📈 Reduced memory footprint
-- 🔒 Security patch for certificate validation
+- Hotfix for reconnection logic
+- Minor performance improvements
+- Reduced memory footprint
+- Security patch for certificate validation
 
 ### Is This a Breaking Change?
 
@@ -511,27 +511,27 @@ sudo systemctl start newt
 
 ### Server (Pangolin v1.14.1)
 
-* 🔄 Improved WebSocket handling
-* 🔒 Enhanced security headers
-* 📊 Better connection metrics
-* 🐛 Bug fixes for reconnection logic
-* 🔒 Security patch for certificate validation
-* 📈 Reduced memory footprint
+* Improved WebSocket handling
+* Enhanced security headers
+* Better connection metrics
+* Bug fixes for reconnection logic
+* Security patch for certificate validation
+* Reduced memory footprint
 
 ### Relay (Gerbil v1.1.1)
 
-* ⚡ Optimized packet routing
-* 🔧 Better error handling
-* 📈 Reduced memory usage
-* 🚀 Improved relay performance
+* Optimized packet routing
+* Better error handling
+* Reduced memory usage
+* Improved relay performance
 
 ### Client (Newt v1.8.1)
 
-* 🚀 New WireGuard engine
-* 🔧 MTU auto-configuration support
-* 📡 Better reconnection logic
-* 🔄 Improved keepalive handling
-* ⚡ Performance optimizations
+* New WireGuard engine
+* MTU auto-configuration support
+* Better reconnection logic
+* Improved keepalive handling
+* Performance optimizations
 
 ---
 
@@ -668,7 +668,7 @@ Major version updates typically include breaking changes that require manual int
    sleep 5
    sudo systemctl status newt
    
-   echo "✅ Newt v2.0.0 update complete!"
+   echo "Newt v2.0.0 update complete!"
    EOF
    
    chmod +x /tmp/update-newt-v2.sh
@@ -680,7 +680,7 @@ Major version updates typically include breaking changes that require manual int
    
    On [DATE] at [TIME], Pangolin VPN will be upgraded from v1.x to v2.0.
    
-   ⚠️ ACTION REQUIRED: You must update your Newt client to v2.0.0
+   ACTION REQUIRED: You must update your Newt client to v2.0.0
    
    Without this update, you will LOSE CONNECTIVITY after the upgrade.
    
@@ -1085,11 +1085,11 @@ watch -n 5 'docker compose exec gerbil wg show'
 
 **Key metrics to watch:**
 
-* 📊 **Connection Success Rate** - Should remain >95%
-* 📊 **Database Query Performance** - Watch for schema-related slowdowns
-* 📊 **Memory Usage** - New version may have different footprint
-* 📊 **Error Rate** - Spike indicates compatibility issues
-* 📊 **Client Reconnection Time** - Should stabilize within 5 minutes
+* **Connection Success Rate** - Should remain >95%
+* **Database Query Performance** - Watch for schema-related slowdowns
+* **Memory Usage** - New version may have different footprint
+* **Error Rate** - Spike indicates compatibility issues
+* **Client Reconnection Time** - Should stabilize within 5 minutes
 
 ### Rollback Considerations
 
@@ -1224,20 +1224,20 @@ services:
 
 **Update these documents after major upgrade:**
 
-* 📝 **This upgrade guide** - Add lessons learned
-* 📝 **Deployment guide** - Update version numbers
-* 📝 **Configuration examples** - Reflect new format
-* 📝 **Troubleshooting guide** - Add new error scenarios
-* 📝 **Architecture diagrams** - Update if topology changed
+* **This upgrade guide** - Add lessons learned
+* **Deployment guide** - Update version numbers
+* **Configuration examples** - Reflect new format
+* **Troubleshooting guide** - Add new error scenarios
+* **Architecture diagrams** - Update if topology changed
 
 ### Emergency Contacts & Resources
 
 **When things go wrong:**
 
-* 🔗 [Pangolin GitHub Issues](https://github.com/fosrl/pangolin/issues)
-* 🔗 [Pangolin Community Discussions](https://github.com/orgs/fosrl/discussions)
-* 🔗 [Official Documentation](https://docs.pangolin.net)
-* 🔗 Backup admin contacts (if team environment)
+* [Pangolin GitHub Issues](https://github.com/fosrl/pangolin/issues)
+* [Pangolin Community Discussions](https://github.com/orgs/fosrl/discussions)
+* [Official Documentation](https://docs.pangolin.net)
+* Backup admin contacts (if team environment)
 
 **Information to provide when seeking help:**
 
@@ -1320,7 +1320,3 @@ docker compose down
 **Next Review:** v1.15.0 release
 
 ---
-
-**Built with** ❤️ **and** ☕
-
-**Powered by** 🐧 Linux · 🐳 Docker · 🔒 WireGuard
