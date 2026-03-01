@@ -1,4 +1,4 @@
-# ⚡ Pangolin Performance Tuning Guide
+# Pangolin Performance Tuning Guide
 
 > **Safe, proven optimizations for your Pangolin tunnel infrastructure**
 
@@ -8,7 +8,7 @@ This guide covers **tested, non-breaking** performance optimizations. Every reco
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Before You Start](#-before-you-start)
 - [Safe Optimizations](#-safe-optimizations)
@@ -18,7 +18,7 @@ This guide covers **tested, non-breaking** performance optimizations. Every reco
 
 ---
 
-## ⚠️ Before You Start
+## Before You Start
 
 ### Prerequisites
 
@@ -51,7 +51,7 @@ iostat -x 5
 
 ---
 
-## ✅ Safe Optimizations
+## Safe Optimizations
 
 These optimizations are **proven safe** and will not break your system.
 
@@ -340,7 +340,7 @@ sudo mount -o remount,noatime,space_cache=v2 /mnt/storage
 
 ### Optional: Reduce Swappiness
 
-**⚠️ Only if you have 32GB RAM and monitor memory usage.**
+**⚠️ Only if you have at least 32GB RAM and monitor memory usage.**
 
 **Check current value:**
 ```bash
@@ -524,7 +524,7 @@ sudo ./optimize-homelab-safe.sh
 
 ---
 
-## 📊 Expected Results
+## Expected Results
 
 After applying safe optimizations:
 
@@ -539,7 +539,7 @@ After applying safe optimizations:
 
 ---
 
-## 📈 Monitoring & Verification
+## Monitoring & Verification
 
 ### Verify Applied Settings
 
@@ -588,7 +588,7 @@ sudo journalctl -f
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Issue: Higher latency after MTU change
 
@@ -627,7 +627,7 @@ sudo reboot
 
 ---
 
-## ⚠️ What This Guide Does NOT Do
+## What This Guide Does NOT Do
 
 **This guide intentionally avoids:**
 
@@ -657,7 +657,7 @@ Before applying any optimization:
 
 ---
 
-## 📚 Resources
+## Resources
 
 **Official Documentation:**
 - [Wireguard Performance](https://www.wireguard.com/performance/)
@@ -671,7 +671,7 @@ Before applying any optimization:
 
 ---
 
-## 🎯 Summary
+## Summary
 
 This guide provides **conservative, tested optimizations** that will improve performance without risking system stability.
 
@@ -684,3 +684,4 @@ This guide provides **conservative, tested optimizations** that will improve per
 **Total time:** ~20 minutes for significant performance gains with zero risk.
 
 **Remember:** A stable, slightly slower system is better than a fast broken one. Don't fix what isn't broken.
+
