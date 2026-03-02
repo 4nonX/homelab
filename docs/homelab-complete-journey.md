@@ -214,7 +214,7 @@ Grand Total:        €1,150-1,850
 - 2x M.2 slots for OS and future expansion
 - Intel I225/I226 networking
 - Quality VRMs for stability
-- Standard ATX (good case compatibility)
+- Mini ITX (good case compatibility, small size)
 
 #### Memory: 32GB DDR4
 
