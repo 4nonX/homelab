@@ -207,7 +207,7 @@ Grand Total:        €1,150-1,850
 - Multiple SATA ports (6+)
 - Dual M.2 slots (OS + cache)
 - Intel networking (reliable drivers)
-- Standard ATX form factor
+- Mini ITX form factor
 
 **Selection Criteria:**
 - ≥6 SATA III ports for storage
