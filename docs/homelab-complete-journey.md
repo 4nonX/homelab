@@ -284,7 +284,7 @@ Options Considered:
 - Multiple 3.5" drive bays (4+)
 - Good airflow
 - Quiet operation
-- ATX motherboard support
+- Mini ITX motherboard support
 
 **Features:**
 - 4+ hot-swap drive bays
