@@ -2,7 +2,7 @@
 
 Comprehensive suite of self-hosted productivity tools replacing cloud services with local, privacy-focused alternatives.
 
-## 🗂️ Service Categories
+## Service Categories
 
 ### Cloud Storage & File Management
 
@@ -134,7 +134,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
   - Mobile apps
   - Metadata management
 
-## 🔐 Security Architecture
+## Security Architecture
 
 ### Authentication
 - **Single Sign-On:** Considered for future implementation
@@ -154,7 +154,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 - Database containers not exposed to external networks
 - Redis instances only accessible by parent services
 
-## 📊 Database Management
+## Database Management
 
 ### PostgreSQL Instances
 1. **Nextcloud DB** (postgres:14)
@@ -169,7 +169,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 2. **Immich Queue**
 3. **Paperless-NGX Queue**
 
-## 💾 Backup Strategy
+## Backup Strategy
 
 ### Service Data
 - **Frequency:** Daily incremental, weekly full
@@ -188,7 +188,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 - **Application configs:** Daily snapshots
 - **Environment files:** Encrypted backup
 
-## 📈 Resource Allocation
+## Resource Allocation
 
 | Service | RAM | CPU | Storage |
 |---------|-----|-----|---------|
@@ -200,14 +200,14 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 **Total:** ~10 GB RAM, ~15 CPU cores (burst), 300+ GB storage
 
-## 🔄 Service Updates
+## Service Updates
 
 - **Strategy:** Automated updates via Watchtower
 - **Schedule:** Weekly on Sundays at 2 AM
 - **Testing:** Staging environment for critical services
 - **Rollback:** Automated via Docker tags + BTRFS snapshots
 
-## 🌐 Access Methods
+## Access Methods
 
 ### Internal Access
 - Direct IP:Port access on local network
@@ -218,7 +218,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 - Wireguard VPN for secure remote access
 - Selective service exposure
 
-## 📱 Mobile Integration
+## Mobile Integration
 
 | Service | Mobile App | Status |
 |---------|------------|--------|
@@ -228,7 +228,7 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 | Vaultwarden | Bitwarden | ✅ Active |
 | Paperless-NGX | Web App | ✅ Responsive |
 
-## 🔧 Maintenance Tasks
+## Maintenance Tasks
 
 ### Daily
 - Health check monitoring
