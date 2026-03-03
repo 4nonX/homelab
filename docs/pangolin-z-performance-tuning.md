@@ -361,7 +361,7 @@ vm.swappiness = 10
 
 ---
 
-## 🤖 Safe Quick-Start Script
+## Safe Quick-Start Script
 
 This script applies **only the safest optimizations** automatically.
 
@@ -524,7 +524,7 @@ sudo ./optimize-homelab-safe.sh
 
 ---
 
-## 📊 Expected Results
+## Expected Results
 
 After applying safe optimizations:
 
@@ -539,7 +539,7 @@ After applying safe optimizations:
 
 ---
 
-## 📈 Monitoring & Verification
+## Monitoring & Verification
 
 ### Verify Applied Settings
 
@@ -588,7 +588,7 @@ sudo journalctl -f
 
 ---
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Issue: Higher latency after MTU change
 
@@ -657,7 +657,7 @@ Before applying any optimization:
 
 ---
 
-## 📚 Resources
+## Resources
 
 **Official Documentation:**
 - [Wireguard Performance](https://www.wireguard.com/performance/)
@@ -671,7 +671,7 @@ Before applying any optimization:
 
 ---
 
-## 🎯 Summary
+## Summary
 
 This guide provides **conservative, tested optimizations** that will improve performance without risking system stability.
 
