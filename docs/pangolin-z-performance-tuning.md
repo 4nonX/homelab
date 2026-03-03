@@ -1,4 +1,4 @@
-# ⚡ Pangolin Performance Tuning Guide
+# Pangolin Performance Tuning Guide
 
 > **Safe, proven optimizations for your Pangolin tunnel infrastructure**
 
@@ -8,7 +8,7 @@ This guide covers **tested, non-breaking** performance optimizations. Every reco
 
 ---
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Before You Start](#-before-you-start)
 - [Safe Optimizations](#-safe-optimizations)
@@ -18,7 +18,7 @@ This guide covers **tested, non-breaking** performance optimizations. Every reco
 
 ---
 
-## ⚠️ Before You Start
+## Before You Start
 
 ### Prerequisites
 
