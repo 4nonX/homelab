@@ -1,0 +1,35 @@
+gerbil:
+    start_port: 51820
+    base_endpoint: "pangolin.d-net.me"
+
+app:
+    dashboard_url: "https://pangolin.d-net.me"
+    log_level: "info"
+    telemetry:
+        anonymous_usage: true
+
+domains:
+    dnetme:
+        base_domain: "d-net.me"
+
+server:
+    secret: "LLn8IL2gZOO2IbtvqPgoPH9fhawakeHo"
+    cors:
+        origins: ["https://pangolin.d-net.me"]
+        methods: ["GET", "POST", "PUT", "DELETE", "PATCH"]
+        allowed_headers: ["X-CSRF-Token", "Content-Type"]
+        credentials: false
+    maxmind_db_path: "./config/GeoLite2-Country.mmdb"
+
+email:
+    smtp_host: "smtp.example.com"
+    smtp_port: 587
+    smtp_user: "noreply@example.com"
+    smtp_pass: "CHANGE_ME"
+    no_reply: "noreply@example.com"
+
+flags:
+    require_email_verification: true
+    disable_signup_without_invite: true
+    disable_user_create_org: false
+    allow_raw_resources: true
