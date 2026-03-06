@@ -1,0 +1,104 @@
+name: pangolin
+
+services:
+  pangolin:
+    image: docker.io/fosrl/pangolin:1.12.2
+    container_name: pangolin
+    restart: unless-stopped
+    networks:
+      - pangolin
+    volumes:
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: "10s"
+      timeout: "10s"
+      retries: 15
+
+  gerbil:
+    image: docker.io/fosrl/gerbil:1.2.2
+    container_name: gerbil
+    restart: unless-stopped
+    networks:
+      - pangolin
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
+    volumes:
+      - ./config/:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - 51820:51820/udp
+      - 21820:21820/udp
+      - 443:443
+      - 80:80
+      - 22000:22000
+
+  traefik:
+    image: docker.io/traefik:v3.5
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - ./config/traefik:/etc/traefik:ro
+      - ./config/letsencrypt:/letsencrypt
+      - ./config/traefik/logs:/var/log/traefik
+
+  traefik-agent:
+    image: hhftechnology/traefik-log-dashboard-agent:latest
+    container_name: traefik-log-dashboard-agent
+    restart: unless-stopped
+    environment:
+      - TRAEFIK_LOG_DASHBOARD_ACCESS_PATH=/logs/access.log
+      - TRAEFIK_LOG_DASHBOARD_AUTH_TOKEN=7f9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d
+    volumes:
+      - ./config/traefik/logs:/logs:ro
+    networks:
+      - pangolin
+
+  traefik-log-dashboard:
+    image: hhftechnology/traefik-log-dashboard:latest
+    container_name: traefik-log-dashboard
+    restart: unless-stopped
+    environment:
+      - AGENT_API_URL=http://traefik-log-dashboard-agent:5000
+      - AGENT_API_TOKEN=7f9b2c3d4e5f6a7b8c9d0e1f2a3b4c5d
+    networks:
+      - pangolin
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.newdash.rule=Host(`traefik.d-net.me`)"
+      - "traefik.http.routers.newdash.entrypoints=websecure"
+      - "traefik.http.routers.newdash.tls=true"
+      - "traefik.http.services.newdash.loadbalancer.server.port=3000"
+
+  crowdsec:
+    image: crowdsecurity/crowdsec:latest
+    container_name: crowdsec
+    restart: unless-stopped
+    networks:
+      - pangolin
+    depends_on:
+      - traefik
+    volumes:
+      - ./config/crowdsec/data:/var/lib/crowdsec/data
+      - ./config/crowdsec/config:/etc/crowdsec
+      - ./config/traefik/logs:/var/log/traefik:ro
+    environment:
+      COLLECTIONS: "crowdsecurity/traefik"
+
+networks:
+  pangolin:
+    name: pangolin
+    driver: bridge

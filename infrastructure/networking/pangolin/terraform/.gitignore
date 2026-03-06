@@ -1,0 +1,22 @@
+# Plaintext secrets - never commit
+terraform.tfvars
+
+# Encrypted version IS committed
+!terraform.tfvars.enc
+
+# Other tfvars (example is safe, others are not)
+*.tfvars
+!*.tfvars.example
+!*.tfvars.enc
+
+# Terraform state (in MinIO)
+*.tfstate
+*.tfstate.backup
+.terraform/
+.terraform.lock.hcl
+
+# Pangolin runtime data (backed up to MinIO, not git)
+config/letsencrypt/
+config/crowdsec/data/
+config/db/
+config/key
