@@ -115,7 +115,7 @@ Check: https://pangolin.d-net.me
 
 ```powershell
 # Check backup history
-ssh root@217.154.249.11 "mc ls nas/pangolin-backup/history/"
+ssh root@[vps-ip] "mc ls nas/pangolin-backup/history/"
 
 # Trigger manual backup now
 ssh root@[vps-ip] "/root/backup.sh"
