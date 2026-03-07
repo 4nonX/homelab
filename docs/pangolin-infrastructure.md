@@ -2,7 +2,7 @@
 
 Self-hosted secure tunnel solution providing external access to homelab services without port forwarding, featuring automatic SSL certificates, DDoS protection, and enterprise-grade security.
 
-## 🌐 Architecture Overview
+## Architecture Overview
 
 ```
 Internet
@@ -24,7 +24,7 @@ Homelab (Behind NAT)
    └─ 40+ Docker Services
 ```
 
-## 📊 Data Flow Visualization
+## Data Flow Visualization
 
 **[→ View Interactive Data Flow Diagram](https://4nonx.github.io/homelab/dataflow-diagram.html)**
 
@@ -32,7 +32,7 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 
 ---
 
-## 🚀 Why Pangolin?
+## Why Pangolin?
 
 **Traditional Approach Problems:**
 - Port forwarding exposes homelab to internet
@@ -50,7 +50,7 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 - ✅ Web-based management
 - ✅ Multiple services on one tunnel
 
-## 🏗️ Infrastructure Components
+## Infrastructure Components
 
 ### VPS Server (Cloud Gateway)
 
@@ -147,7 +147,7 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 - Authenticates with client ID and secret
 - Maintains persistent connection
 
-## 🔒 Security Architecture
+## Security Architecture
 
 ### Multi-Layer Defense
 
@@ -202,7 +202,7 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 - IP reputation scoring
 - Geolocation-based rules (GeoLite2)
 
-## 🔧 Configuration Architecture
+## Configuration Architecture
 
 ### Dynamic Configuration
 
@@ -249,7 +249,7 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
    └─ subdomain.domain.com
 ```
 
-## 📊 Network Flow
+## Network Flow
 
 ### Inbound Request Flow
 
@@ -300,7 +300,7 @@ Response Path (Reverse)
    └─ All requests routed via Gerbil
 ```
 
-## 📈 Performance Characteristics
+## Performance Characteristics
 
 ### Latency
 - **VPS Location:** Germany (Berlin)
@@ -321,7 +321,7 @@ Response Path (Reverse)
 - **Clients per Server:** 100+ possible
 - **Certificate Limit:** Let's Encrypt rate limits apply
 
-## 🔍 Monitoring & Logging
+## Monitoring & Logging
 
 ### Server-Side Logging
 
@@ -364,7 +364,7 @@ Response Path (Reverse)
 - Ping endpoint: `/ping` on HTTP
 - Used for container orchestration
 
-## 🛠️ Operational Tasks
+## Operational Tasks
 
 ### Certificate Management
 
@@ -449,7 +449,7 @@ docker exec traefik traefik healthcheck
 # https://letsencrypt.org/docs/rate-limits/
 ```
 
-## 💰 Cost Analysis
+## Cost Analysis
 
 ### VPS Costs
 - **IONOS VPS:** ~€5-10/month
@@ -478,7 +478,7 @@ docker exec traefik traefik healthcheck
 - Custom domains
 - Learning experience
 
-## 🚀 Deployment Advantages
+## Deployment Advantages
 
 ### For Homelab
 - No router configuration needed
@@ -504,7 +504,7 @@ docker exec traefik traefik healthcheck
 - Automatic SSL management
 - Community support
 
-## 📚 Technical Skills Demonstrated
+## Technical Skills Demonstrated
 
 ### Networking
 - ✅ Wireguard VPN configuration
@@ -538,7 +538,7 @@ docker exec traefik traefik healthcheck
 - ✅ Troubleshooting and debugging
 - ✅ Backup and disaster recovery
 
-## 🔮 Future Enhancements
+## Future Enhancements
 
 ### Planned Improvements
 - [ ] High availability (multiple VPS nodes)
