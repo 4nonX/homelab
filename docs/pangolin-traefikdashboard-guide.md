@@ -1,4 +1,4 @@
-# 🚀 Pangolin Deployment & Observability Guide
+# Pangolin Deployment & Observability Guide
 
 **Focus:** Hardened VPS Relay with Real-Time Traffic Analytics & CrowdSec IPS
 
@@ -6,7 +6,7 @@ This guide details the end-to-end deployment of the Pangolin Edge Gateway, featu
 
 ---
 
-## 🛠️ Step 1: VPS Environment Preparation
+## Step 1: VPS Environment Preparation
 
 Before deploying the stack, the host environment must be prepared for JSON logging and secure handshake protocols.
 
@@ -34,7 +34,7 @@ openssl rand -hex 16
 
 ---
 
-## 📄 Step 2: Integrated Docker Configuration
+## Step 2: Integrated Docker Configuration
 
 This configuration implements the Gerbil Service Network pattern, forcing Traefik through the VPN tunnel while maintaining internal bridge discovery.
 
@@ -117,7 +117,7 @@ networks:
 
 ---
 
-## 🔧 Step 3: Critical Configuration Edits
+## Step 3: Critical Configuration Edits
 
 To bridge the gap between "standard" Traefik and this specialized stack, three manual edits were performed.
 
@@ -147,7 +147,7 @@ labels:
 
 ---
 
-## 🌐 Step 4: Pangolin Dashboard Integration
+## Step 4: Pangolin Dashboard Integration
 
 To bypass "Bad Gateway" (502) issues common in Gerbil network-mode setups, the UI is configured as a Resource.
 
@@ -160,7 +160,7 @@ To bypass "Bad Gateway" (502) issues common in Gerbil network-mode setups, the U
 
 ---
 
-## 📝 Post-Deployment Maintenance
+## Post-Deployment Maintenance
 
 ### Permissions
 ```bash
@@ -179,7 +179,7 @@ Mount `GeoLite2-City.mmdb` to the agent to enable the world map visualization.
 
 ---
 
-## 🔍 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -197,7 +197,7 @@ Mount `GeoLite2-City.mmdb` to the agent to enable the world map visualization.
 
 ---
 
-## 📚 Additional Resources
+## Additional Resources
 
 - [Pangolin Documentation](https://pangolin.com/docs)
 - [Traefik Access Logs](https://doc.traefik.io/traefik/observability/access-logs/)
