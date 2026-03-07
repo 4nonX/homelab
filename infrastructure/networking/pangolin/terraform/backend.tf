@@ -5,7 +5,7 @@ terraform {
     region = "us-east-1"
 
     endpoints = {
-      s3 = "http://10.243.0.1:9000"
+      s3 = "https://minio.d-net.me"
     }
 
     access_key                  = "DanDressen"
