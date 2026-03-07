@@ -187,7 +187,17 @@ homelab/
 │   ├── networking/
 │   │   ├── pihole/pihole.yml
 │   │   ├── traefik/          # Traefik config notes (VPS-managed)
-│   │   └── pangolin/         # Pangolin tunnel docs + component map
+│   │   └── pangolin/
+│   │       ├── README.md                    # Tunnel docs + component map
+│   │       └── terraform/                   # Infrastructure as Code
+│   │           ├── main.tf / cloudflare.tf / vps.tf / backend.tf / variables.tf
+│   │           ├── docker-compose.yml        # Pangolin stack (deployed to VPS)
+│   │           ├── config/                   # Pangolin + Traefik configs
+│   │           ├── scripts/backup.sh         # Weekly backup → MinIO
+│   │           ├── scripts/restore.sh        # DR restore from MinIO
+│   │           ├── minio/docker-compose.yml  # MinIO on NAS (Dockge)
+│   │           ├── pangolin-terraform-iac.md # IaC documentation
+│   │           └── DR_RUNBOOK.md             # Disaster recovery procedure
 │   ├── security/
 │   │   ├── vaultwarden/vaultwarden.yml
 │   │   └── crowdsec/         # CrowdSec notes (VPS-managed)
