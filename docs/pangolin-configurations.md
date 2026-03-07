@@ -2,7 +2,7 @@
 
 Configuration files with sensitive data redacted for portfolio/documentation purposes.
 
-## 📁 VPS Server Configuration
+## VPS Server Configuration
 
 ### docker-compose.yml
 
@@ -176,7 +176,7 @@ ping:
   entryPoint: "web"
 ```
 
-## 📁 Homelab Client Configuration
+## Homelab Client Configuration
 
 ### /etc/systemd/system/newt.service
 
@@ -239,7 +239,7 @@ systemctl start newt.service
 systemctl status newt.service
 ```
 
-## 📝 Configuration Notes
+## Configuration Notes
 
 ### Security Considerations
 
@@ -335,7 +335,7 @@ docker exec crowdsec cscli metrics
 docker exec crowdsec cscli hub update
 ```
 
-## 🔄 Update Procedures
+## Update Procedures
 
 ### VPS Server Update
 
@@ -381,7 +381,7 @@ systemctl status newt
 tail -f /DATA/newt.log
 ```
 
-## 🐛 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
