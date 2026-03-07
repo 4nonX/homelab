@@ -1,4 +1,4 @@
-# 🆙 Pangolin Stack Migration: v1.14.1
+# Pangolin Stack Migration: v1.14.1
 
 This document details the migration process and network optimization for the homelab tunnel infrastructure.
 
@@ -46,17 +46,17 @@ This section covers specific considerations when upgrading from v1.12.2 to v1.14
 ### What Changed Between Versions
 
 **v1.12.2 → v1.14.0:**
-- 🔄 New WireGuard engine with improved performance
-- 🔒 Enhanced WebSocket Secure (WSS) handling
-- 📊 Better connection metrics and monitoring
-- 🐛 Critical bug fixes for edge cases
-- ⚡ Optimized packet routing in Gerbil relay
+-  New WireGuard engine with improved performance
+-  Enhanced WebSocket Secure (WSS) handling
+-  Better connection metrics and monitoring
+-  Critical bug fixes for edge cases
+-  Optimized packet routing in Gerbil relay
 
 **v1.14.0 → v1.14.1:**
-- 🐛 Hotfix for reconnection logic
-- 🔧 Minor performance improvements
-- 📈 Reduced memory footprint
-- 🔒 Security patch for certificate validation
+-  Hotfix for reconnection logic
+-  Minor performance improvements
+-  Reduced memory footprint
+-  Security patch for certificate validation
 
 ### Is This a Breaking Change?
 
@@ -511,27 +511,27 @@ sudo systemctl start newt
 
 ### Server (Pangolin v1.14.1)
 
-* 🔄 Improved WebSocket handling
-* 🔒 Enhanced security headers
-* 📊 Better connection metrics
-* 🐛 Bug fixes for reconnection logic
-* 🔒 Security patch for certificate validation
-* 📈 Reduced memory footprint
+*  Improved WebSocket handling
+*  Enhanced security headers
+*  Better connection metrics
+*  Bug fixes for reconnection logic
+*  Security patch for certificate validation
+*  Reduced memory footprint
 
 ### Relay (Gerbil v1.1.1)
 
-* ⚡ Optimized packet routing
-* 🔧 Better error handling
-* 📈 Reduced memory usage
-* 🚀 Improved relay performance
+*  Optimized packet routing
+*  Better error handling
+*  Reduced memory usage
+*  Improved relay performance
 
 ### Client (Newt v1.8.1)
 
-* 🚀 New WireGuard engine
-* 🔧 MTU auto-configuration support
-* 📡 Better reconnection logic
-* 🔄 Improved keepalive handling
-* ⚡ Performance optimizations
+*  New WireGuard engine
+*  MTU auto-configuration support
+*  Better reconnection logic
+*  Improved keepalive handling
+*  Performance optimizations
 
 ---
 
