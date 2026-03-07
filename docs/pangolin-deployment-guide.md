@@ -2,7 +2,7 @@
 
 Complete step-by-step guide for deploying a self-hosted Pangolin tunnel infrastructure from scratch.
 
-## 📋 Prerequisites
+## Prerequisites
 
 ### Required Resources
 - **VPS Server:** 2 vCPU, 2GB RAM, 20GB+ storage
@@ -16,7 +16,7 @@ Complete step-by-step guide for deploying a self-hosted Pangolin tunnel infrastr
 - DNS record management
 - SSH access and key management
 
-## 🎯 Architecture Goals
+## Architecture Goals
 
 ```
 Goal: Secure external access to homelab services
@@ -27,7 +27,7 @@ Goal: Secure external access to homelab services
 └─ Easy service management
 ```
 
-## 📝 Deployment Steps
+## Deployment Steps
 
 ### Phase 1: VPS Setup
 
@@ -674,7 +674,7 @@ time curl -I https://nextcloud.example.com
 docker logs -f traefik --tail 100
 ```
 
-## 🎯 Success Criteria
+## Success Criteria
 
 Your deployment is successful when:
 
@@ -686,7 +686,7 @@ Your deployment is successful when:
 6. ✅ Logs clean without errors
 7. ✅ Backup and restore tested
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 See `pangolin-configurations.md` for detailed troubleshooting procedures.
 
