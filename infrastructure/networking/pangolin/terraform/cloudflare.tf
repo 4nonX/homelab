@@ -15,7 +15,7 @@ resource "cloudflare_record" "wildcard" {
 # Root A-record: d-net.me -> VPS IP
 resource "cloudflare_record" "root" {
   zone_id = data.cloudflare_zone.dnetme.zone_id
-  name    = "@"
+  name = "d-net.me"
   type    = "A"
   content = var.vps_ip
   ttl     = 1
