@@ -41,3 +41,5 @@ Client (Internet)
 | [pangolin-upgrade-guide.md](../../docs/pangolin-upgrade-guide.md) | Version upgrade procedures |
 | [pangolin-z-performance-tuning.md](../../docs/pangolin-z-performance-tuning.md) | Kernel/sysctl tuning |
 | [pangolin-traefikdashboard-guide.md](../../docs/pangolin-traefikdashboard-guide.md) | Traefik dashboard setup |
+| [terraform/pangolin-terraform-iac.md](terraform/pangolin-terraform-iac.md) | Terraform IaC — DNS, VPS provisioning, backup strategy |
+| [terraform/DR_RUNBOOK.md](terraform/DR_RUNBOOK.md) | Disaster recovery runbook — full VPS rebuild in ~15 min |
