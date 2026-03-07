@@ -75,7 +75,7 @@ ssh root@217.154.249.11 "/root/backup.sh"
 ```bash
 ssh root@NEW_IP
 mkdir -p ~/.ssh
-echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2FWIyW0qG4WHuw74na7HDB5JISJMNWrL4Cft6Peedu terraform-homelab" >> ~/.ssh/authorized_keys
+echo "ssh-ed25519 AAAAC[IONOS-SSH-KEY] terraform-homelab" >> ~/.ssh/authorized_keys
 chmod 600 ~/.ssh/authorized_keys
 ```
 
@@ -118,8 +118,8 @@ Check: https://pangolin.d-net.me
 ssh root@217.154.249.11 "mc ls nas/pangolin-backup/history/"
 
 # Trigger manual backup now
-ssh root@217.154.249.11 "/root/backup.sh"
+ssh root@[vps-ip] "/root/backup.sh"
 
 # Check backup log
-ssh root@217.154.249.11 "tail -50 /var/log/pangolin-backup.log"
+ssh root@[vps-ip] "tail -50 /var/log/pangolin-backup.log"
 ```
