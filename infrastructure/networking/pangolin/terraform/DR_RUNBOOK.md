@@ -28,7 +28,7 @@ If you lose it, you cannot decrypt `terraform.tfvars.enc`.
 cd /path/to/minio
 docker compose up -d
 ```
-Open `http://192.168.8.158:9001` → login → create bucket `pangolin-backup` (private).
+Open `http://[nas-ip]:9001` → login → create bucket `pangolin-backup` (private).
 
 ### 4. Encrypt tfvars
 ```powershell
@@ -57,7 +57,7 @@ Invoke-RestMethod -Uri "https://api.cloudflare.com/client/v4/zones/df398bb255621
 
 ### 7. Run first backup manually
 ```powershell
-ssh root@217.154.249.11 "/root/backup.sh"
+ssh root@[vps-ip] "/root/backup.sh"
 ```
 
 ---
