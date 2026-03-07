@@ -80,6 +80,8 @@ Complete map of every file in this repository.
 | [infrastructure/networking/pangolin/README.md](infrastructure/networking/pangolin/README.md) | Pangolin component map, traffic flow, links to all Pangolin docs |
 | [infrastructure/networking/traefik/README.md](infrastructure/networking/traefik/README.md) | Traefik config notes (VPS-managed) |
 
+| **[Terraform IaC](infrastructure/networking/pangolin/terraform/pangolin-terraform-iac.md)** | Terraform setup, backup strategy, DR key decisions | new |
+
 ### Security
 
 | File | Description |
