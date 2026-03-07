@@ -1,4 +1,4 @@
-# 🚀 Nextcloud Optimization Guide
+# Nextcloud Optimization Guide
 
 [![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
 [![Nextcloud](https://img.shields.io/badge/Nextcloud-Latest-0082C9?logo=nextcloud&logoColor=white)](https://nextcloud.com/)
@@ -9,29 +9,29 @@
 
 ---
 
-## 📑 Table of Contents
+## Table of Contents
 
-- [🎯 Overview](#-overview)
-- [✨ Features](#-features)
-- [📋 Prerequisites](#-prerequisites)
-- [🏗️ Architecture](#️-architecture)
-- [🚀 Quick Start](#-quick-start)
-- [📚 Detailed Setup](#-detailed-setup)
-- [⚙️ Configuration](#configuration)
-- [🔧 Troubleshooting](#troubleshooting)
-- [📊 Performance Benchmarks](#performance-benchmarks)
-- [🛠️ Maintenance](#maintenance)
-- [🔒 Security Considerations](#security-considerations)
-- [⚡ Advanced Configuration](#advanced-configuration)
-- [❓ FAQ](#faq)
-- [📚 Credits & Resources](#credits--resources)
+- [Overview](#-overview)
+- [Features](#-features)
+- [Prerequisites](#-prerequisites)
+- [Architecture](#️-architecture)
+- [Quick Start](#-quick-start)
+- [Detailed Setup](#-detailed-setup)
+- [Configuration](#configuration)
+- [Troubleshooting](#troubleshooting)
+- [Performance Benchmarks](#performance-benchmarks)
+- [Maintenance](#maintenance)
+- [Security Considerations](#security-considerations)
+- [Advanced Configuration](#advanced-configuration)
+- [FAQ](#faq)
+- [Credits & Resources](#credits--resources)
 ---
 
-## 🎯 Overview
+## Overview
 
 This guide provides a complete, production-ready Nextcloud setup optimized for home lab environments. The stack includes performance enhancements, office document editing, and high-quality video conferencing capabilities.
 
-### ⚡ What This Gives You
+### What This Gives You
 
 | Feature | Improvement | Description |
 |---------|-------------|-------------|
@@ -43,7 +43,7 @@ This guide provides a complete, production-ready Nextcloud setup optimized for h
 
 ---
 
-## ✨ Features
+## Features
 
 ### Performance Optimizations
 
@@ -68,9 +68,9 @@ This guide provides a complete, production-ready Nextcloud setup optimized for h
 
 ---
 
-## 📋 Prerequisites
+## Prerequisites
 
-### 💻 Hardware Requirements
+### Hardware Requirements
 
 | Component | Minimum | Recommended |
 |-----------|---------|-------------|
@@ -79,7 +79,7 @@ This guide provides a complete, production-ready Nextcloud setup optimized for h
 | **System Storage** | 120GB SSD | 256GB NVMe |
 | **Data Storage** | 500GB | RAID array |
 
-### 🛠️ Software Requirements
+### Software Requirements
 
 - ✅ Docker (v20.10+) & Docker Compose (v2.0+)
 - ✅ Container host (ZimaOS, Proxmox, Unraid, etc.)
@@ -91,7 +91,7 @@ This guide provides a complete, production-ready Nextcloud setup optimized for h
 
 ---
 
-## 🏗️ Architecture
+## Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────┐
@@ -120,7 +120,7 @@ This guide provides a complete, production-ready Nextcloud setup optimized for h
 
 ---
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Step 1️⃣: Generate Secrets
 
@@ -198,7 +198,7 @@ docker exec -u www-data nextcloud php occ config:system:set default_phone_region
 
 ---
 
-## 📚 Detailed Setup
+## Detailed Setup
 
 ### Docker Compose Configuration
 
@@ -518,7 +518,7 @@ Navigate to your site in Pangolin dashboard and add the following resources:
 | 2️⃣ | **Collabora Office** | `office` | `http://192.168.x.x:9980` | `office.yourdomain.com` | 9980 |
 | 3️⃣ | **Talk Signaling** | `talk-signaling` | `http://192.168.x.x:8188` | `talk-signaling.yourdomain.com` | 8188 |
 
-> **💡 Note:** Replace `192.168.x.x` with your actual NAS/server IP address (e.g., `192.168.8.158`)
+> **Note:** Replace `192.168.x.x` with your actual NAS/server IP address (e.g., `192.168.8.158`)
 
 ##### Step 2: Configure Cloudflare DNS
 
@@ -526,9 +526,9 @@ Add the following **CNAME** records in your Cloudflare dashboard:
 
 | Type | Name | Target | Proxy Status |
 |------|------|--------|--------------|
-| CNAME | `nextcloud` | `yourdomain.com` | 🌥️ DNS only (grey cloud) |
-| CNAME | `office` | `yourdomain.com` | 🌥️ DNS only (grey cloud) |
-| CNAME | `talk-signaling` | `yourdomain.com` | 🌥️ DNS only (grey cloud) |
+| CNAME | `nextcloud` | `yourdomain.com` | DNS only (grey cloud) |
+| CNAME | `office` | `yourdomain.com` | DNS only (grey cloud) |
+| CNAME | `talk-signaling` | `yourdomain.com` | DNS only (grey cloud) |
 
 > **⚠️ Important:** Use **DNS only** mode (grey cloud), NOT proxied (orange cloud). Pangolin handles the proxying.
 
@@ -679,7 +679,7 @@ talk-signaling   CNAME    yourdomain.com
    - Click **Save**
    - Should show ✅ green: "Collabora Online server is reachable"
 
-> **💡 Pangolin Users:** Using the external URL (`https://office.yourdomain.com`) is recommended as it works from anywhere. The internal URL (`http://collabora:9980`) only works from within the Docker network.
+> **Pangolin Users:** Using the external URL (`https://office.yourdomain.com`) is recommended as it works from anywhere. The internal URL (`http://collabora:9980`) only works from within the Docker network.
 
 3. **Test:**
    - Files → + → New document
@@ -973,9 +973,9 @@ Mount SMB/NFS shares:
 3. Configure credentials and mount point
 
 ---
-## ⚖️ Decisions & Trade-offs
+## Decisions & Trade-offs
 
-### 🗄️ Database Backend (PostgreSQL over MariaDB)
+### Database Backend (PostgreSQL over MariaDB)
 **Decision:** Use PostgreSQL instead of MariaDB/MySQL  
 **Rationale:**  
 PostgreSQL offers better concurrency handling, stricter data integrity, and more predictable performance under higher load—particularly relevant for larger Nextcloud instances.
@@ -986,7 +986,7 @@ PostgreSQL offers better concurrency handling, stricter data integrity, and more
 
 ---
 
-### 🚀 Redis for Transactional File Locking
+### Redis for Transactional File Locking
 **Decision:** Enable Redis as the file locking backend  
 **Rationale:**  
 Redis significantly reduces database contention and prevents common issues such as file lock timeouts, especially with concurrent access or background jobs.
@@ -997,7 +997,7 @@ Redis significantly reduces database contention and prevents common issues such 
 
 ---
 
-### 🧵 PHP-FPM Tuning over Defaults
+### PHP-FPM Tuning over Defaults
 **Decision:** Manually tune PHP-FPM worker settings  
 **Rationale:**  
 Default PHP-FPM values are conservative and not optimized for containerized or dedicated environments. Custom tuning improves response times and stability under load.
@@ -1008,7 +1008,7 @@ Default PHP-FPM values are conservative and not optimized for containerized or d
 
 ---
 
-### 🔄 Cron Jobs instead of AJAX
+### Cron Jobs instead of AJAX
 **Decision:** Use system cron for background jobs  
 **Rationale:**  
 Cron provides deterministic execution and avoids dependency on user traffic, which is essential for tasks like previews, cleanup jobs, and notifications.
@@ -1019,7 +1019,7 @@ Cron provides deterministic execution and avoids dependency on user traffic, whi
 
 ---
 
-### 📦 Dockerized Deployment
+### Dockerized Deployment
 **Decision:** Run Nextcloud fully containerized  
 **Rationale:**  
 Containers provide reproducibility, easier upgrades, and clean separation of services (Nextcloud, DB, Redis), aligning with the overall homelab architecture.
@@ -1030,7 +1030,7 @@ Containers provide reproducibility, easier upgrades, and clean separation of ser
 
 ---
 
-### 🔐 Security-First Defaults
+### Security-First Defaults
 **Decision:** Favor conservative security and integrity settings  
 **Rationale:**  
 Settings such as strict permissions, disabled legacy protocols, and hardened headers prioritize data safety over raw performance.
