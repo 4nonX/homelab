@@ -8,8 +8,8 @@ terraform {
       s3 = "https://minio.d-net.me"
     }
 
-    access_key                  = "DanDressen"
-    secret_key                  = "DHimHmwnmPS23"
+    access_key                  = "[username]"
+    secret_key                  = "[password]"
     skip_credentials_validation = true
     skip_metadata_api_check     = true
     skip_region_validation      = true
