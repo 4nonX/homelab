@@ -394,10 +394,9 @@ If you self-host anything that needs external access, start here.
 > [![D-PlaneOS](https://img.shields.io/badge/4nonX%2FD--PlaneOS-self--developed_NAS_OS-blueviolet?style=flat-square&logo=github)](https://github.com/4nonX/D-PlaneOS)
 
 A NAS management layer I built myself — [ZFS](https://github.com/openzfs/zfs) pool management, SMB/NFS shares, [Docker](https://www.docker.com)
-orchestration, user management, and a unified web UI, purpose-built on top of [NixOS](https://nixos.org).
-Developed specifically to fill the gap between [CasaOS](https://github.com/IceWhaleTech/CasaOS) (simple but limited) and
-[TrueNAS](https://www.truenas.com) (powerful but container-hostile). The homelab you're looking at is its
-production testing environment. See [docs/why-d-planeos.md](docs/why-d-planeos.md).
+orchestration, and a unified web UI, purpose-built on top of [NixOS](https://nixos.org).
+Developed as a high-performance Go daemon to fill the gap between [CasaOS](https://github.com/IceWhaleTech/CasaOS) (simple but limited) and
+[TrueNAS](https://www.truenas.com) (powerful but container-hostile).
 
 ---
 
