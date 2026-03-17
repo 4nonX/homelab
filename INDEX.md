@@ -95,7 +95,6 @@ Complete map of every file in this repository.
 |---|---|
 | [infrastructure/monitoring/glances-dashboard.yml](infrastructure/monitoring/glances-dashboard.yml) | Glances system monitor + nginx homelab dashboard |
 | [infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) | Scrutiny — S.M.A.R.T disk health monitoring |
-| [infrastructure/monitoring/big-bear-dockge/dockge.yml](infrastructure/monitoring/big-bear-dockge/dockge.yml) | Dockge — Docker Compose management UI |
 | [infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) | Dockpeek — container health dashboard |
 
 ### Storage
@@ -145,7 +144,6 @@ Complete map of every file in this repository.
 |---|---|
 | [services/development/d-planeos-website.yml](services/development/d-planeos-website.yml) | D-PlaneOS project website |
 | [services/development/aptifolio.yml](services/development/aptifolio.yml) | Aptifolio — Next.js frontend + FastAPI backend + PDF resume parser |
-| [services/development/aptifolio-dockge.yml](services/development/aptifolio-dockge.yml) | Aptifolio — alternate Dockge-managed compose |
 
 ---
 
