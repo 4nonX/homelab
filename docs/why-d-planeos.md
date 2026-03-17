@@ -93,15 +93,15 @@ without a paid license, and without being coupled to a vendor's opinionated app 
 
 ## What D-PlaneOS is
 
-[D-PlaneOS](https://github.com/4nonX/D-PlaneOS) fills that gap. It's a NAS management
-layer that integrates battle-tested tools — Cockpit for system/ZFS/user management,
-Dockge for Docker Compose orchestration, Glances for monitoring — behind a unified
-dashboard. The underlying stack is Debian + ZFS + Docker Engine: no exotic dependencies,
-no proprietary components, nothing that can't be replaced or inspected directly.
+[D-PlaneOS](https://github.com/4nonX/D-PlaneOS) fills that gap. It's a modern, ZFS-first NAS management system built as a high-performance **Go daemon** (`dplaned`). It replaces the scattered, imperative management tools of the past with a unified, declarative control plane.
 
-The design goal is explicit in the project: the simplicity of CasaOS, the storage
-capability of TrueNAS, without the Kubernetes overhead. Pure Docker Compose throughout,
-ZFS as the filesystem, Debian stable as the base.
+The underlying stack is **NixOS + ZFS + Docker Engine**:
+- **Storage**: Native ZFS pool and dataset management with real-time ZED integration.
+- **Orchestration**: Integrated Docker Compose stack management with atomic deployments.
+- **Identity**: Built-in RBAC and audit logging backed by a local SQLite WAL database.
+- **Interface**: Premium React-based UI served directly by nginx.
+
+The design goal is explicit: the simplicity of CasaOS with the enterprise-grade storage capability of TrueNAS, built on the most advanced declarative OS platform available today. Pure Docker Compose throughout, ZFS as the filesystem, and NixOS as the immutable, reproducible base.
 
 The NixOS migration this homelab is currently executing will eventually run D-PlaneOS
 on a NixOS base rather than Debian — combining NixOS's declarative system management

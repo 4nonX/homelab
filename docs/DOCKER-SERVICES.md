@@ -16,7 +16,7 @@ docker/
 ├── productivity/         # Nextcloud, Paperless-ngx
 ├── development/          # Portfolio projects
 ├── security/            # Vaultwarden, Pi-hole
-├── monitoring/          # Glances, Scrutiny, Dockge
+├── monitoring/          # Scrutiny, health checks
 └── infrastructure/      # Core services
 ```
 
@@ -24,7 +24,7 @@ docker/
 
 ## 🎬 Media Management
 
-### Arr Stack (from Dockge)
+### Arr Stack
 **Location:** `docker/media-management/emby-arr/`
 
 Complete media automation stack running behind Gluetun VPN:
@@ -80,7 +80,7 @@ Main media server for movies, TV shows, music.
 
 ## 📝 Productivity
 
-### Nextcloud (from Dockge)
+### Nextcloud
 **Location:** `docker/productivity/nextcloud/`
 
 Complete cloud suite with:
@@ -116,7 +116,7 @@ Complete cloud suite with:
 
 ## 💻 Development
 
-### Portfolio Builder (from Dockge)
+### Portfolio Builder
 **Location:** `docker/development/portfolio-builder/`
 
 Full-stack portfolio application:
@@ -160,7 +160,7 @@ Network-wide ad blocking and DNS server.
 
 ## 📊 Monitoring
 
-### Homelab Dashboard (from Dockge)
+### Homelab Dashboard
 **Location:** `docker/monitoring/homelab-dashboard/`
 
 Custom dashboard with:
@@ -173,10 +173,6 @@ Custom dashboard with:
 
 ### System Monitoring
 
-**Dockge:** `docker/monitoring/big-bear-dockge/`
-- Docker Compose stack manager
-- Web UI for compose management
-
 **Scrutiny:** `docker/monitoring/big-bear-scrutiny/`
 - Hard drive health monitoring (S.M.A.R.T)
 - InfluxDB for metrics storage
@@ -184,14 +180,11 @@ Custom dashboard with:
 **DockPeek:** `docker/monitoring/big-bear-dockpeek/`
 - Container inspection tool
 
-**Glances:** Running but compose not exported yet
-- Real-time system monitoring
-
 ---
 
 ## 🔧 Infrastructure
 
-### Core Services (from Dockge)
+### Core Services
 
 **Newt:** `docker/infrastructure/newt/`
 - Pangolin tunnel relay
@@ -251,9 +244,7 @@ docker compose down
 
 ---
 
-## 🔄 GitOps Integration
-
-Services can be synced via Arcane's GitSync feature:
+Services are synced via D-PlaneOS's GitOps engine:
 
 1. **Add Repository:** `https://github.com/4nonX/homelab`
 2. **Configure Sync:**
