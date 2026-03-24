@@ -98,7 +98,7 @@ without a paid license, and without being coupled to a vendor's opinionated app 
 The underlying stack is **NixOS + ZFS + Docker Engine**:
 - **Storage**: Native ZFS pool and dataset management with real-time ZED integration.
 - **Orchestration**: Integrated Docker Compose stack management with atomic deployments.
-- **Identity**: Built-in RBAC and audit logging backed by a local SQLite WAL database.
+- **Identity**: Built-in RBAC and audit logging backed by a local PostgreSQL database.
 - **Interface**: Premium React-based UI served directly by nginx.
 
 The design goal is explicit: the simplicity of CasaOS with the enterprise-grade storage capability of TrueNAS, built on the most advanced declarative OS platform available today. Pure Docker Compose throughout, ZFS as the filesystem, and NixOS as the immutable, reproducible base.
