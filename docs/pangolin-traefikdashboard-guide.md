@@ -1,4 +1,4 @@
-﻿# Pangolin Deployment & Observability Guide
+# Pangolin Deployment & Observability Guide
 
 **Focus:** Hardened VPS Relay with Real-Time Traffic Analytics & CrowdSec IPS
 
@@ -14,13 +14,13 @@ Before deploying the stack, the host environment must be prepared for JSON loggi
 
 ```bash
 /opt/pangolin/
-â”œâ”€â”€ docker-compose.yml
-â”œâ”€â”€ config/
-â”‚   â”œâ”€â”€ traefik/
-â”‚   â”‚   â”œâ”€â”€ traefik_config.yml
-â”‚   â”‚   â””â”€â”€ logs/                 # chmod 755 required
-â”‚   â””â”€â”€ crowdsec/
-â”‚       â””â”€â”€ acquis.yaml
+├── docker-compose.yml
+├── config/
+│   ├── traefik/
+│   │   ├── traefik_config.yml
+│   │   └── logs/                 # chmod 755 required
+│   └── crowdsec/
+│       └── acquis.yaml
 ```
 
 ### 1.2 Security Handshake

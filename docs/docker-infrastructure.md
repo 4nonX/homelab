@@ -1,8 +1,8 @@
-﻿# Docker Infrastructure & Best Practices
+# Docker Infrastructure & Best Practices
 
 Comprehensive Docker deployment strategy, container orchestration, and operational best practices for the homelab.
 
-## Docker Environment
+## 🐳 Docker Environment
 
 ### Platform Details
 - **Docker Version:** Latest (managed by ZimaOS)
@@ -16,22 +16,22 @@ Comprehensive Docker deployment strategy, container orchestration, and operation
 **Stack-Based Organization:**
 ```
 docker-compose/
-â”œâ”€â”€ media/
-â”‚   â”œâ”€â”€ arr-stack.yml           # Sonarr, Radarr, Lidarr, Prowlarr
-â”‚   â””â”€â”€ media-servers.yml        # Emby, SwingMusic
-â”œâ”€â”€ productivity/
-â”‚   â”œâ”€â”€ nextcloud-stack.yml      # Nextcloud + DB + Redis
-â”‚   â”œâ”€â”€ immich-stack.yml         # Immich + ML + DB
-â”‚   â””â”€â”€ notes-stack.yml          # Joplin, Memos
-â”œâ”€â”€ infrastructure/
-â”‚   â”œâ”€â”€ dns-stack.yml            # Pi-hole
-â”‚   â”œâ”€â”€ management.yml           # Dockge, Syncthing
-â”‚   â””â”€â”€ monitoring.yml           # Future: Prometheus, Grafana
-â””â”€â”€ security/
-    â””â”€â”€ vaultwarden.yml          # Password manager
+├── media/
+│   ├── arr-stack.yml           # Sonarr, Radarr, Lidarr, Prowlarr
+│   └── media-servers.yml        # Emby, SwingMusic
+├── productivity/
+│   ├── nextcloud-stack.yml      # Nextcloud + DB + Redis
+│   ├── immich-stack.yml         # Immich + ML + DB
+│   └── notes-stack.yml          # Joplin, Memos
+├── infrastructure/
+│   ├── dns-stack.yml            # Pi-hole
+│   ├── management.yml           # Dockge, Syncthing
+│   └── monitoring.yml           # Future: Prometheus, Grafana
+└── security/
+    └── vaultwarden.yml          # Password manager
 ```
 
-## Container Management
+## 📦 Container Management
 
 ### Image Strategy
 
@@ -115,19 +115,19 @@ volumes:
 **Storage Paths:**
 ```
 /DATA/
-â”œâ”€â”€ appdata/              # Container configurations
-â”‚   â”œâ”€â”€ sonarr/
-â”‚   â”œâ”€â”€ radarr/
-â”‚   â”œâ”€â”€ nextcloud/
-â”‚   â””â”€â”€ [service-name]/
-â”œâ”€â”€ media/                # Media storage
-â”‚   â”œâ”€â”€ tv/
-â”‚   â”œâ”€â”€ movies/
-â”‚   â””â”€â”€ music/
-â”œâ”€â”€ backups/              # Local backups
+├── appdata/              # Container configurations
+│   ├── sonarr/
+│   ├── radarr/
+│   ├── nextcloud/
+│   └── [service-name]/
+├── media/                # Media storage
+│   ├── tv/
+│   ├── movies/
+│   └── music/
+├── backups/              # Local backups
 ```
 
-## Security Best Practices
+## 🔒 Security Best Practices
 
 ### Container Security
 
@@ -206,7 +206,7 @@ secrets:
 - VPN-routed containers: Gluetun network only
 - Public services: Behind reverse proxy only
 
-## Monitoring & Logging
+## 📊 Monitoring & Logging
 
 ### Container Health Checks
 
@@ -271,7 +271,7 @@ htop
 - **Grafana:** Dashboards and alerting
 - **Node Exporter:** Host metrics
 
-## Update & Maintenance
+## 🔄 Update & Maintenance
 
 ### Update Strategy
 
@@ -331,7 +331,7 @@ docker exec postgres pg_dumpall -U postgres | \
 0 3 * * * /scripts/backup-databases.sh
 ```
 
-## Deployment Workflow
+## 🚀 Deployment Workflow
 
 ### New Service Deployment
 
@@ -425,7 +425,7 @@ docker stats
 docker inspect container_name | grep -A 10 "Memory"
 ```
 
-## Performance Optimization
+## 📈 Performance Optimization
 
 ### Resource Allocation
 
@@ -471,7 +471,7 @@ CMD ["node", "server.js"]
 - Run backups during low-usage periods
 - Schedule updates off-peak
 
-## Future Enhancements
+## 🔮 Future Enhancements
 
 ### Planned Improvements
 
@@ -502,8 +502,8 @@ CMD ["node", "server.js"]
 ---
 
 **Docker Philosophy:**
-- Immutable infrastructure
-- Configuration as code
-- Fail fast, recover faster
-- Monitor everything
-- Automate repetitive tasks
+- ✅ Immutable infrastructure
+- ✅ Configuration as code
+- ✅ Fail fast, recover faster
+- ✅ Monitor everything
+- ✅ Automate repetitive tasks

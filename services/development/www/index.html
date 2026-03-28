@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de" x-data="{ lang: 'de', state: 'idle', showPortfolio: false, showLegal: false }">
 <head>
     <meta charset="UTF-8">
@@ -140,18 +140,18 @@
                     </div>
                     <div class="bg-white/5 rounded-[1.5rem] md:rounded-[2.5rem] border border-white/5 overflow-hidden flex flex-col group">
                         <div class="h-64 overflow-hidden relative">
-                            <img src="D-PlaneOS-website.png" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="D-PlaneOS">
+                            <img src="DPlaneOS-website.png" loading="lazy" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" alt="DPlaneOS">
                             <div class="absolute inset-0 bg-gradient-to-t from-[#0a0a0a] via-transparent to-transparent"></div>
                         </div>
                         <div class="p-8 md:p-12">
-                            <h3 class="text-2xl md:text-3xl font-tech uppercase mb-4 text-white">D-PLANEOS</h3>
+                            <h3 class="text-2xl md:text-3xl font-tech uppercase mb-4 text-white">DPlaneOS</h3>
                             <p class="text-sm md:text-lg text-gray-400 leading-relaxed mb-6">
                                 <span x-show="lang === 'de'">Professionelles Speichermanagement mit ZFS, Docker, nativer Verschlüsselung und einem Web-Dashboard. Einfaches NAS-Management, entwickelt für Homelab-Enthusiasten.</span>
                                 <span x-show="lang === 'en'" x-cloak>Production-grade storage management with ZFS, Docker, native encryption, and a web dashboard. Simple NAS Management Built for Homelabbers.</span>
                             </p>
                             <div class="flex gap-6">
                                 <a href="https://dplaneos.d-net.me" target="_blank" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest hover:underline">Live Demo →</a>
-                                <a href="https://github.com/4nonX/D-PlaneOS" target="_blank" class="text-[10px] font-bold text-white/20 uppercase tracking-widest hover:text-white">GitHub</a>
+                                <a href="https://github.com/4nonX/DPlaneOS" target="_blank" class="text-[10px] font-bold text-white/20 uppercase tracking-widest hover:text-white">GitHub</a>
                             </div>
                         </div>
                     </div>
@@ -211,7 +211,7 @@
 
     <footer class="relative z-[60] py-12 text-center flex flex-col items-center gap-4">
         <div class="opacity-30 text-[9px] md:text-[10px] font-bold uppercase tracking-[0.5em]">
-            © 2026 Dan Dreßen — <button type="button" @click="showLegal = true" class="underline hover:text-blue-500 cursor-pointer">Impressum & Datenschutz</button>
+            © 2026 Dan Dreßen - <button type="button" @click="showLegal = true" class="underline hover:text-blue-500 cursor-pointer">Impressum & Datenschutz</button>
         </div>
     </footer>
 
@@ -228,3 +228,4 @@
     </script>
 </body>
 </html>
+
