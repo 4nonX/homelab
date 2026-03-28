@@ -1,25 +1,25 @@
-# Disaster Recovery Runbook: Pangolin VPS
+﻿# Disaster Recovery Runbook: Pangolin VPS
 
 ## Normal Operation (nothing to do)
 
 - Backup runs automatically every Sunday at 3am UTC
-- Stored in MinIO via Pangolin tunnel → bucket `pangolin-backup`
+- Stored in MinIO via Pangolin tunnel â†’ bucket `pangolin-backup`
 - Last 8 weekly backups retained (2 months history)
 - Logs: `ssh root@217.154.249.11 "tail -f /var/log/pangolin-backup.log"`
 
 ---
 
-## Disaster Recovery — VPS is dead
+## Disaster Recovery â€” VPS is dead
 
 **Total estimated time: ~15 minutes**
 
-### Step 1 — Create new VPS in IONOS panel (2 min)
+### Step 1 â€” Create new VPS in IONOS panel (2 min)
 
 1. Log into [cloud.ionos.de](https://cloud.ionos.de)
 2. Create new VPS: Ubuntu 24.04, `vps 2 2 80`, Berlin datacenter
 3. Note the new public IP address
 
-### Step 2 — Add SSH key to new VPS (1 min)
+### Step 2 â€” Add SSH key to new VPS (1 min)
 
 IONOS provides a temporary root password. SSH in and add the Terraform key:
 
@@ -30,7 +30,7 @@ echo "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIH2FWIyW0qG4WHuw74na7HDB5JISJMNWrL4Cft
 chmod 600 ~/.ssh/authorized_keys
 ```
 
-### Step 3 — Restore terraform.tfvars from Vaultwarden (30 sec)
+### Step 3 â€” Restore terraform.tfvars from Vaultwarden (30 sec)
 
 Open Vaultwarden secure note **"terraform-homelab-tfvars"** and copy the contents to:
 
@@ -44,7 +44,7 @@ Update the IP:
 vps_ip = "NEW_VPS_IP"
 ```
 
-### Step 4 — Run Terraform (10 min)
+### Step 4 â€” Run Terraform (10 min)
 
 ```powershell
 cd infrastructure/networking/pangolin/terraform
@@ -67,7 +67,7 @@ Terraform will automatically:
 - Deploy full stack (Pangolin 1.12.2 + Gerbil 1.2.2 + Traefik v3.5 + CrowdSec)
 - Install weekly backup cron (Sunday 3am UTC)
 
-### Step 5 — Verify (2 min)
+### Step 5 â€” Verify (2 min)
 
 ```bash
 ssh root@NEW_VPS_IP "docker compose -f /opt/pangolin/docker-compose.yml ps"
@@ -91,7 +91,7 @@ These must be running/accessible for DR to work:
 | MinIO reachable | `https://minio.d-net.me` | `Invoke-RestMethod https://minio.d-net.me/minio/health/live` |
 | Backup exists | MinIO bucket `pangolin-backup` | `mc ls nas/pangolin-backup/` |
 | SSH key | `~/.ssh/id_ed25519` | `ssh-keygen -l -f ~/.ssh/id_ed25519` |
-| terraform.tfvars | Vaultwarden secure note | — |
+| terraform.tfvars | Vaultwarden secure note | â€” |
 
 ---
 
@@ -128,7 +128,7 @@ terraform plan
 
 ---
 
-## Key Values (no secrets here — see Vaultwarden)
+## Key Values (no secrets here â€” see Vaultwarden)
 
 | Item | Value |
 |---|---|

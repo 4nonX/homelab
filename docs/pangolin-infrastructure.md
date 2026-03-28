@@ -1,4 +1,4 @@
-# Pangolin Tunnel Infrastructure
+﻿# Pangolin Tunnel Infrastructure
 
 Self-hosted secure tunnel solution providing external access to homelab services without port forwarding, featuring automatic SSL certificates, DDoS protection, and enterprise-grade security.
 
@@ -6,29 +6,29 @@ Self-hosted secure tunnel solution providing external access to homelab services
 
 ```
 Internet
-    ↓
+    â†“
 VPS Server (Cloud)
-├─ Traefik (Reverse Proxy + Let's Encrypt SSL)
-├─ Pangolin (Server API & Management)
-├─ Gerbil (Wireguard Gateway)
-└─ CrowdSec (IDS/IPS + DDoS Protection)
-    ↓
+â”œâ”€ Traefik (Reverse Proxy + Let's Encrypt SSL)
+â”œâ”€ Pangolin (Server API & Management)
+â”œâ”€ Gerbil (Wireguard Gateway)
+â””â”€ CrowdSec (IDS/IPS + DDoS Protection)
+    â†“
 Wireguard Tunnel (Encrypted)
-    ↓
+    â†“
 Homelab (Behind NAT)
-├─ Newt (Client Service)
-└─ Local Services
-   ├─ Nextcloud
-   ├─ Immich
-   ├─ SSH Access
-   └─ 40+ Docker Services
+â”œâ”€ Newt (Client Service)
+â””â”€ Local Services
+   â”œâ”€ Nextcloud
+   â”œâ”€ Immich
+   â”œâ”€ SSH Access
+   â””â”€ 40+ Docker Services
 ```
 
 ## Data Flow Visualization
 
-**[→ View Interactive Data Flow Diagram](https://4nonx.github.io/homelab/dataflow-diagram.html)**
+**[â†’ View Interactive Data Flow Diagram](https://4nonx.github.io/homelab/dataflow-diagram.html)**
 
-See how requests travel from client → VPS → Pi Hub → NAS → Services.
+See how requests travel from client â†’ VPS â†’ Pi Hub â†’ NAS â†’ Services.
 
 ---
 
@@ -42,13 +42,13 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 - Router configuration complexity
 
 **Pangolin Advantages:**
-- ✅ No port forwarding needed
-- ✅ No static IP required
-- ✅ Automatic SSL certificates (Let's Encrypt)
-- ✅ Built-in DDoS protection (CrowdSec)
-- ✅ Wireguard encryption
-- ✅ Web-based management
-- ✅ Multiple services on one tunnel
+- âœ… No port forwarding needed
+- âœ… No static IP required
+- âœ… Automatic SSL certificates (Let's Encrypt)
+- âœ… Built-in DDoS protection (CrowdSec)
+- âœ… Wireguard encryption
+- âœ… Web-based management
+- âœ… Multiple services on one tunnel
 
 ## Infrastructure Components
 
@@ -231,22 +231,22 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 
 ```
 1. Add service in Pangolin dashboard
-   ├─ Service name
-   ├─ Internal address (homelab)
-   ├─ Subdomain
-   └─ Port
+   â”œâ”€ Service name
+   â”œâ”€ Internal address (homelab)
+   â”œâ”€ Subdomain
+   â””â”€ Port
 
 2. Pangolin generates Traefik config
-   └─ Router + Service + Middleware
+   â””â”€ Router + Service + Middleware
 
 3. Traefik polls API and updates
-   └─ New route active in <5 seconds
+   â””â”€ New route active in <5 seconds
 
 4. Let's Encrypt certificate issued
-   └─ HTTP-01 challenge via port 80
+   â””â”€ HTTP-01 challenge via port 80
 
 5. Service accessible via HTTPS
-   └─ subdomain.domain.com
+   â””â”€ subdomain.domain.com
 ```
 
 ## Network Flow
@@ -255,23 +255,23 @@ See how requests travel from client → VPS → Pi Hub → NAS → Services.
 
 ```
 User Browser
-    ↓
-DNS Resolution (subdomain.domain.com → VPS IP)
-    ↓
+    â†“
+DNS Resolution (subdomain.domain.com â†’ VPS IP)
+    â†“
 Traefik (VPS) - Port 443
-    ↓
+    â†“
 SSL Termination + CrowdSec Check
-    ↓
+    â†“
 Route Lookup (Dynamic from Pangolin)
-    ↓
+    â†“
 Forward to Gerbil
-    ↓
+    â†“
 Wireguard Tunnel (Encrypted)
-    ↓
+    â†“
 Newt Client (Homelab)
-    ↓
+    â†“
 Local Service (Docker Container)
-    ↓
+    â†“
 Response Path (Reverse)
 ```
 
@@ -279,25 +279,25 @@ Response Path (Reverse)
 
 ```
 1. Newt starts on homelab
-   └─ Connects to Pangolin API (HTTPS)
+   â””â”€ Connects to Pangolin API (HTTPS)
 
 2. Newt authenticates
-   └─ Client ID + Secret validation
+   â””â”€ Client ID + Secret validation
 
 3. Pangolin registers client
-   └─ Generates Wireguard config
+   â””â”€ Generates Wireguard config
 
 4. Gerbil creates tunnel endpoint
-   └─ Assigns Wireguard IP
+   â””â”€ Assigns Wireguard IP
 
 5. Newt establishes tunnel
-   └─ Persistent Wireguard connection
+   â””â”€ Persistent Wireguard connection
 
 6. Health checks (ping)
-   └─ 10-second intervals
+   â””â”€ 10-second intervals
 
 7. Traffic flows through tunnel
-   └─ All requests routed via Gerbil
+   â””â”€ All requests routed via Gerbil
 ```
 
 ## Performance Characteristics
@@ -452,9 +452,9 @@ docker exec traefik traefik healthcheck
 ## Cost Analysis
 
 ### VPS Costs
-- **IONOS VPS:** ~€5-10/month
+- **IONOS VPS:** ~â‚¬5-10/month
 - **Alternative Providers:**
-  - Hetzner: €4.51/month (similar specs)
+  - Hetzner: â‚¬4.51/month (similar specs)
   - Linode: $5/month
   - DigitalOcean: $6/month
 
@@ -462,9 +462,9 @@ docker exec traefik traefik healthcheck
 
 | Solution | Monthly Cost | Setup Complexity | Security |
 |----------|--------------|------------------|----------|
-| **Pangolin (Self-hosted)** | €5-10 | Medium | High |
+| **Pangolin (Self-hosted)** | â‚¬5-10 | Medium | High |
 | Cloudflare Tunnel | Free* | Low | High |
-| Tailscale | Free/€5+ | Low | High |
+| Tailscale | Free/â‚¬5+ | Low | High |
 | Ngrok | $8-20 | Low | Medium |
 | VPN + Dynamic DNS | $5 | High | Medium |
 | Direct Port Forwarding | $0 | Medium | Low |
@@ -507,36 +507,36 @@ docker exec traefik traefik healthcheck
 ## Technical Skills Demonstrated
 
 ### Networking
-- ✅ Wireguard VPN configuration
-- ✅ Reverse proxy architecture
-- ✅ DNS and domain management
-- ✅ SSL/TLS certificate management
-- ✅ Network address translation (NAT) traversal
-- ✅ Routing and traffic engineering
+- âœ… Wireguard VPN configuration
+- âœ… Reverse proxy architecture
+- âœ… DNS and domain management
+- âœ… SSL/TLS certificate management
+- âœ… Network address translation (NAT) traversal
+- âœ… Routing and traffic engineering
 
 ### Security
-- ✅ Multi-layer defense strategy
-- ✅ Intrusion detection/prevention
-- ✅ Encryption best practices
-- ✅ Authentication and authorization
-- ✅ DDoS mitigation
-- ✅ Security monitoring and logging
+- âœ… Multi-layer defense strategy
+- âœ… Intrusion detection/prevention
+- âœ… Encryption best practices
+- âœ… Authentication and authorization
+- âœ… DDoS mitigation
+- âœ… Security monitoring and logging
 
 ### DevOps
-- ✅ Docker containerization
-- ✅ Docker Compose orchestration
-- ✅ systemd service management
-- ✅ Infrastructure as Code
-- ✅ Automated certificate management
-- ✅ Service monitoring and health checks
+- âœ… Docker containerization
+- âœ… Docker Compose orchestration
+- âœ… systemd service management
+- âœ… Infrastructure as Code
+- âœ… Automated certificate management
+- âœ… Service monitoring and health checks
 
 ### System Administration
-- ✅ Linux server management
-- ✅ VPS deployment and configuration
-- ✅ Log management and rotation
-- ✅ Performance optimization
-- ✅ Troubleshooting and debugging
-- ✅ Backup and disaster recovery
+- âœ… Linux server management
+- âœ… VPS deployment and configuration
+- âœ… Log management and rotation
+- âœ… Performance optimization
+- âœ… Troubleshooting and debugging
+- âœ… Backup and disaster recovery
 
 ## Future Enhancements
 
@@ -561,11 +561,11 @@ docker exec traefik traefik healthcheck
 ---
 
 **Key Takeaways:**
-- ✅ Enterprise-grade external access without port forwarding
-- ✅ Self-hosted with full control
-- ✅ Multi-layer security architecture
-- ✅ Automatic SSL certificate management
-- ✅ Professional infrastructure at homelab cost
-- ✅ Scalable and maintainable solution
+- âœ… Enterprise-grade external access without port forwarding
+- âœ… Self-hosted with full control
+- âœ… Multi-layer security architecture
+- âœ… Automatic SSL certificate management
+- âœ… Professional infrastructure at homelab cost
+- âœ… Scalable and maintainable solution
 
-**Technologies:** Pangolin · Wireguard · Traefik · CrowdSec · Docker · systemd · Let's Encrypt
+**Technologies:** Pangolin Â· Wireguard Â· Traefik Â· CrowdSec Â· Docker Â· systemd Â· Let's Encrypt

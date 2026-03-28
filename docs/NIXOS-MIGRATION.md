@@ -1,4 +1,4 @@
-# NixOS Migration Plan
+﻿# NixOS Migration Plan
 
 I'm moving the whole homelab from ZimaOS (Debian-based) to NixOS. This covers 40+ services and about 33TB of data. The goal is to get everything running on NixOS without any major downtime for the important bits.
 
@@ -15,7 +15,7 @@ I'm moving the whole homelab from ZimaOS (Debian-based) to NixOS. This covers 40
 
 ---
 
-## 📊 Technical Drivers
+## Technical Drivers
 
 ### Current Stack Analysis
 
@@ -59,14 +59,14 @@ I'm doing this in phases so I don't break everything at once.
 - Set up NixOS test environment
 - Learn Nix language and module system
 - Test Docker/Podman compatibility
-- Validate ZFS support and D-PlaneOS integration on NixOS
+- Validate ZFS support and DPlaneOS integration on NixOS
 
 **Tasks:**
 - [x] Research NixOS architecture and best practices
 - [ ] Install NixOS on separate test hardware
 - [ ] Configure basic system (network, storage, users)
 - [ ] Test Docker vs Podman for container workloads
-- [ ] Test ZFS pool setup on NixOS - evaluate D-PlaneOS integration
+- [ ] Test ZFS pool setup on NixOS - evaluate DPlaneOS integration
 - [ ] Document initial configuration patterns
 
 **Success Criteria:**
@@ -98,7 +98,7 @@ I'm doing this in phases so I don't break everything at once.
 1. Document current Docker Compose configurations
 2. Convert to NixOS container definitions
 3. Test on separate hardware
-4. Schedule migration window (announce to users: me 😄)
+4. Schedule migration window (announce to users: me ðŸ˜„)
 5. Deploy to production NixOS
 6. Validate functionality
 7. Monitor for 48 hours before next phase
@@ -226,14 +226,14 @@ I'm doing this in phases so I don't break everything at once.
 
 **Storage Migration Strategy:**
 
-The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-PlaneOS). An in-place conversion from BTRFS to ZFS is not possible - the array must be rebuilt. The data must leave the drives before ZFS can claim them.
+The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlaneOS). An in-place conversion from BTRFS to ZFS is not possible - the array must be rebuilt. The data must leave the drives before ZFS can claim them.
 
 **Plan:**
-1. Boot NixOS from NVMe — ZimaOS remains bootable on its own partition as fallback
+1. Boot NixOS from NVMe â€” ZimaOS remains bootable on its own partition as fallback
 2. Generate `sha256sum` manifest of all data on the BTRFS array (pre-migration baseline)
 3. Rsync all 33TB to external/temporary storage (estimated 24-48h at HDD speeds)
 4. Take a final BTRFS snapshot; note the timestamp
-5. Destroy the mdadm array, create ZFS RAID-Z2 pool via D-PlaneOS
+5. Destroy the mdadm array, create ZFS RAID-Z2 pool via DPlaneOS
 6. Configure datasets (`mainpool/appdata`, `mainpool/media`, `mainpool/home`) with appropriate properties
 7. Rsync data back from temporary storage
 8. Verify checksums against pre-migration manifest
@@ -247,7 +247,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 **Rollback Strategy:**
 - ZimaOS remains bootable until Step 9
-- BTRFS array intact until Step 5 — can abort at any point before that
+- BTRFS array intact until Step 5 â€” can abort at any point before that
 - Rollback time to ZimaOS: < 5 minutes (boot selection)
 
 **Success Criteria:**
@@ -259,7 +259,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## ⚠️ Risk Assessment & Mitigation
+## Risk Assessment & Mitigation
 
 ### Critical Risks
 
@@ -298,7 +298,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## 🧪 Testing Environment
+## Testing Environment
 
 ### Hardware Setup
 
@@ -311,7 +311,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 **Test Scope:**
 - NixOS installation and basic configuration
 - Container deployment (Docker/Podman)
-- ZFS pool creation and dataset management via D-PlaneOS
+- ZFS pool creation and dataset management via DPlaneOS
 - Service configurations
 - Backup/restore procedures
 
@@ -329,7 +329,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 **Planned:**
 - [ ] Container service deployment
-- [ ] ZFS pool setup and D-PlaneOS integration testing
+- [ ] ZFS pool setup and DPlaneOS integration testing
 - [ ] Network configuration
 - [ ] Traefik setup
 - [ ] Database deployment
@@ -338,33 +338,33 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## 📝 NixOS Configuration Strategy
+## NixOS Configuration Strategy
 
 ### Configuration Structure
 ```
 /etc/nixos/
-├── configuration.nix              # Main system configuration
-├── hardware-configuration.nix     # Auto-generated hardware config
-├── modules/
-│   ├── system/
-│   │   ├── boot.nix              # Boot loader settings
-│   │   ├── networking.nix        # Network configuration
-│   │   └── users.nix             # User management
-│   ├── storage/
-│   │   ├── zfs.nix               # ZFS pool + dataset configuration (see D-PlaneOS)
-│   │   └── backups.nix           # Snapshot and replication schedules
-│   ├── containers/
-│   │   ├── docker.nix            # Docker/Podman setup
-│   │   └── podman.nix
-│   └── services/
-│       ├── traefik.nix           # Reverse proxy
-│       ├── databases.nix         # PostgreSQL + Redis
-│       ├── media-stack.nix       # Media services
-│       ├── productivity.nix      # Cloud services
-│       └── monitoring.nix        # Monitoring stack
-├── secrets/                       # Encrypted secrets (age/sops)
-│   └── .gitignore
-└── flake.nix                      # Flakes for reproducibility
+â”œâ”€â”€ configuration.nix              # Main system configuration
+â”œâ”€â”€ hardware-configuration.nix     # Auto-generated hardware config
+â”œâ”€â”€ modules/
+â”‚   â”œâ”€â”€ system/
+â”‚   â”‚   â”œâ”€â”€ boot.nix              # Boot loader settings
+â”‚   â”‚   â”œâ”€â”€ networking.nix        # Network configuration
+â”‚   â”‚   â””â”€â”€ users.nix             # User management
+â”‚   â”œâ”€â”€ storage/
+â”‚   â”‚   â”œâ”€â”€ zfs.nix               # ZFS pool + dataset configuration (see DPlaneOS)
+â”‚   â”‚   â””â”€â”€ backups.nix           # Snapshot and replication schedules
+â”‚   â”œâ”€â”€ containers/
+â”‚   â”‚   â”œâ”€â”€ docker.nix            # Docker/Podman setup
+â”‚   â”‚   â””â”€â”€ podman.nix
+â”‚   â””â”€â”€ services/
+â”‚       â”œâ”€â”€ traefik.nix           # Reverse proxy
+â”‚       â”œâ”€â”€ databases.nix         # PostgreSQL + Redis
+â”‚       â”œâ”€â”€ media-stack.nix       # Media services
+â”‚       â”œâ”€â”€ productivity.nix      # Cloud services
+â”‚       â””â”€â”€ monitoring.nix        # Monitoring stack
+â”œâ”€â”€ secrets/                       # Encrypted secrets (age/sops)
+â”‚   â””â”€â”€ .gitignore
+â””â”€â”€ flake.nix                      # Flakes for reproducibility
 ```
 
 ### Configuration Management Approach
@@ -387,7 +387,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## 📊 Success Metrics
+## Success Metrics
 
 ### Technical Metrics
 
@@ -415,7 +415,7 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## 📚 Learning Resources
+## Learning Resources
 
 ### Primary Resources
 
@@ -445,16 +445,16 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## 📅 Tentative Timeline
+## Tentative Timeline
 
 | Phase | Duration | Start | End | Status |
 |-------|----------|-------|-----|--------|
-| **Phase 0: Preparation** | 2 weeks | Week 1 | Week 2 | 🟡 In Progress |
-| **Phase 1: Non-Critical** | 2 weeks | Week 3 | Week 4 | ⏳ Planned |
-| **Phase 2: Media Stack** | 2 weeks | Week 5 | Week 6 | ⏳ Planned |
-| **Phase 3: Critical Services** | 2 weeks | Week 7 | Week 8 | ⏳ Planned |
-| **Phase 4: Infrastructure** | 2 weeks | Week 9 | Week 10 | ⏳ Planned |
-| **Stabilization & Documentation** | 2 weeks | Week 11 | Week 12 | ⏳ Planned |
+| **Phase 0: Preparation** | 2 weeks | Week 1 | Week 2 | In Progress |
+| **Phase 1: Non-Critical** | 2 weeks | Week 3 | Week 4 | Planned |
+| **Phase 2: Media Stack** | 2 weeks | Week 5 | Week 6 | Planned |
+| **Phase 3: Critical Services** | 2 weeks | Week 7 | Week 8 | Planned |
+| **Phase 4: Infrastructure** | 2 weeks | Week 9 | Week 10 | Planned |
+| **Stabilization & Documentation** | 2 weeks | Week 11 | Week 12 | Planned |
 
 **Total Estimated Duration:** 10-12 weeks  
 **Target Completion:** Q1-Q2 2025  
