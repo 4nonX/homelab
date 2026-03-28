@@ -76,7 +76,7 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
-| [infrastructure/networking/pihole/pihole.yml](infrastructure/networking/pihole/pihole.yml) | Pi-hole — DNS + network-wide ad-blocking |
+| [infrastructure/networking/pihole/pihole.yml](infrastructure/networking/pihole/pihole.yml) | Pi-hole - DNS + network-wide ad-blocking |
 | [infrastructure/networking/pangolin/README.md](infrastructure/networking/pangolin/README.md) | Pangolin component map, traffic flow, links to all Pangolin docs |
 | [infrastructure/networking/traefik/README.md](infrastructure/networking/traefik/README.md) | Traefik config notes (VPS-managed) |
 
@@ -86,15 +86,15 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
-| [infrastructure/security/vaultwarden/vaultwarden.yml](infrastructure/security/vaultwarden/vaultwarden.yml) | Vaultwarden — self-hosted Bitwarden server |
-| [infrastructure/security/crowdsec/README.md](infrastructure/security/crowdsec/README.md) | CrowdSec notes — IDS/IPS integration with Traefik (VPS-managed) |
+| [infrastructure/security/vaultwarden/vaultwarden.yml](infrastructure/security/vaultwarden/vaultwarden.yml) | Vaultwarden - self-hosted Bitwarden server |
+| [infrastructure/security/crowdsec/README.md](infrastructure/security/crowdsec/README.md) | CrowdSec notes - IDS/IPS integration with Traefik (VPS-managed) |
 
 ### Monitoring
 
 | File | Description |
 |---|---|
 | [infrastructure/monitoring/glances-dashboard.yml](infrastructure/monitoring/glances-dashboard.yml) | Glances system monitor + nginx homelab dashboard |
-| [infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) | Scrutiny — S.M.A.R.T disk health monitoring |
+| [infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) | Scrutiny - S.M.A.R.T disk health monitoring |
 | [infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) | Dockpeek - container health dashboard |
 
 ### Storage

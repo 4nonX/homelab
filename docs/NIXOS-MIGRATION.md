@@ -1,39 +1,17 @@
-# 🚀 NixOS Migration Project
+# NixOS Migration Plan
 
-## Executive Summary
-
-Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS, encompassing 40+ containerized services and 33TB storage, with zero-downtime target for critical services.
+I'm moving the whole homelab from ZimaOS (Debian-based) to NixOS. This covers 40+ services and about 33TB of data. The goal is to get everything running on NixOS without any major downtime for the important bits.
 
 **Timeline:** Q1-Q2 2026  
-**Current Phase:** Planning & Testing  
-**Complexity:** High (Production environment, 2+ years uptime, ~95% SLA)  
-**Public Documentation:** [github.com/4nonX/homelab](https://github.com/4nonX/homelab)
+**Status:** Planning & Testing  
 
 ---
 
-## 🎯 Project Goals
+## Why I'm doing this
 
-### Primary Objectives
-
-1. **Declarative Infrastructure at OS Level**
-   - Current: Imperative configuration (apt, manual config files)
-   - Target: Entire system defined in `configuration.nix`
-   - Benefit: System reproducibility, version control for OS configuration
-
-2. **Improved Reliability & Safety**
-   - Current: Manual rollback on failed updates (risky, time-consuming)
-   - Target: Atomic rollbacks - boot into previous generation
-   - Benefit: Safe experimentation, faster disaster recovery
-
-3. **Modern DevOps Practices**
-   - Current: Infrastructure as Code only for containers (Docker Compose)
-   - Target: IaC for entire system stack (OS + containers + services)
-   - Benefit: True reproducible environments, portable configurations
-
-4. **Simplified Maintenance**
-   - Current: Configuration drift, manual dependency management
-   - Target: Declarative dependencies, no configuration drift
-   - Benefit: Reduced maintenance burden, consistent environments
+1. **Declarative Config:** Right now, I have to remember all the manual `apt` commands and config tweaks I've made. With NixOS, the whole system is defined in one place (`configuration.nix`).
+2. **Atomic Rollbacks:** If I break something with an update, I can just boot into the previous working version. Much safer for testing stuff.
+3. **Reproducibility:** I want to be able to rebuild the exact same system on new hardware without any guesswork.
 
 ---
 
@@ -63,18 +41,15 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 
 ---
 
-## 🗺️ Migration Strategy
+## The Plan
 
-### Overview
-
-**Approach:** Phased migration with incremental validation and rollback capability at each step.
+I'm doing this in phases so I don't break everything at once.
 
 **Key Principles:**
-- ✅ Test everything in isolated environment first
-- ✅ Migrate non-critical services before critical ones
-- ✅ Maintain rollback capability at every phase
-- ✅ Document everything during (not after) migration
-- ✅ Validate data integrity at each step
+- Test in a VM first.
+- Move small, unimportant services first.
+- Always have a way to boot back into ZimaOS if things go sideways.
+- Check data integrity at every step.
 
 ---
 
@@ -91,7 +66,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 - [ ] Install NixOS on separate test hardware
 - [ ] Configure basic system (network, storage, users)
 - [ ] Test Docker vs Podman for container workloads
-- [ ] Test ZFS pool setup on NixOS — evaluate D-PlaneOS integration
+- [ ] Test ZFS pool setup on NixOS - evaluate D-PlaneOS integration
 - [ ] Document initial configuration patterns
 
 **Success Criteria:**
@@ -237,7 +212,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 ### Phase 4: Infrastructure & Storage (Weeks 9-10)
 
 **Components:**
-- ZFS RAID-Z2 pool (33TB — replacing BTRFS RAID5)
+- ZFS RAID-Z2 pool (33TB - replacing BTRFS RAID5)
 - Traefik (reverse proxy)
 - PostgreSQL databases (8 instances)
 - Redis instances (3)
@@ -251,12 +226,12 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 
 **Storage Migration Strategy:**
 
-The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-PlaneOS). An in-place conversion from BTRFS to ZFS is not possible — the array must be rebuilt. The data must leave the drives before ZFS can claim them.
+The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-PlaneOS). An in-place conversion from BTRFS to ZFS is not possible - the array must be rebuilt. The data must leave the drives before ZFS can claim them.
 
 **Plan:**
 1. Boot NixOS from NVMe — ZimaOS remains bootable on its own partition as fallback
 2. Generate `sha256sum` manifest of all data on the BTRFS array (pre-migration baseline)
-3. Rsync all 33TB to external/temporary storage (estimated 24–48h at HDD speeds)
+3. Rsync all 33TB to external/temporary storage (estimated 24-48h at HDD speeds)
 4. Take a final BTRFS snapshot; note the timestamp
 5. Destroy the mdadm array, create ZFS RAID-Z2 pool via D-PlaneOS
 6. Configure datasets (`mainpool/appdata`, `mainpool/media`, `mainpool/home`) with appropriate properties
@@ -487,52 +462,12 @@ The target is ZFS RAID-Z2, managed by [D-PlaneOS](https://github.com/4nonX/D-Pla
 
 ---
 
-## 📖 Migration Log
+## Migration Log
 
-### Phase 0: Preparation (Current)
+Keep track of what's actually happening here.
 
-**Week 1:**
-- [2025-01-07] Project planning and documentation started
-- [2025-01-07] Created detailed migration plan
-- [2025-01-07] Identified learning resources
-- [ ] Set up test environment
-- [ ] Install NixOS on test hardware
+**Phase 0: Preparation (Current)**
 
-**Week 2:**
-- [ ] Basic NixOS configuration
-- [ ] Docker/Podman testing
-- [ ] ZFS pool + D-PlaneOS integration testing
-- [ ] Document initial findings
-
----
-
-## 🎓 Learnings & Insights
-
-*This section will be updated throughout the migration with key learnings, surprises, and recommendations.*
-
-### What I'm Learning
-
-**Technical Insights:**
-- [To be updated during migration]
-
-**Process Insights:**
-- [To be updated during migration]
-
-**Surprises:**
-- [To be updated during migration]
-
-### What Went Well
-
-*Post-migration reflections*
-
-### What Could Be Improved
-
-*Post-migration reflections*
-
-### Recommendations for Others
-
-*Post-migration advice for similar projects*
-
----
-
-*This document will be updated throughout the migration to reflect actual progress, learnings, and adjustments to the plan.*
+- [2025-01-07] Started the plan.
+- [ ] Set up test environment.
+- [ ] First NixOS install on test hardware.

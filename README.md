@@ -6,11 +6,11 @@
 [![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
 [![NAS](https://img.shields.io/badge/NAS_layer-D--PlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/D-PlaneOS)
 
-A reference implementation of a self-hosted home infrastructure stack: 60+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) — a self-developed NAS management layer — currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
+A reference implementation of a self-hosted home infrastructure stack: 60+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) - a self-developed NAS management layer - currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
 
 ---
 
-> **[INDEX.md](INDEX.md)** — complete map of every file in this repository.
+> **[INDEX.md](INDEX.md)** - complete map of every file in this repository.
 
 ## Contents
 
@@ -32,26 +32,26 @@ A reference implementation of a self-hosted home infrastructure stack: 60+ conta
 Internet
   │
   ▼
-VPS — IONOS, Berlin (2 vCPU / 2 GB RAM / 80 GB NVMe)
+VPS - IONOS, Berlin (2 vCPU / 2 GB RAM / 80 GB NVMe)
   ├─ UFW firewall        ports 80, 443, 51820 only
   ├─ CrowdSec IDS/IPS   community blocklists, Traefik bouncer
   ├─ Traefik v3          TLS 1.3 termination, Let's Encrypt
   └─ Gerbil              WireGuard endpoint (Pangolin component)
             │
-            │  WireGuard tunnel — ChaCha20-Poly1305, encrypted
+            │  WireGuard tunnel - ChaCha20-Poly1305, encrypted
             ▼
-Raspberry Pi 5 — local LAN hub (Pangolin brain)
+Raspberry Pi 5 - local LAN hub (Pangolin brain)
   ├─ Pangolin server     identity, routing control plane
   ├─ Newt                tunnel termination
   └─ Traefik (inner)     internal routing → services
             │
             ▼
-Home network — 10.XXX.0.0/24
+Home network - 10.XXX.0.0/24
   ├─ NAS server (10.XXX.0.1)     40+ containers, 33 TB storage
   └─ Pi-hole  (10.XXX.0.2)       DNS, ad-blocking
 ```
 
-> **Key design decision:** [Pangolin](https://github.com/fosrl/pangolin) tunnel instead of port-forwarding means the home IP is never
+> **Note on tunnel design:** Using a [Pangolin](https://github.com/fosrl/pangolin) tunnel instead of port-forwarding means the home IP is never
 > exposed, there is no dynamic DNS dependency, and the home router attack surface is zero.
 
 Interactive diagrams: [Architecture](https://4nonx.github.io/homelab/architecture-diagram.html) · [Security layers](https://4nonx.github.io/homelab/security-diagram.html) · [Data flow](https://4nonx.github.io/homelab/dataflow-diagram.html)
@@ -63,31 +63,31 @@ Interactive diagrams: [Architecture](https://4nonx.github.io/homelab/architectur
 Defense in depth: each layer is independently hardened and does not rely on the correctness of outer layers.
 
 ```
-Layer 1 — Perimeter (VPS)
+Layer 1 - Perimeter (VPS)
   UFW: only ports 80, 443, 51820 reachable from internet
   CrowdSec: IP reputation, automated banning, community threat feeds
   DDoS mitigation: IONOS network-level
 
-Layer 2 — Transport
+Layer 2 - Transport
   WireGuard: encrypted tunnel between VPS and home network
   TLS 1.3: enforced at both outer (VPS Traefik) and inner (Pi Traefik) layers
   Let's Encrypt: certificates auto-renewed, HSTS enabled
 
-Layer 3 — Network isolation
+Layer 3 - Network isolation
   Docker bridge networks scoped per service group
   Databases not exposed to host network interface
   Services communicate only via explicitly defined networks
 
-Layer 4 — Application
+Layer 4 - Application
   Per-service authentication; OIDC where supported
   2FA enforced on Vaultwarden and Nextcloud
   Vaultwarden for shared credential management
 
-Layer 5 — Data integrity
+Layer 5 - Data integrity
   ZFS end-to-end checksumming: every block verified on read, silent corruption repaired from RAID-Z2 parity
   RAID-Z2: dual-disk fault tolerance, no write-hole vulnerability (unlike BTRFS RAID5)
   Scheduled scrubs verify the full pool
-  Current: migrating from BTRFS RAID5 — see infrastructure/storage/README.md
+  Current: migrating from BTRFS RAID5 - see infrastructure/storage/README.md
 ```
 
 ---
@@ -131,9 +131,9 @@ Layer 5 — Data integrity
 | Service | Purpose | Compose |
 |---|---|---|
 | [Pi-hole](https://github.com/pi-hole/pi-hole) | Network-wide DNS + ad-blocking | [pihole.yml](infrastructure/networking/pihole/pihole.yml) |
-| [Traefik](https://github.com/traefik/traefik) v3 | Reverse proxy, TLS termination | VPS-managed — see [infrastructure/networking/traefik/](infrastructure/networking/traefik/README.md) |
-| [Pangolin](https://github.com/fosrl/pangolin) + [Gerbil](https://github.com/fosrl/gerbil) | Self-hosted Cloudflare Tunnel | VPS + Pi — see [infrastructure/networking/pangolin/](infrastructure/networking/pangolin/README.md) |
-| [CrowdSec](https://github.com/crowdsecurity/crowdsec) | IDS/IPS, collaborative threat intel | VPS-managed — see [infrastructure/security/crowdsec/](infrastructure/security/crowdsec/README.md) |
+| [Traefik](https://github.com/traefik/traefik) v3 | Reverse proxy, TLS termination | VPS-managed: see [infrastructure/networking/traefik/](infrastructure/networking/traefik/README.md) |
+| [Pangolin](https://github.com/fosrl/pangolin) + [Gerbil](https://github.com/fosrl/gerbil) | Self-hosted Cloudflare Tunnel | VPS + Pi: see [infrastructure/networking/pangolin/](infrastructure/networking/pangolin/README.md) |
+| [CrowdSec](https://github.com/crowdsecurity/crowdsec) | IDS/IPS, collaborative threat intel | VPS-managed: see [infrastructure/security/crowdsec/](infrastructure/security/crowdsec/README.md) |
 | [Dockge](https://github.com/louislam/dockge) | Docker Compose management UI | [dockge.yml](infrastructure/monitoring/big-bear-dockge/dockge.yml) |
 | [Dockpeek](https://github.com/louislam/dockge) | Container health dashboard | [dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) |
 | [Scrutiny](https://github.com/AnalogJ/scrutiny) | S.M.A.R.T disk health monitoring | [scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) |
@@ -156,7 +156,7 @@ Layer 5 — Data integrity
 
 > Full details: [infrastructure/storage/README.md](infrastructure/storage/README.md)
 
-**33 TB across four HDDs** — currently BTRFS on mdadm RAID5 (legacy, from ZimaOS). Migrating to ZFS RAID-Z2 via [D-PlaneOS](https://github.com/4nonX/D-PlaneOS).
+**33 TB across four HDDs** - currently BTRFS on mdadm RAID5 (legacy, from ZimaOS). Migrating to ZFS RAID-Z2 via [D-PlaneOS](https://github.com/4nonX/D-PlaneOS).
 
 ### Why ZFS
 
@@ -255,7 +255,7 @@ homelab/
 │   ├── DOCKER-SERVICES.md
 │   ├── INDEX.md
 │   └── *.html               # Interactive architecture diagrams
-├── docker/                  # Legacy source tree — see docker/README.md
+├── docker/                  # Legacy source tree (see docker/README.md)
 ├── .env.example             # All required environment variables
 └── README.md
 ```
@@ -273,10 +273,10 @@ homelab/
 | Tunnel | [Pangolin](https://github.com/fosrl/pangolin) — self-hosted Cloudflare Tunnel |
 | Security | [CrowdSec](https://github.com/crowdsecurity/crowdsec) IDS/IPS |
 | DNS | [Pi-hole](https://github.com/pi-hole/pi-hole) |
-| Storage | [OpenZFS](https://github.com/openzfs/zfs) RAID-Z2 (target) — migrating from BTRFS on mdadm RAID5 — 33 TB |
-| Databases | [PostgreSQL](https://www.postgresql.org) 14 (×8 instances), [Redis](https://redis.io) Alpine (×3 instances) |
+| Storage | [OpenZFS](https://github.com/openzfs/zfs) RAID-Z2 (target) - migrating from BTRFS on mdadm RAID5 - 33 TB |
+| Databases | [PostgreSQL](https://www.postgresql.org) 14 (x8 instances), [Redis](https://redis.io) Alpine (x3 instances) |
 | Hardware | Intel i3-13100 / 32 GB DDR4-3200 / 120 GB NVMe |
-| VPS gateway | [IONOS](https://www.ionos.de) Berlin — 2 vCPU / 2 GB / 80 GB NVMe |
+| VPS gateway | [IONOS](https://www.ionos.de) Berlin - 2 vCPU / 2 GB / 80 GB NVMe |
 
 ---
 
@@ -361,18 +361,17 @@ For the full external access setup ([Pangolin](https://github.com/fosrl/pangolin
 
 ---
 
-## Built on the shoulders of giants
-
-This homelab would not exist without these projects. Each one is worth knowing about.
+### Credit due
+I've used a lot of open source projects to make this work. Here's a quick look at the main ones.
 
 ---
 
-### 🥇 Pangolin — the backbone of external access
+### Pangolin - the backbone of external access
 
 > [![Pangolin](https://img.shields.io/badge/fosrl%2Fpangolin-self--hosted_tunnel-FF6B35?style=flat-square&logo=github)](https://github.com/fosrl/pangolin)
 
-The single most impactful piece of infrastructure in this stack. [Pangolin](https://github.com/fosrl/pangolin) is a self-hosted
-tunnelled reverse proxy with identity and access management — think [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/), but
+This handles just about everything for external access. [Pangolin](https://github.com/fosrl/pangolin) is a self-hosted
+tunnelled reverse proxy with identity and access management - think [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/), but
 open source and entirely under your control.
 
 Before Pangolin, the realistic options for external access were: open ports on your home
@@ -389,14 +388,13 @@ If you self-host anything that needs external access, start here.
 
 ---
 
-### 🗄️ D-PlaneOS — the NAS management layer (self-developed)
+### D-PlaneOS - the NAS management layer (self-developed)
 
 > [![D-PlaneOS](https://img.shields.io/badge/4nonX%2FD--PlaneOS-self--developed_NAS_OS-blueviolet?style=flat-square&logo=github)](https://github.com/4nonX/D-PlaneOS)
 
-A NAS management layer I built myself — [ZFS](https://github.com/openzfs/zfs) pool management, SMB/NFS shares, [Docker](https://www.docker.com)
+The NAS management layer I built - [ZFS](https://github.com/openzfs/zfs) pool management, SMB/NFS shares, [Docker](https://www.docker.com)
 orchestration, and a unified web UI, purpose-built on top of [NixOS](https://nixos.org).
-Developed as a high-performance Go daemon to fill the gap between [CasaOS](https://github.com/IceWhaleTech/CasaOS) (simple but limited) and
-[TrueNAS](https://www.truenas.com) (powerful but container-hostile).
+Developed in Go to fill the gap between something like [CasaOS](https://github.com/IceWhaleTech/CasaOS) and [TrueNAS](https://www.truenas.com).
 
 ---
 
@@ -404,11 +402,11 @@ Developed as a high-performance Go daemon to fill the gap between [CasaOS](https
 
 | Project | Role in this stack |
 |---|---|
-| [![NixOS](https://img.shields.io/badge/NixOS-nixos.org-5277C3?style=flat-square&logo=nixos)](https://nixos.org) | The OS everything runs on. Declarative system configuration, atomic rollbacks, reproducible builds — the base that makes the whole stack manageable. [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) runs on top of it. |
-| [![Traefik](https://img.shields.io/badge/Traefik-traefik.io-24A1C1?style=flat-square&logo=traefikproxy)](https://github.com/traefik/traefik) | Reverse proxy — TLS termination, automatic [Let's Encrypt](https://letsencrypt.org), routing. Runs on the VPS and handles every inbound HTTPS request. |
-| [![CrowdSec](https://img.shields.io/badge/CrowdSec-crowdsec.net-1565C0?style=flat-square)](https://github.com/crowdsecurity/crowdsec) | Collaborative IDS/IPS. Analyses [Traefik](https://github.com/traefik/traefik) logs, bans malicious IPs via bouncer, pulls community threat feeds. The passive security layer that works without any configuration after setup. |
-| [![Pi-hole](https://img.shields.io/badge/Pi--hole-pi--hole.net-CC0000?style=flat-square)](https://github.com/pi-hole/pi-hole) | Network-wide DNS and ad-blocking. Every device on the LAN benefits without any per-device configuration. |
-| [![OpenZFS](https://img.shields.io/badge/OpenZFS-openzfs.org-2A7AE2?style=flat-square)](https://github.com/openzfs/zfs) | The filesystem everything is migrating to. End-to-end checksumming, RAID-Z2, snapshots, `zfs send` replication — the right foundation for a long-lived NAS. |
+| [![NixOS](https://img.shields.io/badge/NixOS-nixos.org-5277C3?style=flat-square&logo=nixos)](https://nixos.org) | The OS everything runs on. Declarative system configuration, atomic rollbacks, reproducible builds - the base that makes the whole stack manageable. [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) runs on top of it. |
+| [![Traefik](https://img.shields.io/badge/Traefik-traefik.io-24A1C1?style=flat-square&logo=traefikproxy)](https://github.com/traefik/traefik) | Reverse proxy - TLS termination, automatic [Let's Encrypt](https://letsencrypt.org), routing. Runs on the VPS and handles inbound HTTPS requests. |
+| [![CrowdSec](https://img.shields.io/badge/CrowdSec-crowdsec.net-1565C0?style=flat-square)](https://github.com/crowdsecurity/crowdsec) | Collaborative IDS/IPS. Analyses [Traefik](https://github.com/traefik/traefik) logs, bans malicious IPs via bouncer, pulls community threat feeds. Passive security layer that more or less works out of the box. |
+| [![Pi-hole](https://img.shields.io/badge/Pi--hole-pi--hole.net-CC0000?style=flat-square)](https://github.com/pi-hole/pi-hole) | Network-wide DNS and ad-blocking. |
+| [![OpenZFS](https://img.shields.io/badge/OpenZFS-openzfs.org-2A7AE2?style=flat-square)](https://github.com/openzfs/zfs) | The filesystem everything is migrating to. End-to-end checksumming, RAID-Z2, snapshots, `zfs send` replication. |
 
 ---
 
@@ -424,7 +422,7 @@ Developed as a high-performance Go daemon to fill the gap between [CasaOS](https
 | [![Sonarr](https://img.shields.io/badge/Sonarr-sonarr.tv-35C5F4?style=flat-square)](https://github.com/Sonarr/Sonarr) [![Radarr](https://img.shields.io/badge/Radarr-radarr.video-FFC230?style=flat-square)](https://github.com/Radarr/Radarr) [![Lidarr](https://img.shields.io/badge/Lidarr-lidarr.audio-1DA0C2?style=flat-square)](https://github.com/Lidarr/Lidarr) | Manual media management |
 | [![Prowlarr](https://img.shields.io/badge/Prowlarr-github.com-FF6600?style=flat-square)](https://github.com/Prowlarr/Prowlarr) | Per-client indexer configuration |
 | [![Bazarr](https://img.shields.io/badge/Bazarr-bazarr.media-F5A623?style=flat-square)](https://github.com/morpheus65535/bazarr) | Manual subtitle hunting |
-| [![Gluetun](https://img.shields.io/badge/Gluetun-github.com-3A3A3A?style=flat-square)](https://github.com/qdm12/gluetun) | Any VPN client — containerised, provider-agnostic [WireGuard](https://www.wireguard.com) gateway |
+| [![Gluetun](https://img.shields.io/badge/Gluetun-github.com-3A3A3A?style=flat-square)](https://github.com/qdm12/gluetun) | Any VPN client: containerised, provider-agnostic [WireGuard](https://www.wireguard.com) gateway |
 | [![Syncthing](https://img.shields.io/badge/Syncthing-syncthing.net-0891D1?style=flat-square&logo=syncthing)](https://github.com/syncthing/syncthing) | Dropbox, rsync scripts |
 | [![Dockge](https://img.shields.io/badge/Dockge-github.com-5E4FCD?style=flat-square)](https://github.com/louislam/dockge) | Manual `docker compose` commands |
 | [![Scrutiny](https://img.shields.io/badge/Scrutiny-github.com-E53935?style=flat-square)](https://github.com/AnalogJ/scrutiny) | Ignoring disk health until something fails |

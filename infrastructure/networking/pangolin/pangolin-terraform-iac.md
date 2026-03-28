@@ -1,10 +1,6 @@
-# 🏗️ Pangolin Infrastructure as Code (Terraform)
+# Pangolin Infrastructure as Code (Terraform)
 
-[![Terraform](https://img.shields.io/badge/Terraform-7B42BC?style=for-the-badge&logo=terraform&logoColor=white)](https://terraform.io)
-[![Cloudflare](https://img.shields.io/badge/Cloudflare-F38020?style=for-the-badge&logo=cloudflare&logoColor=white)](https://cloudflare.com)
-[![MinIO](https://img.shields.io/badge/MinIO-C72E49?style=for-the-badge&logo=minio&logoColor=white)](https://min.io)
-
-> **Infrastructure as Code setup for the Pangolin VPS gateway**, enabling full disaster recovery in ~15 minutes. Cloudflare DNS, VPS provisioning, stack deployment, and automated backups — all reproducible from a single `terraform apply`.
+This is the Terraform setup for the Pangolin VPS gateway. It allows me to rebuild the entire gateway from scratch in about 15 minutes - including DNS, Docker, and restoring configs from backup.
 
 ---
 
@@ -21,26 +17,11 @@
 
 ---
 
-## 🎯 Overview
+## Overview
 
-**Problem:** The Pangolin VPS is a single point of failure. If IONOS terminates or the VPS dies, all external access to the homelab goes down.
+The Pangolin VPS is a single point of failure. If it dies, I lose external access to the lab. This Terraform setup is my insurance policy. It manages the Cloudflare DNS records and the VPS provisioning (Docker, stack, backup cron).
 
-**Solution:** Full Infrastructure as Code setup that can rebuild the entire VPS gateway from scratch in ~15 minutes, including DNS cutover, Docker stack deployment, and config restore from backup.
-
-**What Terraform manages:**
-
-| Resource | Provider | Details |
-|---|---|---|
-| DNS record: `d-net.me` (root A) | Cloudflare | Points to VPS IP |
-| DNS record: `pangolin.d-net.me` (A) | Cloudflare | Points to VPS IP |
-| DNS record: `*.d-net.me` (wildcard CNAME) | Cloudflare | → `pangolin.d-net.me` |
-| VPS provisioning | null_resource + SSH | Docker, stack, backup, cron |
-
-**What Terraform does NOT manage** (intentionally):
-
-- IONOS VPS creation — no Terraform provider for IONOS VPS product (only CloudAPI/DCD)
-- Other Cloudflare records (ProtonMail MX/TXT/DKIM, Tailscale VPN CNAME, Headscale UI, Vercel CNAME)
-- Domain registrar (Squarespace) — changes never needed
+I don't manage IONOS itself through Terraform because they don't have a good provider for their basic VPS product. Creation is still manual, but everything after that is automated.
 
 ---
 
@@ -230,23 +211,12 @@ Expected output:
 
 ---
 
-## 🔑 Key Decisions
+## Why I built it this way
 
-### Why not use the IONOS Terraform provider?
-
-IONOS offers two products: the **VPS product** (simple, cheap, used here) and **Cloud/DCD** (enterprise). The Terraform provider (`ionos-cloud/ionoscloud`) only supports Cloud/DCD. The VPS product has no API. This is why VPS creation is a manual step (~2 min) and Terraform takes over from there via SSH.
-
-### Why MinIO instead of Terraform Cloud?
-
-State is stored on the homelab NAS via MinIO (S3-compatible). This keeps everything self-hosted, avoids external dependencies, and is accessible from anywhere via the Pangolin tunnel at `https://minio.d-net.me`.
-
-### Why not SOPS for secrets?
-
-SOPS 3.7.3 and 3.9.4 on Windows produced BOM encoding issues with age encryption that were not reliably solvable. Given the small number of secrets and the self-hosted nature of the infrastructure, Vaultwarden secure notes provide sufficient security with zero toolchain friction.
-
-### Why only 3 DNS records in Terraform?
-
-Other records (`dandressen` Vercel CNAME, Tailscale VPN, Headscale UI, ProtonMail MX/TXT/DKIM) were intentionally left unmanaged — they point to different targets and don't need to change during a VPS DR event. Managing them in Terraform would add risk without benefit.
+- **No IONOS Provider:** IONOS only has Terraform support for their "Enterprise" Cloud products. For the cheap VPS I use, the API doesn't exist. So I create the VPS manually and let Terraform handle the SSH provisioning.
+- **MinIO for State:** I store the Terraform state on my own NAS via MinIO. It keeps things self-hosted and avoids needing an account on Terraform Cloud.
+- **No SOPS for Secrets:** I tried using SOPS, but it kept having encoding issues on Windows with `age` encryption. Since I don't have many secrets, storing them in Vaultwarden is just easier and more reliable.
+- **DNS Scope:** I only manage the 3 records needed for the tunnel in this Terraform setup. Everything else (email, other sites) is handled manually so a mistake here doesn't take down my entire domain.
 
 ---
 

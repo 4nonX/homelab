@@ -1,4 +1,4 @@
-# Disaster Recovery Runbook — Pangolin VPS
+# Disaster Recovery Runbook: Pangolin VPS
 
 ## Normal Operation (nothing to do)
 
