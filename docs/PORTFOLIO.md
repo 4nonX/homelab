@@ -1,25 +1,14 @@
 # Homelab Infrastructure Portfolio
 
-> **Self-hosted infrastructure demonstrating Docker orchestration, network security, and system administration expertise**
+This is a collection of my work on my personal homelab. I use it to experiment with Docker, network security, and self-hosting services while keeping my own data private.
 
-## 👋 About This Project
+## Project Overview
 
-This repository documents my personal homelab infrastructure, showcasing practical experience in:
-- Docker containerization and orchestration
-- Network architecture and security
-- Linux system administration
-- Self-hosted service deployment
-- Infrastructure automation
-- Custom dashboard for monitoring and management
-
-## 🎯 Project Overview
-
-**Platform:** DIY NAS Build (Intel i3-13100, 32GB RAM) running ZimaOS  
-**Scale:** 40+ containerized services across multiple categories  
-**Uptime:** ~90%+ with automated monitoring and health checks  
-**Storage:** BTRFS on RAID5 (33TB) with compression and checksumming  
-**External Access:** Self-hosted Pangolin tunnel with Traefik reverse proxy (VPS-based)  
-**Dashboard:** Custom homelab HTML dashboard for service monitoring and management
+- **Hardware:** DIY NAS (Intel i3-13100, 32GB RAM)
+- **Scale:** 40+ containerized services
+- **Storage:** Moving from BTRFS RAID5 (33TB) to ZFS RAID-Z2
+- **Remote Access:** Self-hosted Pangolin tunnel with Traefik
+- **Interface:** Custom HTML dashboard
 
 ## 🚧 Current Major Project: NixOS Migration (2026)
 
@@ -97,49 +86,14 @@ Self-hosted alternatives to cloud services:
 - Health monitoring and logging
 - Custom HTML dashboard for service overview and edits
 
-## 💻 Technical Skills Demonstrated
+## What I've learned working on this
 
-### Docker & Containerization
-- Multi-container application stacks
-- Docker Compose orchestration
-- Container networking and isolation
-- Volume and data management
-- Security hardening (non-root users, resource limits)
-- Health checks and monitoring
+Setting up and maintaining a 40-container stack has taught me a lot about how things actually work under the hood.
 
-### Linux System Administration
-- ZimaOS/Ubuntu-based system management
-- BTRFS and mdadm RAID management
-- Network configuration and routing
-- Firewall setup (UFW)
-- Service management and automation
-- Performance monitoring and optimization
-
-### Network Engineering
-- Docker network architecture
-- VPN integration and routing (Wireguard)
-- DNS server configuration (Pi-hole)
-- Reverse proxy deployment (Traefik with SSL automation)
-- Tunnel infrastructure (Pangolin self-hosted alternative)
-- Network segmentation
-- Port management and security
-- Multi-server networking (VPS + Homelab)
-
-### Security Practices
-- Defense in depth architecture
-- Encryption at rest (LUKS/filesystem-level) and in transit (TLS)
-- VPN kill-switch implementation
-- Container security (capabilities, read-only FS)
-- Secrets management
-- Regular security updates
-
-### DevOps Practices
-- Infrastructure as Code (Docker Compose)
-- Automated backups with verification
-- Monitoring and logging
-- Update automation (Watchtower)
-- Documentation as code
-- Disaster recovery planning
+- **Docker:** I've moved from simple single-container setups to complex stacks with isolated networks and health checks.
+- **Networking:** Building the Pangolin tunnel was a huge learning curve. Handling WireGuard, Traefik, and SSL automation without opening ports taught me more about networking than any textbook.
+- **Security:** I use a "defense in depth" approach. If one layer fails, there's always something else (CrowdSec, UFW, authenticated proxies) to stop an intruder.
+- **Data Integrity:** Moving to ZFS was a big decision. I've learned why checksums and parity matter when you're managing 33TB of data.
 
 ## 🔨 Technical Implementation
 
@@ -216,17 +170,12 @@ Internet → Router → Pi-hole (DNS) → Services
 - [ ] Build CI/CD pipeline for infrastructure
 - [ ] Multi-site replication for disaster recovery
 
-## 🎓 Learning Outcomes
+## Why I self-host
 
-This project demonstrates proficiency in:
-
-✅ **Container Technologies:** Docker, Docker Compose, container security  
-✅ **Linux Administration:** System management, BTRFS RAID5, networking, security  
-✅ **Infrastructure Automation:** IaC, automated backups, monitoring  
-✅ **Network Engineering:** VPN, DNS, network segmentation, firewalls  
-✅ **Security:** Defense in depth, encryption, access control  
-✅ **Documentation:** Comprehensive technical documentation  
-✅ **Problem Solving:** Troubleshooting complex multi-service deployments
+- **Privacy:** I don't like my data living on someone else's computer.
+- **Control:** I can tune my storage (ZFS) and network exactly how I want.
+- **Cost:** Replacing 6+ SaaS subscriptions with a single homelab pays for itself in a few years.
+- **Learning:** It's the best way to keep my skills sharp.
 
 ## 📚 Documentation
 

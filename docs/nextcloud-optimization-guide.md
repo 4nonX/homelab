@@ -1,11 +1,6 @@
 # Nextcloud Optimization Guide
 
-[![Docker](https://img.shields.io/badge/Docker-Compose-2496ED?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Nextcloud](https://img.shields.io/badge/Nextcloud-Latest-0082C9?logo=nextcloud&logoColor=white)](https://nextcloud.com/)
-[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-[![Maintenance](https://img.shields.io/badge/Maintained-Yes-brightgreen.svg)](https://github.com/yourusername/homelab)
-
-> Production-grade Nextcloud deployment with Redis caching, Collabora Office, Talk HPB, and performance tuning for ZimaOS/Docker environments.
+This is how I've set up and tuned Nextcloud to run smoothly on my homelab. It includes Redis for caching, Collabora for office docs, and Talk for video calls.
 
 ---
 
@@ -29,17 +24,7 @@
 
 ## Overview
 
-This guide provides a complete, production-ready Nextcloud setup optimized for home lab environments. The stack includes performance enhancements, office document editing, and high-quality video conferencing capabilities.
-
-### What This Gives You
-
-| Feature | Improvement | Description |
-|---------|-------------|-------------|
-| **Performance** | 2-3x faster | Redis caching + PHP optimization |
-| **Office Suite** | Full integration | Word, Excel, PowerPoint editing |
-| **Video Calls** | 5+ participants | High-performance backend |
-| **Background Jobs** | 100% reliable | Cron-based execution |
-| **Database** | Optimized queries | PostgreSQL tuning |
+This setup is more than just a basic Nextcloud install. I've tuned it to be 2-3x faster using Redis and PostgreSQL optimizations, integrated a full office suite, and set up a high-performance backend for video calls so it doesn't lag with multiple people.
 
 ---
 
@@ -70,14 +55,7 @@ This guide provides a complete, production-ready Nextcloud setup optimized for h
 
 ## Prerequisites
 
-### Hardware Requirements
-
-| Component | Minimum | Recommended |
-|-----------|---------|-------------|
-| **CPU** | 4 cores | 6+ cores |
-| **RAM** | 16GB | 32GB |
-| **System Storage** | 120GB SSD | 256GB NVMe |
-| **Data Storage** | 500GB | RAID array |
+You'll need a decent server for this. I recommend at least 4-6 cores and 16GB of RAM if you're planning on using Collabora and Talk heavily. For storage, a RAID array is best for reliability.
 
 ### Software Requirements
 
@@ -140,7 +118,7 @@ openssl rand -base64 32  # internalsecret
 openssl rand -base64 32  # backend secret
 ```
 
-> **⚠️ Important:** Save these in a password manager! You'll need them during setup.
+> **Important:** Save these in a password manager! You'll need them during setup.
 
 ---
 
@@ -152,7 +130,7 @@ mkdir -p /DATA/AppData/nextcloud/{html,postgres,redis}
 mkdir -p /DATA/AppData/collabora
 mkdir -p /DATA/AppData/talk-signaling
 
-# Optional: Store data on RAID array (30TB+ capacity)
+# Optional: Store data on your RAID array
 mkdir -p /media/mainpool/nextcloud-data
 ```
 
@@ -630,21 +608,17 @@ labels:
 │  └──────────────────────────────────────────────────────┘  │
 └─────────────────────────────────────────────────────────────┘
                             ↓
-┌─────────────────────────────────────────────────────────────┐
-│  Step 3: Traffic Flow                                        │
-│                                                              │
-│  User → nextcloud.yourdomain.com                            │
-│      ↓                                                       │
-│  Cloudflare DNS (not proxied)                               │
-│      ↓                                                       │
-│  VPS (Pangolin + Traefik)                                   │
-│      ↓                                                       │
-│  Pangolin Tunnel (encrypted)                                │
-│      ↓                                                       │
-│  Home Server (192.168.x.x:10081)                            │
-│      ↓                                                       │
-│  Nextcloud Container                                        │
-└─────────────────────────────────────────────────────────────┘
+User -> nextcloud.yourdomain.com
+    |
+Cloudflare DNS (not proxied)
+    |
+VPS (Pangolin + Traefik)
+    |
+Pangolin Tunnel (encrypted)
+    |
+Home Server (192.168.x.x:10081)
+    |
+Nextcloud Container
 ```
 
 ---
@@ -788,16 +762,7 @@ docker exec -u www-data nextcloud php occ log:watch
 
 ### Resource Usage
 
-| Service | CPU (idle) | RAM Usage | Notes |
-|---------|-----------|-----------|-------|
-| Nextcloud | ~5% | 150-250 MB | With PHP-FPM pool |
-| PostgreSQL | ~2% | 100-150 MB | Optimized queries |
-| Redis | <1% | 50-100 MB | 512MB cache limit |
-| Collabora | ~3% | 300-400 MB | Per session |
-| Talk Signaling | <1% | 20-30 MB | Lightweight |
-| NATS | <1% | 10-15 MB | Minimal overhead |
-
-**Total:** ~600-950 MB RAM (idle), 1.5-2GB RAM (active use)
+Typically uses about 600-950 MB of RAM when idle, and can go up to 2GB when active.
 
 ---
 
@@ -973,113 +938,28 @@ Mount SMB/NFS shares:
 3. Configure credentials and mount point
 
 ---
-## Decisions & Trade-offs
+## Why I chose this setup
 
-### Database Backend (PostgreSQL over MariaDB)
-**Decision:** Use PostgreSQL instead of MariaDB/MySQL  
-**Rationale:**  
-PostgreSQL offers better concurrency handling, stricter data integrity, and more predictable performance under higher load—particularly relevant for larger Nextcloud instances.
-
-**Trade-off:**  
-- Slightly higher memory usage  
-- Fewer community tuning guides compared to MariaDB  
-
----
-
-### Redis for Transactional File Locking
-**Decision:** Enable Redis as the file locking backend  
-**Rationale:**  
-Redis significantly reduces database contention and prevents common issues such as file lock timeouts, especially with concurrent access or background jobs.
-
-**Trade-off:**  
-- Additional service to operate and monitor  
-- Marginal increase in system complexity  
-
----
-
-### PHP-FPM Tuning over Defaults
-**Decision:** Manually tune PHP-FPM worker settings  
-**Rationale:**  
-Default PHP-FPM values are conservative and not optimized for containerized or dedicated environments. Custom tuning improves response times and stability under load.
-
-**Trade-off:**  
-- Requires workload-specific tuning  
-- Misconfiguration can cause resource starvation if not monitored  
-
----
-
-### Cron Jobs instead of AJAX
-**Decision:** Use system cron for background jobs  
-**Rationale:**  
-Cron provides deterministic execution and avoids dependency on user traffic, which is essential for tasks like previews, cleanup jobs, and notifications.
-
-**Trade-off:**  
-- Slightly more setup effort  
-- Requires host or container scheduler access  
-
----
-
-### Dockerized Deployment
-**Decision:** Run Nextcloud fully containerized  
-**Rationale:**  
-Containers provide reproducibility, easier upgrades, and clean separation of services (Nextcloud, DB, Redis), aligning with the overall homelab architecture.
-
-**Trade-off:**  
-- Added abstraction layer  
-- Debugging can be more complex than bare-metal setups  
-
----
-
-### Security-First Defaults
-**Decision:** Favor conservative security and integrity settings  
-**Rationale:**  
-Settings such as strict permissions, disabled legacy protocols, and hardened headers prioritize data safety over raw performance.
-
-**Trade-off:**  
-- Minor performance overhead  
-- Some legacy integrations may require additional configuration  
+- **PostgreSQL over MariaDB:** I've found Postgres to be a bit more stable with large datasets and it handles multiple users better. It uses a bit more RAM, but it's worth it for the integrity.
+- **Redis for Locking:** This is a must. Without Redis, Nextcloud's database gets hammered with file lock requests. It makes the whole UI feel much snappier.
+- **Cron over AJAX:** AJAX background jobs only run when someone is logged in. Using a real system cron means previews and cleanup happen even when I'm away.
+- **Everything in Docker:** Obviously. It makes updates so much easier. I can test a new image, and if it breaks, I just roll back the tag.
 
 ---
 
 ## FAQ
 
-### Q: Can I use this with existing Nextcloud?
+**Can I use this with an existing Nextcloud?**  
+Yes, just backup your data first, then point the new containers at your existing volumes. Make sure your `.env` matches your old DB credentials.
 
-**A:** Yes! Follow the upgrade path:
-1. Backup everything
-2. Deploy new stack with your existing volumes
-3. Adjust environment variables to match current setup
-4. Restart and verify
+**Do I need all these services?**  
+No. You can just run Nextcloud, Postgres, and Redis. Collabora and Talk are optional but nice to have.
 
-### Q: Do I need all these services?
+**How much faster will it be?**  
+In my experience, page loads dropped from 5 seconds to under 2. It's a huge difference.
 
-**A:** No, services are modular:
-- **Minimum:** Nextcloud + PostgreSQL + Redis
-- **Optional:** Collabora (office docs), Talk+NATS+Signaling (video calls)
-
-### Q: How much does this improve performance?
-
-**A:** Typical improvements:
-- 50-70% faster page loads
-- 60-80% faster file browsing
-- Reliable background job execution
-- Better multi-user performance
-
-### Q: Is this production-ready?
-
-**A:** Yes, but:
-- Test thoroughly in your environment first
-- Have backups before deploying
-- Monitor for the first week
-- Adjust resource limits based on usage
-
-### Q: Can I run this on Raspberry Pi?
-
-**A:** Not recommended. Minimum requirements:
-- 4-core CPU
-- 16GB RAM
-- Fast SSD storage
-- Raspberry Pi 5 might work with reduced features
+**Is this production-ready?**  
+It's what I use every day. Just make sure you have backups!
 
 ---
 

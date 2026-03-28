@@ -1,6 +1,6 @@
 # Remote Access Strategy
 
-Multi-layered VPN architecture ensuring reliable connectivity while maintaining security and privacy.
+I use a mix of VPNs and tunnels to get into my lab. The goal is to have a primary way in that's fast and secure, with a few backups in case my home internet or the main tunnel goes down.
 
 ---
 
@@ -43,70 +43,27 @@ Internet Users
 
 ### Current Implementation
 
-| Layer | Solution | Purpose | Status |
-|-------|----------|---------|--------|
-| **Primary** | Pangolin VPN (self-hosted) | Web service exposure | ✅ Production |
-| **Fallback** | Tailscale | Mobile/quick access | ✅ Active |
-| **System Access** | ZeroTier (ZimaOS native) | NAS maintenance/SSH | ✅ Production |
+- **Primary:** [Pangolin](https://github.com/fosrl/pangolin) for exposing web services (Nextcloud, Immich, etc.) over the internet safely.
+- **Fallback:** [Tailscale](https://tailscale.com) for a quick way back in from my phone or laptop without opening ports.
+- **System Access:** [ZeroTier](https://www.zerotier.com) for direct SSH and maintenance on the NAS itself.
 
 ---
 
-## Access Methods Comparison
+### Comparison
 
-### Feature Matrix
+| Feature | Pangolin | Tailscale | ZeroTier |
+|---------|----------|-----------|----------|
+| **Protocol** | WireGuard | WireGuard | Custom |
+| **Self-Hosted** | Yes | No | No |
+| **Public URLs** | Yes | No | No |
+| **Auto SSL** | Yes (Traefik) | No | No |
+| **Setup** | High | Low | Medium |
 
-| Feature | Pangolin | Tailscale | ZeroTier | Wiredoor | Cloudflare Tunnel |
-|---------|----------|-----------|----------|----------|-------------------|
-| **Protocol** | WireGuard | WireGuard | Custom | WireGuard | Cloudflared |
-| **Self-Hosted** | ✅ Full | ⚠️ Headscale only | ⚠️ Partial | ✅ Yes | ❌ No |
-| **Public Subdomains** | ✅ Yes | ❌ No | ❌ No | ❌ No | ✅ Yes |
-| **WAF/Security** | ✅ CrowdSec + Traefik | ❌ Basic | ❌ Basic | ⚠️ Manual | ✅ Built-in |
-| **Auto SSL** | ✅ Let's Encrypt | ❌ No | ❌ No | ❌ No | ✅ Automatic |
-| **Reverse Proxy** | ✅ Traefik built-in | ❌ No | ❌ No | ❌ No | ✅ Built-in |
-| **Port Forwarding** | ❌ Not needed | ❌ Not needed | ❌ Not needed | ❌ Not needed | ❌ Not needed |
-| **NAT Traversal** | ✅ Automatic | ✅ Automatic | ✅ Automatic | ✅ Yes | ✅ Automatic |
-| **Mesh Networking** | ⚠️ Site-to-site | ✅ Full mesh | ✅ Full mesh | ⚠️ Limited | ❌ No |
-| **Direct IP Access** | ❌ No | ✅ Yes | ✅ Yes | ✅ Yes | ❌ No |
-| **SSH/Terminal** | ⚠️ Via resources | ✅ Direct | ✅ Direct | ✅ Direct | ⚠️ Via tunnel |
-| **Access Control** | ✅ Granular | ✅ ACLs | ✅ Flow rules | ⚠️ Basic | ✅ Access policies |
-| **Setup Complexity** | 🔴 High | 🟢 Low | 🟡 Medium | 🟡 Medium | 🟢 Low |
-| **Free Tier** | ✅ Unlimited | ✅ 100 devices | ⚠️ 10 devices | ✅ Unlimited | ✅ Unlimited |
-| **Mobile Apps** | ✅ Newt client | ✅ Excellent | ✅ Good | ⚠️ WG native | ❌ None |
-| **SSO Integration** | ✅ Yes | ✅ Yes | ⚠️ Limited | ❌ No | ✅ Yes |
-| **Data Sovereignty** | ✅ Complete | ⚠️ Metadata only | ⚠️ Metadata only | ✅ Complete | ❌ Routes via CF |
-| **Multicast Support** | ❌ No | ❌ No | ✅ Yes | ❌ No | ❌ No |
+### Why I use each one
 
-### Use Case Fit
-
-| Scenario | Best Choice | Why |
-|----------|-------------|-----|
-| **Web service exposure** | Pangolin | Public subdomains, SSL, WAF, full control |
-| **Quick device access** | Tailscale | Easiest setup, reliable, great mobile |
-| **NAS maintenance/SSH** | ZeroTier | Direct IP, terminal access, ZimaOS native |
-| **Maximum control** | Pangolin | Full self-hosting, no dependencies |
-| **Mobile access** | Tailscale | Best mobile UX, automatic reconnection |
-| **Legacy IoT devices** | ZeroTier | Virtual L2, multicast support |
-| **Zero-config exposure** | Cloudflare Tunnel | Instant setup, no server needed |
-| **Simple VPN** | Wiredoor | Lightweight WireGuard management |
-
-### Performance Comparison
-
-| Metric | Pangolin | Tailscale | ZeroTier | Wiredoor | Cloudflare Tunnel |
-|--------|----------|-----------|----------|----------|-------------------|
-| **Latency** | ~10-20ms | ~5-15ms | ~10-25ms | ~5-10ms | ~20-40ms |
-| **Throughput** | 500-900 Mbps | 600-1000 Mbps | 400-800 Mbps | 700-1000 Mbps | 300-600 Mbps |
-| **Connection Time** | 2-4 sec | 1-2 sec | 2-3 sec | 1-2 sec | 3-5 sec |
-| **Overhead** | Low (WG) | Low (WG) | Medium (Custom) | Low (WG) | Medium (HTTP/2) |
-
-### Safety Considerations
-
-| Solution | Security Strengths | Safety Concerns | Mitigation |
-|----------|-------------------|-----------------|------------|
-| **Pangolin** | Full control, CrowdSec IPS, Audit logging | Self-managed security, VPS compromise risk | Regular updates, hardening, monitoring |
-| **Tailscale** | Strong encryption, Regular audits, Open source clients | Coordination servers see metadata, Company access to network graph | Use for non-sensitive traffic only |
-| **ZeroTier** | Direct P2P connections, Network segmentation | Root servers coordinate, Custom protocol (less audited) | Limit to system access, keep updated |
-| **Wiredoor** | Standard WireGuard, Simple attack surface | Minimal features, Limited access control | Not suitable for production web services |
-| **Cloudflare** | DDoS protection, Managed security | All traffic via Cloudflare, Cannot comply with data sovereignty, Vendor lock-in | Avoid for sensitive/private data |
+- **Pangolin:** This is what I use 90% of the time. It gives me proper subdomains (like `nextcloud.example.com`) with real SSL certificates. It's fully self-hosted on a cheap VPS.
+- **Tailscale:** My "oh crap" button. If Pangolin fails, Tailscale usually still works because of their NAT traversal. Great for a quick check from my phone.
+- **ZeroTier:** This is mostly for "behind the scenes" work. It's built into ZimaOS, so I use it for SSH and direct system management.
 
 ---
 
@@ -152,27 +109,15 @@ Home NAS
    └─ Resource Exposure
 ```
 
-### Stack Components
+### How the pieces fit together
 
-Pangolin operates as a multi-component stack where each piece serves a specific role:
+Pangolin isn't just one thing. It's a few different bits working together:
 
-**Pangolin (Server)**  
-Core VPN server managing user authentication, access control, and resource definitions. Coordinates the entire tunnel infrastructure and handles client authorization. Acts as the control plane for the entire system.
-
-**Gerbil (Relay)**  
-WireGuard gateway that establishes and maintains encrypted tunnels between VPS and home network. Handles NAT traversal and packet routing through the VPN tunnel. Operates as the data plane for all traffic.
-
-**Badger (Middleware)**  
-Authentication and session management middleware. Bridges communication between Pangolin server and external services, handling token validation and API requests. Provides the authentication layer between components.
-
-**Traefik (Reverse Proxy)**  
-Entry point for all public traffic. Routes HTTPS requests to appropriate services, manages SSL certificates via Let's Encrypt, enforces security headers, and integrates with CrowdSec for threat detection. Serves as the application gateway.
-
-**CrowdSec (Security)**  
-Collaborative intrusion prevention system. Analyzes Traefik logs in real-time, identifies malicious behavior, blocks threats using community intelligence, and provides AppSec/WAF protection. Forms the security layer protecting all services.
-
-**Newt (Client)**  
-Client-side VPN agent running on home NAS. Establishes WireGuard tunnel to Gerbil relay, exposes local services through Pangolin, and maintains persistent connection with automatic reconnection. Acts as the home-side endpoint.
+- **Pangolin (Server):** The brain. It handles the users and tells the other parts what to do.
+- **Gerbil (Relay):** The WireGuard gateway on the VPS. This is the tunnel exit.
+- **Newt (Client):** The part running on my NAS at home. It connects out to Gerbil.
+- **Traefik:** The entry point. It handles the SSL certs (via Let's Encrypt) and routes traffic to the right place.
+- **CrowdSec:** The bouncer. It watches the logs and blocks IPs that look like they're trying to brute-force or scan the system.
 
 **Component Interaction Flow:**
 
@@ -295,29 +240,12 @@ http:
 * Request sanitization
 * IP whitelisting for sensitive services
 
-### Self-Hosted vs. Publicly Hosted
+### Why I self-host this
 
-| Aspect | Self-Hosted (My Choice) | Publicly Hosted |
-|--------|-------------------------|-----------------|
-| **Privacy** | ✅ Complete - no third-party visibility | ❌ Provider sees metadata |
-| **Control** | ✅ Full configuration access | ⚠️ Limited to provider options |
-| **Dependencies** | ✅ None - fully independent | ❌ Relies on provider uptime |
-| **Data Sovereignty** | ✅ All traffic stays in infrastructure | ❌ Routed through provider |
-| **Cost** | ✅ VPS only (€5/month) | ⚠️ Subscription fees |
-| **Security** | ✅ Custom hardening, full audit | ⚠️ Trust provider security practices |
-| **Attack Surface** | ✅ Isolated infrastructure | ❌ Shared with other users |
-| **Key Management** | ✅ Complete control | ❌ Provider managed |
-| **Compliance** | ✅ Meets privacy requirements | ⚠️ Problematic for sensitive work |
-| **Reliability** | ⚠️ High availability feature not available | ✅ High availability, automatic failover if node goes down |
-**Why Self-Hosted is Essential:**
-
-Given my federal employment background and potential future work with sensitive information, maintaining complete control over VPN infrastructure isn't just a preference—it's a security necessity. A publicly hosted solution would:
-
-* Introduce external party into trust chain
-* Create single point of compromise affecting all connected networks
-* Require trusting provider's security practices and incident response
-* Potentially expose connection metadata revealing usage patterns
-* Add complexity to security auditing and compliance requirements
+Since I work in sensitive environments (federal background), I'm not comfortable routing my home traffic through a third-party tunnel provider if I can avoid it. Self-hosting means:
+- No one else sees my connection metadata.
+- I'm not dependent on a company's uptime or pricing changes.
+- I control the encryption keys.
 
 ### Safety Considerations
 
@@ -672,77 +600,14 @@ OpenVPN served well in the past but WireGuard-based solutions (Pangolin, Tailsca
 
 ---
 
-## Design Philosophy
+## Safety and Philosophy
 
-### Security Hierarchy
+I follow a "layered" approach. 
+1. **Pangolin** is my most trusted path because I built and manage it.
+2. **Tailscale** is a pragmatic backup. I trust their encryption, but they still see my network metadata, so it's not my primary.
+3. **ZeroTier** is there just for system maintenance.
 
-```
-1. 🥇 Most Trusted: Pangolin (Self-Hosted)
-   ├─ Full infrastructure control
-   ├─ Custom security hardening
-   ├─ CrowdSec protection
-   └─ Federal employment compatible
-
-2. 🥈 Pragmatic Backup: Tailscale
-   ├─ Reliable across network conditions
-   ├─ Strong encryption
-   ├─ Trusted company
-   └─ Different architecture (diversity)
-
-3. 🔧 System Access: ZeroTier (ZimaOS Native)
-   ├─ Direct IP for SSH/terminal
-   ├─ NAS maintenance and troubleshooting
-   ├─ Independent third architecture
-   └─ Zero-config built-in option
-```
-
-### Redundancy Strategy
-
-The layered approach ensures continuous access while maintaining security:
-
-**Why Multiple Solutions?**
-
-* **Diverse failure modes** - Each uses different architecture
-* **Specialized purposes** - Web services, mobile access, system maintenance
-* **Network condition resilience** - Tailscale excels where Pangolin might struggle
-* **Independent paths** - Failure of one doesn't affect others
-* **Security depth** - Multiple verification layers
-
-**Layering Benefits:**
-
-✅ **No single point of failure** - Three independent paths  
-✅ **Architectural diversity** - Different protocols/technologies  
-✅ **Purpose-built solutions** - Each optimized for specific use case  
-✅ **Maintenance flexibility** - Can update one without downtime  
-✅ **Skill development** - Experience with multiple modern VPN solutions  
-✅ **Future-proof** - Not locked into single vendor/technology
-
-### Critical Security Requirements
-
-Given federal employment considerations and future work with sensitive information:
-
-🔴 **Non-Negotiable:**
-
-* Self-hosted primary access (Pangolin)
-* End-to-end encryption on all paths
-* Complete infrastructure control
-* No third-party traffic routing (on primary)
-* Audit trail and logging
-* Multi-layer defense in depth
-
-🟡 **Acceptable for Fallback:**
-
-* Coordination servers (Tailscale/ZeroTier) - traffic still encrypted
-* External relay (only when direct connection fails)
-* Trusted third-party companies with good reputation
-* Metadata visibility (connection times, network topology)
-
-🔴 **Unacceptable:**
-
-* Traffic routing through third-party (Cloudflare Tunnel)
-* Decryption by external party
-* No audit trail
-* Vendor-controlled encryption keys
+I don't use things like Cloudflare Tunnel for this lab because they'd have to decrypt my traffic to provide their services, and that goes against my "sovereignty" rule.
 
 ### Real-World Usage Patterns
 

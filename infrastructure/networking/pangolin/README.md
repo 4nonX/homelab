@@ -1,4 +1,4 @@
-# Pangolin — Self-Hosted WireGuard Tunnel
+# Pangolin: Self-Hosted WireGuard Tunnel
 
 Pangolin replaces commercial tunnels (Cloudflare Tunnel, ngrok) with a fully self-hosted equivalent.
 No home IP exposure. No port forwarding on the home router.
@@ -24,11 +24,11 @@ Client (Internet)
 
 ## Key Properties
 
-- Home router has **zero open ports**
-- Home IP is **never exposed** to the internet
-- All traffic encrypted end-to-end via WireGuard (ChaCha20-Poly1305)
-- TLS 1.3 enforced at Traefik on both VPS and inner layers
-- CrowdSec bouncer active at VPS Traefik — bad IPs never reach LAN
+- Home router has **zero open ports**.
+- Home IP is **never exposed** to the internet.
+- All traffic is encrypted end-to-end via WireGuard.
+- TLS 1.3 is enforced at both the VPS and inner layers.
+- CrowdSec blocks malicious IPs before they ever reach the LAN.
 
 ## Documentation
 
@@ -41,5 +41,5 @@ Client (Internet)
 | [pangolin-upgrade-guide.md](../../docs/pangolin-upgrade-guide.md) | Version upgrade procedures |
 | [pangolin-z-performance-tuning.md](../../docs/pangolin-z-performance-tuning.md) | Kernel/sysctl tuning |
 | [pangolin-traefikdashboard-guide.md](../../docs/pangolin-traefikdashboard-guide.md) | Traefik dashboard setup |
-| [terraform/pangolin-terraform-iac.md](terraform/pangolin-terraform-iac.md) | Terraform IaC — DNS, VPS provisioning, backup strategy |
-| [terraform/DR_RUNBOOK.md](terraform/DR_RUNBOOK.md) | Disaster recovery runbook — full VPS rebuild in ~15 min |
+| [terraform/pangolin-terraform-iac.md](terraform/pangolin-terraform-iac.md) | Terraform IaC: DNS, VPS provisioning, backup strategy |
+| [terraform/DR_RUNBOOK.md](terraform/DR_RUNBOOK.md) | Disaster recovery runbook: full VPS rebuild in ~15 min |
