@@ -1,4 +1,4 @@
-﻿# Index
+# Index
 
 Complete map of every file in this repository.
 
@@ -19,8 +19,8 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
-| [docs/why-DPlaneOS.md](docs/why-DPlaneOS.md) | Why ZimaOS was replaced - limitations, alternatives considered, what DPlaneOS solves |
-| [docs/NIXOS-MIGRATION.md](docs/NIXOS-MIGRATION.md) | Full migration plan: ZimaOS â†’ NixOS + DPlaneOS, phased approach, risk assessment |
+| [docs/why-dplaneos.md](docs/why-dplaneos.md) | Why ZimaOS was replaced - limitations, alternatives considered, what DPlaneOS solves |
+| [docs/NIXOS-MIGRATION.md](docs/NIXOS-MIGRATION.md) | Full migration plan: ZimaOS → NixOS + DPlaneOS, phased approach, risk assessment |
 | [docs/homelab-complete-journey.md](docs/homelab-complete-journey.md) | Full build narrative - hardware, OS selection, storage, networking, lessons learned |
 
 ### Hardware & infrastructure
@@ -47,7 +47,7 @@ Complete map of every file in this repository.
 | [docs/pangolin-configurations.md](docs/pangolin-configurations.md) | Sanitised config reference - Docker Compose, server config, client setup |
 | [docs/pangolin-vps-relay-guide.md](docs/pangolin-vps-relay-guide.md) | Raspberry Pi as Pangolin brain - static IP, installation, VPS relay, live cutover |
 | [docs/pangolin-traefikdashboard-guide.md](docs/pangolin-traefikdashboard-guide.md) | Traefik dashboard setup behind Pangolin |
-| [docs/pangolin-upgrade-guide.md](docs/pangolin-upgrade-guide.md) | Version upgrade procedures, rollback, v1.12.2 â†’ v1.14.1 migration |
+| [docs/pangolin-upgrade-guide.md](docs/pangolin-upgrade-guide.md) | Version upgrade procedures, rollback, v1.12.2 → v1.14.1 migration |
 | [docs/pangolin-z-performance-tuning.md](docs/pangolin-z-performance-tuning.md) | Latency tuning - WireGuard MTU, keepalive, Traefik timeouts, sysctl |
 
 ### Services
@@ -152,3 +152,5 @@ Complete map of every file in this repository.
 | File | Description |
 |---|---|
 | [scripts/export-all-compose.sh](scripts/export-all-compose.sh) | Export all Docker Compose stacks from the running system |
+
+

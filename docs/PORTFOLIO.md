@@ -1,35 +1,35 @@
-﻿<p align="center">
-  <a href="https://github.com/4nonX/DPlaneOS">
-    <img src="https://raw.githubusercontent.com/4nonX/DPlaneOS/main/assets/dplaneos-logo.png" width="400" alt="DPlaneOS Logo">
-  </a>
-</p>
+﻿# Homelab Infrastructure Portfolio
 
-# Homelab Infrastructure Portfolio
+> **Self-hosted infrastructure demonstrating Docker orchestration, network security, and system administration expertise**
 
-[![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
-[![Services](https://img.shields.io/badge/services-30+-blue?style=flat-square)](https://github.com/4nonX/homelab)
-[![Storage](https://img.shields.io/badge/storage-33TB_â†’_ZFS_RAID--Z2-orange?style=flat-square)](infrastructure/storage/README.md)
-[![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
+## 👋 About This Project
 
-This is a collection of my work on my personal homelab. I use it to experiment with Docker, network security, and self-hosting services while keeping my own data private.
+This repository documents my personal homelab infrastructure, showcasing practical experience in:
+- Docker containerization and orchestration
+- Network architecture and security
+- Linux system administration
+- Self-hosted service deployment
+- Infrastructure automation
+- Custom dashboard for monitoring and management
 
-## Project Overview
+## 🎯 Project Overview
 
-- **Hardware:** DIY NAS (Intel i3-13100, 32GB RAM)
-- **Scale:** 40+ containerized services
-- **Storage:** Moving from BTRFS RAID5 (33TB) to ZFS RAID-Z2
-- **Remote Access:** Self-hosted Pangolin tunnel with Traefik
-- **Interface:** Custom DPlaneOS dashboard
+**Platform:** DIY NAS Build (Intel i3-13100, 32GB RAM) running ZimaOS  
+**Scale:** 40+ containerized services across multiple categories  
+**Uptime:** ~90%+ with automated monitoring and health checks  
+**Storage:** BTRFS on RAID5 (33TB) with compression and checksumming  
+**External Access:** Self-hosted Pangolin tunnel with Traefik reverse proxy (VPS-based)  
+**Dashboard:** Custom homelab HTML dashboard for service monitoring and management
 
-## Current Major Project: NixOS Migration (2026)
+## 🚧 Current Major Project: NixOS Migration (2026)
 
 I'm planning and executing a **complete infrastructure migration** from ZimaOS (Debian) to NixOS for my entire 40+-service production environment.
 
 **Why NixOS?**
-- Technical system configuration (Infrastructure as Code at OS level)
-- Atomic rollbacks and reproducible builds
-- Separation of system state and configuration
-- Simplified disaster recovery through "system as code"
+- 🔧 Declarative system configuration (Infrastructure as Code at OS level)
+- ♻️ Atomic rollbacks and reproducible builds  
+- 📦 Separation of system state and configuration
+- 🔄 Simplified disaster recovery through "system as code"
 
 **Migration Strategy:**
 - Zero-downtime target for critical services
@@ -39,7 +39,7 @@ I'm planning and executing a **complete infrastructure migration** from ZimaOS (
 
 **Current Phase:** Planning & Testing | **Target:** Q2-Q3 2025
 
-ðŸ“– **[Read Full Migration Plan â†’](NIXOS-MIGRATION.md)**
+📖 **[Read Full Migration Plan →](NIXOS-MIGRATION.md)**
 
 **What This Demonstrates:**
 - Production change management and risk assessment
@@ -47,7 +47,7 @@ I'm planning and executing a **complete infrastructure migration** from ZimaOS (
 - Complex project planning and execution
 - Technical decision-making for system architecture
 
-## Technical Architecture
+## 🏗️ Technical Architecture
 
 ### Infrastructure Highlights
 
@@ -61,13 +61,13 @@ I'm planning and executing a **complete infrastructure migration** from ZimaOS (
 
 ### Service Categories
 
-#### Media Library & Streaming
+#### 📺 Media Library & Streaming
 Personal media server infrastructure with organized library management:
 - Library organization tools (metadata, quality profiles, automation)
 - Emby streaming server with Intel Quick Sync transcoding
 - Household request and sharing workflow
 
-#### Productivity Suite
+#### 🛠️ Productivity Suite
 Self-hosted alternatives to cloud services:
 - Nextcloud (file sync and collaboration)
 - Immich (AI-powered photo management)
@@ -75,13 +75,13 @@ Self-hosted alternatives to cloud services:
 - Vaultwarden (password manager)
 - Joplin Server & Memos (note-taking)
 
-#### Security Infrastructure
+#### 🔒 Security Infrastructure
 - Pi-hole (network-wide DNS and ad-blocking)
 - Gluetun (VPN gateway with kill-switch)
 - Container isolation via Docker networks
 - BTRFS RAID5 data integrity
 
-#### External Access (Pangolin Tunnel)
+#### 🌐 External Access (Pangolin Tunnel)
 - **VPS Gateway:** IONOS Berlin (2vCPU, 2GB RAM)
 - **Pangolin Server:** API and management dashboard
 - **Gerbil:** Wireguard tunnel gateway
@@ -90,23 +90,58 @@ Self-hosted alternatives to cloud services:
 - **Newt Client:** Homelab tunnel agent (systemd service)
 - **Result:** Secure external access without port forwarding
 
-#### Management & Operations
+#### 🔧 Management & Operations
 - Dockge (Docker stack management)
 - Syncthing (decentralized file sync)
 - Automated backups with testing
 - Health monitoring and logging
 - Custom HTML dashboard for service overview and edits
 
-## What I've learned working on this
+## 💻 Technical Skills Demonstrated
 
-Setting up and maintaining a 40-container stack has taught me a lot about how things actually work under the hood.
+### Docker & Containerization
+- Multi-container application stacks
+- Docker Compose orchestration
+- Container networking and isolation
+- Volume and data management
+- Security hardening (non-root users, resource limits)
+- Health checks and monitoring
 
-- **Docker:** I've moved from simple single-container setups to complex stacks with isolated networks and health checks.
-- **Networking:** Building the Pangolin tunnel was a huge learning curve. Handling WireGuard, Traefik, and SSL automation without opening ports taught me more about networking than any textbook.
-- **Security:** I use a "defense in depth" approach. If one layer fails, there's always something else (CrowdSec, UFW, authenticated proxies) to stop an intruder.
-- **Data Integrity:** Moving to ZFS was a big decision. I've learned why checksums and parity matter when you're managing 33TB of data.
+### Linux System Administration
+- ZimaOS/Ubuntu-based system management
+- BTRFS and mdadm RAID management
+- Network configuration and routing
+- Firewall setup (UFW)
+- Service management and automation
+- Performance monitoring and optimization
 
-## Technical Implementation
+### Network Engineering
+- Docker network architecture
+- VPN integration and routing (Wireguard)
+- DNS server configuration (Pi-hole)
+- Reverse proxy deployment (Traefik with SSL automation)
+- Tunnel infrastructure (Pangolin self-hosted alternative)
+- Network segmentation
+- Port management and security
+- Multi-server networking (VPS + Homelab)
+
+### Security Practices
+- Defense in depth architecture
+- Encryption at rest (LUKS/filesystem-level) and in transit (TLS)
+- VPN kill-switch implementation
+- Container security (capabilities, read-only FS)
+- Secrets management
+- Regular security updates
+
+### DevOps Practices
+- Infrastructure as Code (Docker Compose)
+- Automated backups with verification
+- Monitoring and logging
+- Update automation (Watchtower)
+- Documentation as code
+- Disaster recovery planning
+
+## 🔨 Technical Implementation
 
 ### Docker Compose Example (Media Stack)
 ```yaml
@@ -144,13 +179,13 @@ services:
 
 ### Network Architecture
 ```
-Internet â†’ Router â†’ Pi-hole (DNS) â†’ Services
-                                   â†“
+Internet → Router → Pi-hole (DNS) → Services
+                                   ↓
                             Docker Networks:
-                            â”œâ”€ Media Network
-                            â”œâ”€ Productivity Network
-                            â”œâ”€ Database Network
-                            â””â”€ VPN Network (Gluetun)
+                            ├─ Media Network
+                            ├─ Productivity Network
+                            ├─ Database Network
+                            └─ VPN Network (Gluetun)
 ```
 
 ### Custom Dashboard
@@ -160,7 +195,7 @@ Internet â†’ Router â†’ Pi-hole (DNS) â†’ Services
 - Responsive UI for desktop & mobile
 - Lightweight static HTML + JS, integrated with Docker stack
 
-## Project Statistics
+## 📊 Project Statistics
 
 - **Total Services:** 40+ active containers
 - **Uptime:** ~90%+ (monitored via health checks)
@@ -169,7 +204,7 @@ Internet â†’ Router â†’ Pi-hole (DNS) â†’ Services
 - **Network Traffic:** ~500K DNS queries/day (Pi-hole)
 - **Automation:** Automated updates, backups, and monitoring
 
-## Future Enhancements
+## 🚀 Future Enhancements
 
 ### Short-term
 - [ ] Deploy monitoring stack (Prometheus + Grafana)
@@ -181,14 +216,19 @@ Internet â†’ Router â†’ Pi-hole (DNS) â†’ Services
 - [ ] Build CI/CD pipeline for infrastructure
 - [ ] Multi-site replication for disaster recovery
 
-## Why I self-host
+## 🎓 Learning Outcomes
 
-- **Privacy:** I don't like my data living on someone else's computer.
-- **Control:** I can tune my storage (ZFS) and network exactly how I want.
-- **Cost:** Replacing 6+ SaaS subscriptions with a single homelab pays for itself in a few years.
-- **Learning:** It's the best way to keep my skills sharp.
+This project demonstrates proficiency in:
 
-## Documentation
+✅ **Container Technologies:** Docker, Docker Compose, container security  
+✅ **Linux Administration:** System management, BTRFS RAID5, networking, security  
+✅ **Infrastructure Automation:** IaC, automated backups, monitoring  
+✅ **Network Engineering:** VPN, DNS, network segmentation, firewalls  
+✅ **Security:** Defense in depth, encryption, access control  
+✅ **Documentation:** Comprehensive technical documentation  
+✅ **Problem Solving:** Troubleshooting complex multi-service deployments
+
+## 📚 Documentation
 
 Comprehensive documentation covering all aspects of the infrastructure:
 
@@ -208,18 +248,18 @@ Comprehensive documentation covering all aspects of the infrastructure:
 - **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Upgrade guide
 - **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry Pi relay guide
 - **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Pangolin performance tuning
-- **[why-dplaneos.md](why-dplaneos.md)** - ZimaOS limitations, alternatives considered, what DPlaneOS solves
+- **[homelab-dashboard-guide.md](homelab-dashboard-guide.md)** - Custom dashboard guide
 - **[homelab-complete-journey.md](homelab-complete-journey.md)** - Full homelab journey
 
-## Contact
+## 📞 Contact
 
 This portfolio demonstrates practical DevOps and infrastructure skills. For professional inquiries or technical discussions about this implementation, please connect via:
 
 - **GitHub:** [https://github.com/4nonX/](https://github.com/4nonX/)
-- **LinkedIn:** [https://www.linkedin.com/in/dan-dreÃŸen-b83b1839a/](https://www.linkedin.com/in/dan-dreÃŸen-b83b1839a/)
+- **LinkedIn:** [https://www.linkedin.com/in/dan-dreßen-b83b1839a/](https://www.linkedin.com/in/dan-dreßen-b83b1839a/)
 - **Email:** [dan.dressen@d-net.me](mailto:dan.dressen@d-net.me)
 
-## License
+## 📄 License
 
 This documentation is shared for educational and portfolio purposes. Service configurations may contain references to third-party software - please refer to their respective licenses.
 
@@ -227,4 +267,5 @@ This documentation is shared for educational and portfolio purposes. Service con
 
 **Note:** This is a living project that continues to evolve. Check back for updates as new services are added and infrastructure improvements are implemented.
 
-**Stack:** Docker Â· Linux Â· BTRFS RAID5 Â· Networking Â· Security Â· Self-Hosting
+**Stack:** Docker · Linux · BTRFS RAID5 · Networking · Security · Self-Hosting
+

@@ -1,4 +1,4 @@
-﻿# Pangolin Pi-Hub: The Transparent VPS Relay Guide
+# Pangolin Pi-Hub: The Transparent VPS Relay Guide
 
 [![Hardware](https://img.shields.io/badge/Hardware-Pi%205%208GB-BC1142?logo=raspberry-pi&logoColor=white)](#)
 [![Storage](https://img.shields.io/badge/Storage-NVMe%20Gen3-yellow?logo=ssm&logoColor=black)](#)
@@ -26,7 +26,7 @@ This guide documents the "Live Transplant" of the Pangolin Server from a VPS-hos
 * **The Tunnel (Newt):** Encrypted link connecting the VPS to your home network.
 * **The Brain (Pi 5):** Terminates SSL, manages Identity, and handles routing on a Gen4 NVMe SSD.
 
-**[â†’ View Interactive Architecture Diagram](https://4nonx.github.io/homelab/architecture-diagram.html)**
+**[→ View Interactive Architecture Diagram](https://4nonx.github.io/homelab/architecture-diagram.html)**
 
 ---
 
@@ -110,7 +110,7 @@ curl -fsSL https://static.pangolin.net/get-installer.sh | bash
 
 The VPS serves as the "Dumb Pipe" entry point into your home network.
 
-1. **On the Pi Dashboard:** Go to Sites â†’ Add Site.
+1. **On the Pi Dashboard:** Go to Sites → Add Site.
 2. **Site Type:** Select Newt Tunnel.
 3. **Credentials:** Copy the generated ID, Secret, and Endpoint.
 4. **On the VPS:** Run the Newt client via Docker:
@@ -157,4 +157,4 @@ dd if=/dev/zero of=/opt/pangolin/test.img bs=1G count=1 oflag=dsync
 
 ---
 
-**Maintained by Dan | â­ Star this repo if it helped!**
+**Maintained by Dan | ⭐ Star this repo if it helped!**

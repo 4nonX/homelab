@@ -1,21 +1,43 @@
-﻿# NixOS Migration Plan
+﻿# 🚀 NixOS Migration Project
 
-I'm moving the whole homelab from ZimaOS (Debian-based) to NixOS. This covers 40+ services and about 33TB of data. The goal is to get everything running on NixOS without any major downtime for the important bits.
+## Executive Summary
+
+Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS, encompassing 40+ containerized services and 33TB storage, with zero-downtime target for critical services.
 
 **Timeline:** Q1-Q2 2026  
-**Status:** Planning & Testing  
+**Current Phase:** Planning & Testing  
+**Complexity:** High (Production environment, 2+ years uptime, ~95% SLA)  
+**Public Documentation:** [github.com/4nonX/homelab](https://github.com/4nonX/homelab)
 
 ---
 
-## Why I'm doing this
+## 🎯 Project Goals
 
-1. **Declarative Config:** Right now, I have to remember all the manual `apt` commands and config tweaks I've made. With NixOS, the whole system is defined in one place (`configuration.nix`).
-2. **Atomic Rollbacks:** If I break something with an update, I can just boot into the previous working version. Much safer for testing stuff.
-3. **Reproducibility:** I want to be able to rebuild the exact same system on new hardware without any guesswork.
+### Primary Objectives
+
+1. **Declarative Infrastructure at OS Level**
+   - Current: Imperative configuration (apt, manual config files)
+   - Target: Entire system defined in `configuration.nix`
+   - Benefit: System reproducibility, version control for OS configuration
+
+2. **Improved Reliability & Safety**
+   - Current: Manual rollback on failed updates (risky, time-consuming)
+   - Target: Atomic rollbacks - boot into previous generation
+   - Benefit: Safe experimentation, faster disaster recovery
+
+3. **Modern DevOps Practices**
+   - Current: Infrastructure as Code only for containers (Docker Compose)
+   - Target: IaC for entire system stack (OS + containers + services)
+   - Benefit: True reproducible environments, portable configurations
+
+4. **Simplified Maintenance**
+   - Current: Configuration drift, manual dependency management
+   - Target: Declarative dependencies, no configuration drift
+   - Benefit: Reduced maintenance burden, consistent environments
 
 ---
 
-## Technical Drivers
+## 📊 Technical Drivers
 
 ### Current Stack Analysis
 
@@ -41,15 +63,18 @@ I'm moving the whole homelab from ZimaOS (Debian-based) to NixOS. This covers 40
 
 ---
 
-## The Plan
+## 🗺️ Migration Strategy
 
-I'm doing this in phases so I don't break everything at once.
+### Overview
+
+**Approach:** Phased migration with incremental validation and rollback capability at each step.
 
 **Key Principles:**
-- Test in a VM first.
-- Move small, unimportant services first.
-- Always have a way to boot back into ZimaOS if things go sideways.
-- Check data integrity at every step.
+- ✅ Test everything in isolated environment first
+- ✅ Migrate non-critical services before critical ones
+- ✅ Maintain rollback capability at every phase
+- ✅ Document everything during (not after) migration
+- ✅ Validate data integrity at each step
 
 ---
 
@@ -98,7 +123,7 @@ I'm doing this in phases so I don't break everything at once.
 1. Document current Docker Compose configurations
 2. Convert to NixOS container definitions
 3. Test on separate hardware
-4. Schedule migration window (announce to users: me ðŸ˜„)
+4. Schedule migration window (announce to users: me 😄)
 5. Deploy to production NixOS
 6. Validate functionality
 7. Monitor for 48 hours before next phase
@@ -229,9 +254,9 @@ I'm doing this in phases so I don't break everything at once.
 The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlaneOS). An in-place conversion from BTRFS to ZFS is not possible - the array must be rebuilt. The data must leave the drives before ZFS can claim them.
 
 **Plan:**
-1. Boot NixOS from NVMe â€” ZimaOS remains bootable on its own partition as fallback
+1. Boot NixOS from NVMe - ZimaOS remains bootable on its own partition as fallback
 2. Generate `sha256sum` manifest of all data on the BTRFS array (pre-migration baseline)
-3. Rsync all 33TB to external/temporary storage (estimated 24-48h at HDD speeds)
+3. Rsync all 33TB to external/temporary storage (estimated 24–48h at HDD speeds)
 4. Take a final BTRFS snapshot; note the timestamp
 5. Destroy the mdadm array, create ZFS RAID-Z2 pool via DPlaneOS
 6. Configure datasets (`mainpool/appdata`, `mainpool/media`, `mainpool/home`) with appropriate properties
@@ -247,7 +272,7 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 **Rollback Strategy:**
 - ZimaOS remains bootable until Step 9
-- BTRFS array intact until Step 5 â€” can abort at any point before that
+- BTRFS array intact until Step 5 - can abort at any point before that
 - Rollback time to ZimaOS: < 5 minutes (boot selection)
 
 **Success Criteria:**
@@ -259,7 +284,7 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## Risk Assessment & Mitigation
+## ⚠️ Risk Assessment & Mitigation
 
 ### Critical Risks
 
@@ -298,7 +323,7 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## Testing Environment
+## 🧪 Testing Environment
 
 ### Hardware Setup
 
@@ -338,33 +363,33 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## NixOS Configuration Strategy
+## 📝 NixOS Configuration Strategy
 
 ### Configuration Structure
 ```
 /etc/nixos/
-â”œâ”€â”€ configuration.nix              # Main system configuration
-â”œâ”€â”€ hardware-configuration.nix     # Auto-generated hardware config
-â”œâ”€â”€ modules/
-â”‚   â”œâ”€â”€ system/
-â”‚   â”‚   â”œâ”€â”€ boot.nix              # Boot loader settings
-â”‚   â”‚   â”œâ”€â”€ networking.nix        # Network configuration
-â”‚   â”‚   â””â”€â”€ users.nix             # User management
-â”‚   â”œâ”€â”€ storage/
-â”‚   â”‚   â”œâ”€â”€ zfs.nix               # ZFS pool + dataset configuration (see DPlaneOS)
-â”‚   â”‚   â””â”€â”€ backups.nix           # Snapshot and replication schedules
-â”‚   â”œâ”€â”€ containers/
-â”‚   â”‚   â”œâ”€â”€ docker.nix            # Docker/Podman setup
-â”‚   â”‚   â””â”€â”€ podman.nix
-â”‚   â””â”€â”€ services/
-â”‚       â”œâ”€â”€ traefik.nix           # Reverse proxy
-â”‚       â”œâ”€â”€ databases.nix         # PostgreSQL + Redis
-â”‚       â”œâ”€â”€ media-stack.nix       # Media services
-â”‚       â”œâ”€â”€ productivity.nix      # Cloud services
-â”‚       â””â”€â”€ monitoring.nix        # Monitoring stack
-â”œâ”€â”€ secrets/                       # Encrypted secrets (age/sops)
-â”‚   â””â”€â”€ .gitignore
-â””â”€â”€ flake.nix                      # Flakes for reproducibility
+├── configuration.nix              # Main system configuration
+├── hardware-configuration.nix     # Auto-generated hardware config
+├── modules/
+│   ├── system/
+│   │   ├── boot.nix              # Boot loader settings
+│   │   ├── networking.nix        # Network configuration
+│   │   └── users.nix             # User management
+│   ├── storage/
+│   │   ├── zfs.nix               # ZFS pool + dataset configuration (see DPlaneOS)
+│   │   └── backups.nix           # Snapshot and replication schedules
+│   ├── containers/
+│   │   ├── docker.nix            # Docker/Podman setup
+│   │   └── podman.nix
+│   └── services/
+│       ├── traefik.nix           # Reverse proxy
+│       ├── databases.nix         # PostgreSQL + Redis
+│       ├── media-stack.nix       # Media services
+│       ├── productivity.nix      # Cloud services
+│       └── monitoring.nix        # Monitoring stack
+├── secrets/                       # Encrypted secrets (age/sops)
+│   └── .gitignore
+└── flake.nix                      # Flakes for reproducibility
 ```
 
 ### Configuration Management Approach
@@ -387,7 +412,7 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## Success Metrics
+## 📊 Success Metrics
 
 ### Technical Metrics
 
@@ -415,7 +440,7 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## Learning Resources
+## 📚 Learning Resources
 
 ### Primary Resources
 
@@ -445,16 +470,16 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## Tentative Timeline
+## 📅 Tentative Timeline
 
 | Phase | Duration | Start | End | Status |
 |-------|----------|-------|-----|--------|
-| **Phase 0: Preparation** | 2 weeks | Week 1 | Week 2 | In Progress |
-| **Phase 1: Non-Critical** | 2 weeks | Week 3 | Week 4 | Planned |
-| **Phase 2: Media Stack** | 2 weeks | Week 5 | Week 6 | Planned |
-| **Phase 3: Critical Services** | 2 weeks | Week 7 | Week 8 | Planned |
-| **Phase 4: Infrastructure** | 2 weeks | Week 9 | Week 10 | Planned |
-| **Stabilization & Documentation** | 2 weeks | Week 11 | Week 12 | Planned |
+| **Phase 0: Preparation** | 2 weeks | Week 1 | Week 2 | 🟡 In Progress |
+| **Phase 1: Non-Critical** | 2 weeks | Week 3 | Week 4 | ⏳ Planned |
+| **Phase 2: Media Stack** | 2 weeks | Week 5 | Week 6 | ⏳ Planned |
+| **Phase 3: Critical Services** | 2 weeks | Week 7 | Week 8 | ⏳ Planned |
+| **Phase 4: Infrastructure** | 2 weeks | Week 9 | Week 10 | ⏳ Planned |
+| **Stabilization & Documentation** | 2 weeks | Week 11 | Week 12 | ⏳ Planned |
 
 **Total Estimated Duration:** 10-12 weeks  
 **Target Completion:** Q1-Q2 2025  
@@ -462,12 +487,54 @@ The target is ZFS RAID-Z2, managed by [DPlaneOS](https://github.com/4nonX/DPlane
 
 ---
 
-## Migration Log
+## 📖 Migration Log
 
-Keep track of what's actually happening here.
+### Phase 0: Preparation (Current)
 
-**Phase 0: Preparation (Current)**
+**Week 1:**
+- [2025-01-07] Project planning and documentation started
+- [2025-01-07] Created detailed migration plan
+- [2025-01-07] Identified learning resources
+- [ ] Set up test environment
+- [ ] Install NixOS on test hardware
 
-- [2025-01-07] Started the plan.
-- [ ] Set up test environment.
-- [ ] First NixOS install on test hardware.
+**Week 2:**
+- [ ] Basic NixOS configuration
+- [ ] Docker/Podman testing
+- [ ] ZFS pool + DPlaneOS integration testing
+- [ ] Document initial findings
+
+---
+
+## 🎓 Learnings & Insights
+
+*This section will be updated throughout the migration with key learnings, surprises, and recommendations.*
+
+### What I'm Learning
+
+**Technical Insights:**
+- [To be updated during migration]
+
+**Process Insights:**
+- [To be updated during migration]
+
+**Surprises:**
+- [To be updated during migration]
+
+### What Went Well
+
+*Post-migration reflections*
+
+### What Could Be Improved
+
+*Post-migration reflections*
+
+### Recommendations for Others
+
+*Post-migration advice for similar projects*
+
+---
+
+*This document will be updated throughout the migration to reflect actual progress, learnings, and adjustments to the plan.*
+
+
