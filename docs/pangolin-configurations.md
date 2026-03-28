@@ -1,4 +1,4 @@
-# Pangolin Configuration Files (Sanitized)
+﻿# Pangolin Configuration Files (Sanitized)
 
 Configuration files with sensitive data redacted for portfolio/documentation purposes.
 
@@ -312,9 +312,9 @@ ufw enable
 **Data Directories:**
 ```
 ./config/crowdsec/
-├── data/           # Database and decisions
-├── config/         # CrowdSec configuration
-└── scenarios/      # Custom detection scenarios
+â”œâ”€â”€ data/           # Database and decisions
+â”œâ”€â”€ config/         # CrowdSec configuration
+â””â”€â”€ scenarios/      # Custom detection scenarios
 ```
 
 **Collection Installed:**

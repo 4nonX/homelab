@@ -1,10 +1,10 @@
-# Pangolin Infrastructure as Code (Terraform)
+﻿# Pangolin Infrastructure as Code (Terraform)
 
 This is the Terraform setup for the Pangolin VPS gateway. It allows me to rebuild the entire gateway from scratch in about 15 minutes - including DNS, Docker, and restoring configs from backup.
 
 ---
 
-## 📋 Table of Contents
+## ðŸ“‹ Table of Contents
 
 - [Overview](#-overview)
 - [Architecture](#-architecture)
@@ -25,67 +25,67 @@ I don't manage IONOS itself through Terraform because they don't have a good pro
 
 ---
 
-## 🏛️ Architecture
+## ðŸ›ï¸ Architecture
 
 ```
 Developer Machine (Windows)
-        │
-        ├─ terraform apply
-        │
-        ├──► Cloudflare API
-        │       └─ Update DNS: d-net.me A, pangolin A, *.d-net.me CNAME
-        │
-        └──► SSH → New IONOS VPS
-                ├─ Install Docker + mc (MinIO client)
-                ├─ mc alias set nas https://minio.d-net.me
-                ├─ mc cp nas/pangolin-backup/latest.tar.gz → /tmp/
-                ├─ Restore config/ (DB, certs, WireGuard key, CrowdSec)
-                ├─ docker compose up -d
-                └─ Install cron: Sunday 3am → /root/backup.sh
+        â”‚
+        â”œâ”€ terraform apply
+        â”‚
+        â”œâ”€â”€â–º Cloudflare API
+        â”‚       â””â”€ Update DNS: d-net.me A, pangolin A, *.d-net.me CNAME
+        â”‚
+        â””â”€â”€â–º SSH â†’ New IONOS VPS
+                â”œâ”€ Install Docker + mc (MinIO client)
+                â”œâ”€ mc alias set nas https://minio.d-net.me
+                â”œâ”€ mc cp nas/pangolin-backup/latest.tar.gz â†’ /tmp/
+                â”œâ”€ Restore config/ (DB, certs, WireGuard key, CrowdSec)
+                â”œâ”€ docker compose up -d
+                â””â”€ Install cron: Sunday 3am â†’ /root/backup.sh
 
 State Backend:
-        MinIO on NAS (ZimaOS) ──► https://minio.d-net.me
+        MinIO on NAS (ZimaOS) â”€â”€â–º https://minio.d-net.me
         Bucket: terraform-state
 
 Backup Storage:
-        MinIO on NAS (ZimaOS) ──► https://minio.d-net.me
+        MinIO on NAS (ZimaOS) â”€â”€â–º https://minio.d-net.me
         Bucket: pangolin-backup
-        └─ latest.tar.gz       (always current)
-        └─ history/            (8 weeks retained)
+        â””â”€ latest.tar.gz       (always current)
+        â””â”€ history/            (8 weeks retained)
 ```
 
 ---
 
-## 📁 File Structure
+## ðŸ“ File Structure
 
 ```
 infrastructure/networking/pangolin/terraform/
-├── main.tf                    # Provider configuration (Cloudflare)
-├── backend.tf                 # MinIO S3 state backend
-├── variables.tf               # All variable declarations
-├── cloudflare.tf              # DNS records (3 managed records)
-├── vps.tf                     # VPS provisioning via remote-exec
-├── terraform.tfvars           # ⚠️ LOCAL ONLY — gitignored, from Vaultwarden
-├── terraform.tfvars.example   # Template — safe to commit
-├── .gitignore                 # Excludes tfvars, .terraform/, state files
-├── run.ps1                    # PowerShell helper (validates tfvars exists)
-├── DR_RUNBOOK.md              # Step-by-step disaster recovery procedure
-├── docker-compose.yml         # Pangolin stack (deployed to VPS by Terraform)
-├── config/
-│   ├── config.yml             # Pangolin configuration
-│   └── traefik/
-│       ├── traefik_config.yml # Traefik static config
-│       └── dynamic_config.yml # Traefik dynamic config
-├── scripts/
-│   ├── backup.sh              # Weekly backup to MinIO (deployed to VPS)
-│   └── restore.sh             # DR restore from MinIO (deployed to VPS)
-└── minio/
-    └── docker-compose.yml     # MinIO stack for Dockge on NAS
+â”œâ”€â”€ main.tf                    # Provider configuration (Cloudflare)
+â”œâ”€â”€ backend.tf                 # MinIO S3 state backend
+â”œâ”€â”€ variables.tf               # All variable declarations
+â”œâ”€â”€ cloudflare.tf              # DNS records (3 managed records)
+â”œâ”€â”€ vps.tf                     # VPS provisioning via remote-exec
+â”œâ”€â”€ terraform.tfvars           # âš ï¸ LOCAL ONLY â€” gitignored, from Vaultwarden
+â”œâ”€â”€ terraform.tfvars.example   # Template â€” safe to commit
+â”œâ”€â”€ .gitignore                 # Excludes tfvars, .terraform/, state files
+â”œâ”€â”€ run.ps1                    # PowerShell helper (validates tfvars exists)
+â”œâ”€â”€ DR_RUNBOOK.md              # Step-by-step disaster recovery procedure
+â”œâ”€â”€ docker-compose.yml         # Pangolin stack (deployed to VPS by Terraform)
+â”œâ”€â”€ config/
+â”‚   â”œâ”€â”€ config.yml             # Pangolin configuration
+â”‚   â””â”€â”€ traefik/
+â”‚       â”œâ”€â”€ traefik_config.yml # Traefik static config
+â”‚       â””â”€â”€ dynamic_config.yml # Traefik dynamic config
+â”œâ”€â”€ scripts/
+â”‚   â”œâ”€â”€ backup.sh              # Weekly backup to MinIO (deployed to VPS)
+â”‚   â””â”€â”€ restore.sh             # DR restore from MinIO (deployed to VPS)
+â””â”€â”€ minio/
+    â””â”€â”€ docker-compose.yml     # MinIO stack for Dockge on NAS
 ```
 
 ---
 
-## ✅ Prerequisites
+## âœ… Prerequisites
 
 ### On the NAS
 
@@ -98,8 +98,8 @@ curl -s https://minio.d-net.me/minio/health/live  # Returns 200 (empty body = he
 ```
 
 Two buckets required:
-- `terraform-state` — Terraform remote state
-- `pangolin-backup` — VPS config backups
+- `terraform-state` â€” Terraform remote state
+- `pangolin-backup` â€” VPS config backups
 
 ### On the New VPS
 
@@ -119,7 +119,7 @@ chmod 600 ~/.ssh/authorized_keys
 
 ---
 
-## 🚀 Setup Guide
+## ðŸš€ Setup Guide
 
 > This section documents the **initial setup** performed on 2026-03-07. For disaster recovery, see [DR_RUNBOOK.md](./DR_RUNBOOK.md).
 
@@ -129,7 +129,7 @@ Deploy using `minio/docker-compose.yml` via Dockge. Create buckets `terraform-st
 
 Expose the S3 API (port 9000) via a Pangolin resource at `https://minio.d-net.me`.
 
-> **Note:** MinIO has two ports — port 9001 is the Web UI, port 9000 is the S3 API. Only the S3 API needs to be exposed via Pangolin.
+> **Note:** MinIO has two ports â€” port 9001 is the Web UI, port 9000 is the S3 API. Only the S3 API needs to be exposed via Pangolin.
 
 ### 2. Terraform Init
 
@@ -155,7 +155,7 @@ terraform import cloudflare_record.pangolin "ZONE_ID/RECORD_ID"
 terraform import cloudflare_record.wildcard "ZONE_ID/RECORD_ID"
 ```
 
-After import, run `terraform plan` — should show 0 changes (or only metadata like `allow_overwrite`).
+After import, run `terraform plan` â€” should show 0 changes (or only metadata like `allow_overwrite`).
 
 ### 4. Deploy Scripts to VPS
 
@@ -183,7 +183,7 @@ Expected output:
 
 ---
 
-## 💾 Backup Strategy
+## ðŸ’¾ Backup Strategy
 
 | Attribute | Value |
 |---|---|
@@ -205,9 +205,9 @@ Expected output:
 
 **What is NOT backed up** (rebuilt by Terraform):
 
-- `docker-compose.yml` — in Git
-- `config.yml`, Traefik configs — in Git
-- Docker images — pulled fresh on restore
+- `docker-compose.yml` â€” in Git
+- `config.yml`, Traefik configs â€” in Git
+- Docker images â€” pulled fresh on restore
 
 ---
 
@@ -220,7 +220,7 @@ Expected output:
 
 ---
 
-## 📚 Related Documentation
+## ðŸ“š Related Documentation
 
 | Document | Description |
 |---|---|

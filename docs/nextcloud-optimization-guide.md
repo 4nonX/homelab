@@ -1,4 +1,4 @@
-# Nextcloud Optimization Guide
+﻿# Nextcloud Optimization Guide
 
 This is how I've set up and tuned Nextcloud to run smoothly on my homelab. It includes Redis for caching, Collabora for office docs, and Talk for video calls.
 
@@ -6,12 +6,12 @@ This is how I've set up and tuned Nextcloud to run smoothly on my homelab. It in
 
 ## Table of Contents
 
-- [Overview](#-overview)
-- [Features](#-features)
-- [Prerequisites](#-prerequisites)
-- [Architecture](#️-architecture)
-- [Quick Start](#-quick-start)
-- [Detailed Setup](#-detailed-setup)
+- [Overview](#overview)
+- [Features](#features)
+- [Prerequisites](#prerequisites)
+- [Architecture](#architecture)
+- [Quick Start](#quick-start)
+- [Detailed Setup](#detailed-setup)
 - [Configuration](#configuration)
 - [Troubleshooting](#troubleshooting)
 - [Performance Benchmarks](#performance-benchmarks)
@@ -32,24 +32,24 @@ This setup is more than just a basic Nextcloud install. I've tuned it to be 2-3x
 
 ### Performance Optimizations
 
-- ✅ Redis caching (local + distributed + locking)
-- ✅ PostgreSQL query optimization
-- ✅ PHP-FPM tuning (2GB memory, 10GB uploads)
-- ✅ Cron-based background jobs
-- ✅ APCu opcode caching
+- Redis caching (local + distributed + locking)
+- PostgreSQL query optimization
+- PHP-FPM tuning (2GB memory, 10GB uploads)
+- Cron-based background jobs
+- APCu opcode caching
 
 ### Applications
 
-- ✅ **Collabora Online** - Full Microsoft Office alternative
-- ✅ **Talk HPB** - High-performance video conferencing
-- ✅ **NATS** - Message bus for real-time features
+- **Collabora Online** - Full Microsoft Office alternative
+- **Talk HPB** - High-performance video conferencing
+- **NATS** - Message bus for real-time features
 
 ### Infrastructure
 
-- ✅ Docker Compose deployment
-- ✅ Automatic container restarts
-- ✅ Health checks for all services
-- ✅ Persistent volumes for data safety
+- Docker Compose deployment
+- Automatic container restarts
+- Health checks for all services
+- Persistent volumes for data safety
 
 ---
 
@@ -59,40 +59,40 @@ You'll need a decent server for this. I recommend at least 4-6 cores and 16GB of
 
 ### Software Requirements
 
-- ✅ Docker (v20.10+) & Docker Compose (v2.0+)
-- ✅ Container host (ZimaOS, Proxmox, Unraid, etc.)
-- ✅ Reverse proxy (Traefik, Nginx, or Pangolin)
-- ✅ Domain name with DNS configured
-- ✅ SSL certificate (Let's Encrypt recommended)
+- Docker (v20.10+) & Docker Compose (v2.0+)
+- Container host (ZimaOS, Proxmox, Unraid, etc.)
+- Reverse proxy (Traefik, Nginx, or Pangolin)
+- Domain name with DNS configured
+- SSL certificate (Let's Encrypt recommended)
 
-> **💡 Tip:** Using a RAID array for data storage significantly improves reliability and allows you to scale to 30TB+
+> **Tip:** Using a RAID array for data storage significantly improves reliability and allows you to scale to 30TB+
 
 ---
 
 ## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────┐
-│                    Reverse Proxy                         │
-│              (Traefik / Pangolin / NPM)                  │
-└────────────────────┬────────────────────────────────────┘
-                     │
-        ┌────────────┼────────────┬──────────────┐
-        │            │            │              │
-┌───────▼──────┐ ┌──▼────────┐ ┌─▼──────────┐ ┌─▼─────────────┐
-│  Nextcloud   │ │ Collabora │ │Talk Signal │ │  PostgreSQL   │
-│   :10081     │ │   :9980   │ │   :8188    │ │   (internal)  │
-└──────┬───────┘ └───────────┘ └─────┬──────┘ └───────────────┘
-       │                              │
-  ┌────▼─────┐                   ┌───▼─────┐
-  │  Redis   │                   │  NATS   │
-  │(internal)│                   │  :4222  │
-  └──────────┘                   └─────────┘
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚                    Reverse Proxy                         â”‚
+â”‚              (Traefik / Pangolin / NPM)                  â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                     â”‚
+        â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+        â”‚            â”‚            â”‚              â”‚
+â”Œâ”€â”€â”€â”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”€â” â”Œâ”€â”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â” â”Œâ”€â–¼â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Nextcloud   â”‚ â”‚ Collabora â”‚ â”‚Talk Signal â”‚ â”‚  PostgreSQL   â”‚
+â”‚   :10081     â”‚ â”‚   :9980   â”‚ â”‚   :8188    â”‚ â”‚   (internal)  â”‚
+â””â”€â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”¬â”€â”€â”€â”€â”€â”€â”˜ â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+       â”‚                              â”‚
+  â”Œâ”€â”€â”€â”€â–¼â”€â”€â”€â”€â”€â”                   â”Œâ”€â”€â”€â–¼â”€â”€â”€â”€â”€â”
+  â”‚  Redis   â”‚                   â”‚  NATS   â”‚
+  â”‚(internal)â”‚                   â”‚  :4222  â”‚
+  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜                   â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
 ```
 
 ### Network Flow
 
-1. **External Access:** `https://nextcloud.yourdomain.com` → Reverse Proxy
+1. **External Access:** `https://nextcloud.yourdomain.com` â†’ Reverse Proxy
 2. **Internal Services:** Nextcloud container network
 3. **Data Storage:** Docker volumes + optional RAID array mount
 
@@ -100,7 +100,7 @@ You'll need a decent server for this. I recommend at least 4-6 cores and 16GB of
 
 ## Quick Start
 
-### Step 1️⃣: Generate Secrets
+### Step 1: Generate Secrets
 
 Generate strong, random passwords for all services:
 
@@ -122,7 +122,7 @@ openssl rand -base64 32  # backend secret
 
 ---
 
-### Step 2️⃣: Create Directory Structure
+### Step 2: Create Directory Structure
 
 ```bash
 # Create app data directories
@@ -136,13 +136,13 @@ mkdir -p /media/mainpool/nextcloud-data
 
 ---
 
-### Step 3️⃣: Configure Environment
+### Step 3: Configure Environment
 
 Create your `.env` file (see [Environment Variables](#environment-variables) section below).
 
 ---
 
-### Step 4️⃣: Deploy Stack
+### Step 4: Deploy Stack
 
 ```bash
 # Using Docker Compose
@@ -156,7 +156,7 @@ docker compose up -d
 
 ---
 
-### Step 5️⃣: Post-Deployment Configuration
+### Step 5: Post-Deployment Configuration
 
 ```bash
 # Switch to cron for background jobs (CRITICAL!)
@@ -172,7 +172,7 @@ docker exec -u www-data nextcloud php occ config:system:set maintenance_window_s
 docker exec -u www-data nextcloud php occ config:system:set default_phone_region --value="DE"
 ```
 
-> **✅ Done!** Access your Nextcloud at `https://nextcloud.yourdomain.com`
+> **Done!** Access your Nextcloud at `https://nextcloud.yourdomain.com`
 
 ---
 
@@ -440,7 +440,7 @@ SIGNALING_CONFIG_PATH=/DATA/AppData/talk-signaling/server.conf
 TIMEZONE=Europe/Berlin
 ```
 
-> **🔐 Security Note:** Never commit `.env` files to version control! Add `.env` to your `.gitignore`.
+> **Security Note:** Never commit `.env` files to version control! Add `.env` to your `.ignore`.
 
 ---
 
@@ -492,9 +492,9 @@ Navigate to your site in Pangolin dashboard and add the following resources:
 
 | # | Service | Identifier | Target (Local) | Subdomain | Port |
 |---|---------|-----------|----------------|-----------|------|
-| 1️⃣ | **Nextcloud** | `nextcloud` | `http://192.168.x.x:10081` | `nextcloud.yourdomain.com` | 10081 |
-| 2️⃣ | **Collabora Office** | `office` | `http://192.168.x.x:9980` | `office.yourdomain.com` | 9980 |
-| 3️⃣ | **Talk Signaling** | `talk-signaling` | `http://192.168.x.x:8188` | `talk-signaling.yourdomain.com` | 8188 |
+| 1ï¸âƒ£ | **Nextcloud** | `nextcloud` | `http://192.168.x.x:10081` | `nextcloud.yourdomain.com` | 10081 |
+| 2ï¸âƒ£ | **Collabora Office** | `office` | `http://192.168.x.x:9980` | `office.yourdomain.com` | 9980 |
+| 3ï¸âƒ£ | **Talk Signaling** | `talk-signaling` | `http://192.168.x.x:8188` | `talk-signaling.yourdomain.com` | 8188 |
 
 > **Note:** Replace `192.168.x.x` with your actual NAS/server IP address (e.g., `192.168.8.158`)
 
@@ -508,7 +508,7 @@ Add the following **CNAME** records in your Cloudflare dashboard:
 | CNAME | `office` | `yourdomain.com` | DNS only (grey cloud) |
 | CNAME | `talk-signaling` | `yourdomain.com` | DNS only (grey cloud) |
 
-> **⚠️ Important:** Use **DNS only** mode (grey cloud), NOT proxied (orange cloud). Pangolin handles the proxying.
+> **âš ï¸ Important:** Use **DNS only** mode (grey cloud), NOT proxied (orange cloud). Pangolin handles the proxying.
 
 ##### Step 3: Verify Connectivity
 
@@ -529,7 +529,7 @@ Identifier: nextcloud
 Display Name: Nextcloud
 Target: http://192.168.X.XXX:10081
 Subdomain: nextcloud.d-net.me
-Health Check: ✅ Enabled (/)
+Health Check: âœ… Enabled (/)
 ```
 
 **Collabora Resource:**
@@ -538,7 +538,7 @@ Identifier: office
 Display Name: Collabora Office
 Target: http://192.168.X.XXX:9980
 Subdomain: office.d-net.me
-Health Check: ✅ Enabled (/)
+Health Check: âœ… Enabled (/)
 ```
 
 **Talk Signaling Resource:**
@@ -547,7 +547,7 @@ Identifier: talk-signaling
 Display Name: Talk Signaling
 Target: http://192.168.X.XXX:8188
 Subdomain: talk-signaling.d-net.me
-Health Check: ✅ Enabled (/api/v1/welcome)
+Health Check: Enabled (/api/v1/welcome)
 ```
 
 ---
@@ -590,24 +590,24 @@ labels:
 #### Pangolin + Cloudflare Setup Flow
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│  Step 1: Add DNS Records in Cloudflare                      │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  nextcloud.yourdomain.com  →  CNAME  →  yourdomain  │  │
-│  │  office.yourdomain.com     →  CNAME  →  yourdomain  │  │
-│  │  talk-signaling...         →  CNAME  →  yourdomain  │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                            ↓
-┌─────────────────────────────────────────────────────────────┐
-│  Step 2: Add Resources in Pangolin Dashboard                │
-│  ┌──────────────────────────────────────────────────────┐  │
-│  │  Nextcloud:  http://192.168.x.x:10081               │  │
-│  │  Collabora:  http://192.168.x.x:9980                │  │
-│  │  Signaling:  http://192.168.x.x:8188                │  │
-│  └──────────────────────────────────────────────────────┘  │
-└─────────────────────────────────────────────────────────────┘
-                            ↓
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 1: Add DNS Records in Cloudflare                      â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
+â”‚  â”‚  nextcloud.yourdomain.com  â†’  CNAME  â†’  yourdomain  â”‚  â”‚
+â”‚  â”‚  office.yourdomain.com     â†’  CNAME  â†’  yourdomain  â”‚  â”‚
+â”‚  â”‚  talk-signaling...         â†’  CNAME  â†’  yourdomain  â”‚  â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                            â†“
+â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”
+â”‚  Step 2: Add Resources in Pangolin Dashboard                â”‚
+â”‚  â”Œâ”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”  â”‚
+â”‚  â”‚  Nextcloud:  http://192.168.x.x:10081               â”‚  â”‚
+â”‚  â”‚  Collabora:  http://192.168.x.x:9980                â”‚  â”‚
+â”‚  â”‚  Signaling:  http://192.168.x.x:8188                â”‚  â”‚
+â”‚  â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜  â”‚
+â””â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”˜
+                            â†“
 User -> nextcloud.yourdomain.com
     |
 Cloudflare DNS (not proxied)
@@ -642,21 +642,21 @@ talk-signaling   CNAME    yourdomain.com
 ### Collabora Office Setup
 
 1. **Install Nextcloud Office app:**
-   - Apps → Search "Nextcloud Office" → Enable
+   - Apps â†’ Search "Nextcloud Office" â†’ Enable
 
 2. **Configure server:**
-   - Settings → Administration → Nextcloud Office
+   - Settings â†’ Administration â†’ Nextcloud Office
    - Select "Use your own server"
    - **URL Options:**
      - **With Pangolin:** `https://office.yourdomain.com` (uses tunnel)
      - **Without Pangolin:** `http://collabora:9980` (internal Docker network)
    - Click **Save**
-   - Should show ✅ green: "Collabora Online server is reachable"
+   - Should show green: "Collabora Online server is reachable"
 
 > **Pangolin Users:** Using the external URL (`https://office.yourdomain.com`) is recommended as it works from anywhere. The internal URL (`http://collabora:9980`) only works from within the Docker network.
 
 3. **Test:**
-   - Files → + → New document
+   - Files â†’ + â†’ New document
    - Should open Collabora editor
 
 ### Talk HPB Setup
@@ -667,12 +667,12 @@ talk-signaling   CNAME    yourdomain.com
    ```
 
 2. **Configure HPB:**
-   - Settings → Administration → Talk
+   - Settings â†’ Administration â†’ Talk
    - STUN servers: `stun.nextcloud.com:443`
    - Add signaling server:
      - URL: `https://talk-signaling.yourdomain.com`
      - Secret: (your backend secret from server.conf)
-   - Click "Verify" → Should show ✅
+   - Click "Verify" â†’ Should show success
    - Save
 
 ---
@@ -755,9 +755,9 @@ docker exec -u www-data nextcloud php occ log:watch
 
 ### After Optimization
 
-- **Page Load:** 1-2 seconds ⚡ (50-60% improvement)
+- **Page Load:** 1-2 seconds (50-60% improvement)
 - **File Upload:** 10GB support, network-limited speed
-- **Photo Gallery:** 2-3 seconds ⚡ (70% improvement)
+- **Photo Gallery:** 2-3 seconds (70% improvement)
 - **Background Jobs:** Cron (reliable, runs on schedule)
 
 ### Resource Usage
@@ -857,7 +857,7 @@ docker compose up -d
 docker exec -u www-data nextcloud php occ upgrade
 ```
 
-#### Major Updates (e.g., 28 → 29)
+#### Major Updates (e.g., 28 â†’ 29)
 
 1. **Backup everything** (see above)
 2. Test update in staging environment (recommended)
@@ -881,13 +881,13 @@ docker exec -u www-data nextcloud php occ upgrade
 
 ### Best Practices
 
-- ✅ Use strong, unique passwords for all services
-- ✅ Keep Talk backend secret secure and never commit to Git
-- ✅ Enable 2FA for admin accounts
-- ✅ Regular updates (weekly check, monthly apply)
-- ✅ Monitor logs for suspicious activity
-- ✅ Use HTTPS only (enforce via reverse proxy)
-- ✅ Limit exposed ports (only reverse proxy should be public)
+- Use strong, unique passwords for all services
+- Keep Talk backend secret secure and never commit to Git
+- Enable 2FA for admin accounts
+- Regular updates (weekly check, monthly apply)
+- Monitor logs for suspicious activity
+- Use HTTPS only (enforce via reverse proxy)
+- Limit exposed ports (only reverse proxy should be public)
 
 ### Recommended Security Apps
 
@@ -933,7 +933,7 @@ docker exec -u www-data nextcloud php occ preview:generate-all
 
 Mount SMB/NFS shares:
 
-1. Settings → Administration → External Storage
+1. Settings â†’ Administration â†’ External Storage
 2. Add storage (SMB/CIFS, NFS, etc.)
 3. Configure credentials and mount point
 

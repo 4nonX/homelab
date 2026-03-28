@@ -1,16 +1,16 @@
-# Network & Security Infrastructure
+﻿# Network & Security Infrastructure
 
 Core network services providing DNS, ad-blocking, VPN access, and security monitoring for the homelab.
 
-## 🛡️ Interactive Security Architecture
+## Interactive Security Architecture
 
-**[→ View Complete Security Diagram](https://4nonx.github.io/homelab/security-diagram.html)**
+**[â†’ View Complete Security Diagram](https://4nonx.github.io/homelab/security-diagram.html)**
 
 This diagram shows our 6-layer defense-in-depth strategy with interactive hover effects.
 
 ---
 
-## 🌐 Network Architecture
+## ðŸŒ Network Architecture
 
 ### Core Network Services
 
@@ -51,8 +51,8 @@ This diagram shows our 6-layer defense-in-depth strategy with interactive hover 
 
 **Network Routing:**
 ```
-Application → Gluetun → VPN Provider → Internet
-           ↓
+Application â†’ Gluetun â†’ VPN Provider â†’ Internet
+           â†“
     Kill Switch Active
     (No direct internet access)
 ```
@@ -63,17 +63,17 @@ Application → Gluetun → VPN Provider → Internet
 
 **Architecture:**
 ```
-Internet → VPS (IONOS Berlin)
-           ├─ Traefik (Reverse Proxy + SSL)
-           ├─ Pangolin (Server API)
-           ├─ Gerbil (Wireguard Gateway)
-           └─ CrowdSec (IDS/IPS)
-                ↓
+Internet â†’ VPS (IONOS Berlin)
+           â”œâ”€ Traefik (Reverse Proxy + SSL)
+           â”œâ”€ Pangolin (Server API)
+           â”œâ”€ Gerbil (Wireguard Gateway)
+           â””â”€ CrowdSec (IDS/IPS)
+                â†“
            Wireguard Tunnel (Encrypted)
-                ↓
+                â†“
            Homelab (Behind NAT)
-           └─ Newt (Client Service)
-              └─ Local Services
+           â””â”€ Newt (Client Service)
+              â””â”€ Local Services
 ```
 
 **Key Features:**
@@ -89,15 +89,15 @@ Internet → VPS (IONOS Berlin)
 - CPU: 2 vCores
 - RAM: 2 GB
 - Storage: 80 GB NVMe SSD
-- Cost: ~€5-10/month
+- Cost: ~â‚¬5-10/month
 
 **Benefits Over Traditional Approaches:**
-- ✅ No router configuration needed
-- ✅ No static IP or DDNS required
-- ✅ Enterprise-grade SSL management
-- ✅ Integrated security monitoring
-- ✅ Professional subdomain routing
-- ✅ Zero-trust network access
+- No router configuration needed
+- No static IP or DDNS required
+- Enterprise-grade SSL management
+- Integrated security monitoring
+- Professional subdomain routing
+- Zero-trust network access
 
 *See [pangolin-infrastructure.md](pangolin-infrastructure.md) for complete architecture documentation.*
 
@@ -119,7 +119,7 @@ Internet → VPS (IONOS Berlin)
   - 22000: Sync protocol (TCP/UDP)
   - 21027: Local discovery (UDP)
 
-## 🔒 Security Layers
+## Security Layers
 
 ### Network Security
 
@@ -189,7 +189,7 @@ Internet → VPS (IONOS Berlin)
 - **Loki:** Log aggregation
 - **Alerting:** Email/Push notifications for issues
 
-## 🔐 Encryption
+## Encryption
 
 ### Data at Rest
 - **ZFS native encryption:** All datasets encrypted
@@ -202,27 +202,27 @@ Internet → VPS (IONOS Berlin)
 - **SSH:** Key-based only, no password auth
 - **Docker TLS:** Secure daemon communication
 
-## 📊 Network Topology
+## Network Topology
 
 ```
 Internet
-    ↓
+    â†“
 Router/Firewall
-    ↓
-    ├─── Pi-hole (DNS + Ad Blocking)
-    ↓
+    â†“
+    â”œâ”€â”€â”€ Pi-hole (DNS + Ad Blocking)
+    â†“
 Switch
-    ↓
-    ├─── NAS Server (10.243.0.1)
-    │     ├─── Docker Bridge Networks
-    │     │     ├─── Media Stack Network
-    │     │     ├─── Productivity Network
-    │     │     ├─── Infrastructure Network
-    │     │     └─── Gluetun VPN Network
-    │     └─── Host Network Services
-    │
-    ├─── Wireguard VPN Server (Remote Access)
-    └─── Client Devices
+    â†“
+    â”œâ”€â”€â”€ NAS Server (10.243.0.1)
+    â”‚     â”œâ”€â”€â”€ Docker Bridge Networks
+    â”‚     â”‚     â”œâ”€â”€â”€ Media Stack Network
+    â”‚     â”‚     â”œâ”€â”€â”€ Productivity Network
+    â”‚     â”‚     â”œâ”€â”€â”€ Infrastructure Network
+    â”‚     â”‚     â””â”€â”€â”€ Gluetun VPN Network
+    â”‚     â””â”€â”€â”€ Host Network Services
+    â”‚
+    â”œâ”€â”€â”€ Wireguard VPN Server (Remote Access)
+    â””â”€â”€â”€ Client Devices
 ```
 
 ### IP Addressing
@@ -243,7 +243,7 @@ Switch
 | db-network | 172.22.0.0/16 | Database isolation |
 | gluetun-net | 172.23.0.0/16 | VPN-routed traffic |
 
-## 🛡️ Threat Protection
+## Threat Protection
 
 ### Defense Layers
 
@@ -273,7 +273,7 @@ Switch
 - **OSSEC:** Host-based IDS
 - **Log analysis:** Automated alert on anomalies
 
-## 📈 Performance Metrics
+## Performance Metrics
 
 ### Pi-hole Statistics
 - **Queries/Day:** ~500,000
@@ -286,7 +286,7 @@ Switch
 - **External Bandwidth:** ISP-limited
 - **VPN Throughput:** ~300-400 Mbps (Wireguard)
 
-## 🔧 Management Tools
+## Management Tools
 
 **Dockge**
 - Docker Compose stack management
@@ -298,7 +298,7 @@ Switch
   - Update management
 - Replaces manual CLI management
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 ### Planned Additions
 1. **Reverse Proxy:** Nginx Proxy Manager or Traefik
@@ -321,8 +321,8 @@ Switch
 ---
 
 **Security Philosophy:**
-- ✅ Defense in depth
-- ✅ Principle of least privilege
-- ✅ Regular updates and patching
-- ✅ Encrypted everything
-- ✅ Monitored and logged
+- Defense in depth
+- Principle of least privilege
+- Regular updates and patching
+- Encrypted everything
+- Monitored and logged

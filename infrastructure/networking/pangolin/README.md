@@ -1,4 +1,4 @@
-# Pangolin: Self-Hosted WireGuard Tunnel
+﻿# Pangolin: Self-Hosted WireGuard Tunnel
 
 Pangolin replaces commercial tunnels (Cloudflare Tunnel, ngrok) with a fully self-hosted equivalent.
 No home IP exposure. No port forwarding on the home router.
@@ -16,10 +16,10 @@ No home IP exposure. No port forwarding on the home router.
 
 ```
 Client (Internet)
-  → VPS:443 (Traefik)
-  → WireGuard tunnel (Gerbil ↔ Newt, encrypted)
-  → Raspberry Pi 5 (Pangolin / inner Traefik)
-  → Target service on LAN
+  â†’ VPS:443 (Traefik)
+  â†’ WireGuard tunnel (Gerbil â†” Newt, encrypted)
+  â†’ Raspberry Pi 5 (Pangolin / inner Traefik)
+  â†’ Target service on LAN
 ```
 
 ## Key Properties

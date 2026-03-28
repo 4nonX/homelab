@@ -42,20 +42,20 @@ VPS Gateway (External Access)
 
 ### Technical
 
-- ✅ **40+ Production Services** running containerized
-- ✅ **33TB Storage** with RAID5 redundancy
-- ✅ **Zero Port Forwarding** via Pangolin tunnel
-- ✅ **Automatic SSL** certificates (Let's Encrypt)
-- ✅ **Multi-layer Security** (IDS/IPS, encryption, isolation)
-- ✅ **~90%+ Uptime** with automated monitoring
+- **40+ Production Services** running containerized
+- **33TB Storage** with RAID5 redundancy
+- **Zero Port Forwarding** via Pangolin tunnel
+- **Automatic SSL** certificates (Let's Encrypt)
+- **Multi-layer Security** (IDS/IPS, encryption, isolation)
+- **~90%+ Uptime** with automated monitoring
 
 ### Financial
 
-- 💰 **€1,506 Initial Investment**
-- 💰 **€147/year Operating Costs**
-- 💰 **€582/year SaaS Costs Eliminated**
-- 💰 **3.5-year Break-Even Point**
-- 💰 **€1,400+ Profit After 5 Years**
+- **€1,506 Initial Investment**
+- **€147/year Operating Costs**
+- **€582/year SaaS Costs Eliminated**
+- **3.5-year Break-Even Point**
+- **€1,400+ Profit After 5 Years**
 
 ### Skills Demonstrated
 
@@ -256,7 +256,7 @@ For technical discussions about this implementation or consultation on similar d
 ---
 
 **Last Updated:** December 2025  
-**Status:** ✅ Production, Actively Maintained  
+**Status:** Production, Actively Maintained  
 **License:** Documentation available for educational purposes
 
 **Technologies:**  

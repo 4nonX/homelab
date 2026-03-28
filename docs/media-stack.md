@@ -1,26 +1,26 @@
-# Media Library Management Stack
+﻿# Media Library Management Stack
 
 Comprehensive media library organization and streaming infrastructure for personal media collections, featuring automated metadata management, multi-platform streaming, and secure network architecture.
 
-## 🎬 Architecture
+## ðŸŽ¬ Architecture
 
 ```
 Personal Media Sources
 (DVDs, Blu-rays, YouTube, Podcasts, Home Videos)
-    ↓
+    â†“
 Media Ingest & Organization
-    ↓
+    â†“
 Library Management Tools
 (Metadata, Quality, Organization)
-    ↓
+    â†“
 Local Storage (RAID5)
-    ↓
+    â†“
 Streaming Servers
-    ↓
+    â†“
 Devices (TV, Mobile, Desktop)
 ```
 
-## 📦 Services Overview
+## ðŸ“¦ Services Overview
 
 ### Media Organization & Metadata
 
@@ -112,18 +112,18 @@ Devices (TV, Mobile, Desktop)
 - Organized media acquisition workflow
 
 
-## 🔒 Security Architecture
+## ðŸ”’ Security Architecture
 
 ### Network Isolation
 
 ```
 Isolated Networks:
-├─ Media Management Network
-│   └─ Library organization tools
-├─ Streaming Network  
-│   └─ Emby, SwingMusic, Kavita
-└─ Storage Network
-    └─ Direct storage access
+â”œâ”€ Media Management Network
+â”‚   â””â”€ Library organization tools
+â”œâ”€ Streaming Network  
+â”‚   â””â”€ Emby, SwingMusic, Kavita
+â””â”€ Storage Network
+    â””â”€ Direct storage access
 ```
 
 **Security Features:**
@@ -140,24 +140,24 @@ Isolated Networks:
 - Session management
 - Audit logging
 
-## 📁 Storage Organization
+## ðŸ“ Storage Organization
 
 ```
 /media/mainpool/
-├── tv-shows/           # Organized by Sonarr
-│   └── (Personal DVD backups, home recordings)
-├── movies/             # Organized by Radarr
-│   └── (Personal Blu-ray backups)
-├── music/              # Organized by Lidarr
-│   └── (CD rips, purchased music)
-├── books/              # Managed by Kavita
-│   └── (Personal PDFs, eBooks)
-├── youtube-archive/    # Managed by Pinchflat
-│   └── (Educational content, tutorials)
-└── home-videos/        # Family recordings
+â”œâ”€â”€ tv-shows/           # Organized by Sonarr
+â”‚   â””â”€â”€ (Personal DVD backups, home recordings)
+â”œâ”€â”€ movies/             # Organized by Radarr
+â”‚   â””â”€â”€ (Personal Blu-ray backups)
+â”œâ”€â”€ music/              # Organized by Lidarr
+â”‚   â””â”€â”€ (CD rips, purchased music)
+â”œâ”€â”€ books/              # Managed by Kavita
+â”‚   â””â”€â”€ (Personal PDFs, eBooks)
+â”œâ”€â”€ youtube-archive/    # Managed by Pinchflat
+â”‚   â””â”€â”€ (Educational content, tutorials)
+â””â”€â”€ home-videos/        # Family recordings
 ```
 
-## 🎯 Use Cases
+## ðŸŽ¯ Use Cases
 
 ### Legal Personal Media Management
 
@@ -186,7 +186,7 @@ Isolated Networks:
    - Personal music library streaming
    - Album organization
 
-## ⚙️ Technical Implementation
+## âš™ï¸ Technical Implementation
 
 ### Metadata Management
 
@@ -218,7 +218,7 @@ Isolated Networks:
 - Format conversion on-the-fly
 - Battery-efficient mobile playback
 
-## 🔗 Integration & Automation
+## ðŸ”- Integration & Automation
 
 ### Inter-Service Communication
 
@@ -249,7 +249,7 @@ Docker Networks:
 - Docker Compose: Version-controlled configs
 - Rollback capability via Docker tags
 
-## 📊 Resource Utilization
+## ðŸ“Š Resource Utilization
 
 ```
 CPU Usage:
@@ -269,7 +269,7 @@ Storage I/O:
 - Transcoding: Moderate (with HW acceleration)
 ```
 
-## 🚀 Deployment Architecture
+## ðŸš€ Deployment Architecture
 
 **Docker Compose Structure:**
 ```yaml
@@ -295,7 +295,7 @@ services:
     # YouTube archival for educational content
 ```
 
-## 🎓 Skills Demonstrated
+## ðŸŽ“ Skills Demonstrated
 
 ### Infrastructure
 - Multi-container orchestration
@@ -315,17 +315,17 @@ services:
 - Monitoring and health checks
 - Update management
 
-## 📚 Personal Media Library Benefits
+## ðŸ“š Personal Media Library Benefits
 
-✅ **Organization:** Professional-grade media library management  
-✅ **Accessibility:** Stream personal media anywhere securely  
-✅ **Preservation:** Digital backup of physical media collections  
-✅ **Family Sharing:** Secure sharing with household members  
-✅ **Education:** Archive educational and reference content  
-✅ **Privacy:** Self-hosted alternative to streaming services  
-✅ **Learning:** Hands-on experience with media technologies  
+âœ… **Organization:** Professional-grade media library management  
+âœ… **Accessibility:** Stream personal media anywhere securely  
+âœ… **Preservation:** Digital backup of physical media collections  
+âœ… **Family Sharing:** Secure sharing with household members  
+âœ… **Education:** Archive educational and reference content  
+âœ… **Privacy:** Self-hosted alternative to streaming services  
+âœ… **Learning:** Hands-on experience with media technologies  
 
-## 🔧 Future Enhancements
+## ðŸ”§ Future Enhancements
 
 - [ ] Integration with DVR for TV recording (legal broadcasts)
 - [ ] Automated photo organization (Immich already deployed)
@@ -342,6 +342,7 @@ This infrastructure demonstrates enterprise-level media management capabilities 
 - Digital asset management (DAM) systems
 - Broadcasting and media production workflows
 
-**Technologies:** Docker · Metadata Management · Transcoding · API Integration · Network Security · Automated Workflows
+**Technologies:** Docker Â· Metadata Management Â· Transcoding Â· API Integration Â· Network Security Â· Automated Workflows
 
 **Purpose:** Personal media library organization and streaming infrastructure for legally owned content
+

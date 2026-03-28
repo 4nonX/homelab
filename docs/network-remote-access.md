@@ -1,4 +1,4 @@
-# Remote Access Strategy
+﻿# Remote Access Strategy
 
 I use a mix of VPNs and tunnels to get into my lab. The goal is to have a primary way in that's fast and secure, with a few backups in case my home internet or the main tunnel goes down.
 
@@ -23,22 +23,22 @@ I use a mix of VPNs and tunnels to get into my lab. The goal is to have a primar
 
 ```
 Internet Users
-    │
-    ├─── Primary Path (Pangolin + Traefik)
-    │      ├─ HTTPS (443) → Traefik
-    │      ├─ Auto SSL (Let's Encrypt)
-    │      ├─ CrowdSec Security
-    │      └─ WireGuard Tunnel → Home
-    │
-    ├─── Fallback Path (Tailscale)
-    │      ├─ Mesh VPN
-    │      ├─ NAT Traversal
-    │      └─ Direct P2P → Home
-    │
-    └─── System Access (ZeroTier/ZimaOS)
-           ├─ Direct IP Assignment
-           ├─ Terminal/SSH Access
-           └─ NAS Maintenance → Home
+    â”‚
+    â”œâ”€â”€â”€ Primary Path (Pangolin + Traefik)
+    â”‚      â”œâ”€ HTTPS (443) â†’ Traefik
+    â”‚      â”œâ”€ Auto SSL (Let's Encrypt)
+    â”‚      â”œâ”€ CrowdSec Security
+    â”‚      â””â”€ WireGuard Tunnel â†’ Home
+    â”‚
+    â”œâ”€â”€â”€ Fallback Path (Tailscale)
+    â”‚      â”œâ”€ Mesh VPN
+    â”‚      â”œâ”€ NAT Traversal
+    â”‚      â””â”€ Direct P2P â†’ Home
+    â”‚
+    â””â”€â”€â”€ System Access (ZeroTier/ZimaOS)
+           â”œâ”€ Direct IP Assignment
+           â”œâ”€ Terminal/SSH Access
+           â””â”€ NAS Maintenance â†’ Home
 ```
 
 ### Current Implementation
@@ -75,38 +75,38 @@ Internet Users
 
 ### Why Pangolin?
 
-✅ **Full Sovereignty** - Complete self-hosting, no third-party dependencies  
-✅ **Public Subdomains** - Expose services with granular access controls  
-✅ **Security Stack** - Traefik + CrowdSec + Let's Encrypt integrated  
-✅ **Zero Port Forwarding** - Works behind CGNAT without router config  
-✅ **Rich Features** - More configuration options than alternatives  
-✅ **WireGuard Foundation** - Modern, performant protocol
+- **Full Sovereignty** - Complete self-hosting, no third-party dependencies
+- **Public Subdomains** - Expose services with granular access controls
+- **Security Stack** - Traefik + CrowdSec + Let's Encrypt integrated
+- **Zero Port Forwarding** - Works behind CGNAT without router config
+- **Rich Features** - More configuration options than alternatives
+- **WireGuard Foundation** - Modern, performant protocol
 
 ### Architecture
 
 ```
 VPS (IONOS Berlin)
-├─ Traefik (Reverse Proxy)
-│  ├─ Automatic HTTPS (Let's Encrypt)
-│  ├─ Security Headers
-│  └─ Rate Limiting
-├─ Pangolin API Server
-│  ├─ User Management
-│  ├─ Resource Definitions
-│  └─ Access Control
-├─ Gerbil (WireGuard Gateway)
-│  └─ Encrypted Tunnel
-└─ CrowdSec (Security)
-   ├─ IDS/IPS
-   ├─ Community Intelligence
-   └─ AppSec (WAF)
-        ↓
+â”œâ”€ Traefik (Reverse Proxy)
+â”‚  â”œâ”€ Automatic HTTPS (Let's Encrypt)
+â”‚  â”œâ”€ Security Headers
+â”‚  â””â”€ Rate Limiting
+â”œâ”€ Pangolin API Server
+â”‚  â”œâ”€ User Management
+â”‚  â”œâ”€ Resource Definitions
+â”‚  â””â”€ Access Control
+â”œâ”€ Gerbil (WireGuard Gateway)
+â”‚  â””â”€ Encrypted Tunnel
+â””â”€ CrowdSec (Security)
+   â”œâ”€ IDS/IPS
+   â”œâ”€ Community Intelligence
+   â””â”€ AppSec (WAF)
+        â†“
    [WireGuard Tunnel]
-        ↓
+        â†“
 Home NAS
-└─ Newt Client
-   ├─ Tunnel Endpoint
-   └─ Resource Exposure
+â””â”€ Newt Client
+   â”œâ”€ Tunnel Endpoint
+   â””â”€ Resource Exposure
 ```
 
 ### How the pieces fit together
@@ -123,21 +123,21 @@ Pangolin isn't just one thing. It's a few different bits working together:
 
 ```
 External Request
-    ↓
+    â†“
 1. Traefik receives HTTPS request
-    ↓
-2. CrowdSec analyzes for threats → Block if malicious
-    ↓
+    â†“
+2. CrowdSec analyzes for threats â†’ Block if malicious
+    â†“
 3. Traefik forwards to Pangolin API
-    ↓
+    â†“
 4. Badger validates authentication
-    ↓
+    â†“
 5. Pangolin checks access control
-    ↓
+    â†“
 6. Gerbil routes through WireGuard tunnel
-    ↓
+    â†“
 7. Newt receives and forwards to local service
-    ↓
+    â†“
 8. Response flows back through same path
 ```
 
@@ -206,11 +206,11 @@ http:
 
 **Benefits:**
 
-✅ Zero-day protection through community intelligence  
-✅ Reduced attack surface before threats reach applications  
-✅ No false positives from crowd-validated data  
-✅ Open-source with automatic scenario updates  
-✅ Dashboard for threat visualization
+- Zero-day protection through community intelligence
+- Reduced attack surface before threats reach applications
+- No false positives from crowd-validated data
+- Open-source with automatic scenario updates
+- Dashboard for threat visualization
 
 #### Additional Security Middlewares
 
@@ -251,18 +251,18 @@ Since I work in sensitive environments (federal background), I'm not comfortable
 
 **Security Strengths:**
 
-✅ Complete infrastructure control and visibility  
-✅ Multi-layer defense (CrowdSec, Traefik, WireGuard)  
-✅ Audit logging for all access  
-✅ Custom security hardening  
-✅ No third-party trust requirements
+- Complete infrastructure control and visibility
+- Multi-layer defense (CrowdSec, Traefik, WireGuard)
+- Audit logging for all access
+- Custom security hardening
+- No third-party trust requirements
 
 **Potential Risks:**
 
-⚠️ **Self-Managed Security** - Responsibility for updates and patches  
-⚠️ **VPS Compromise** - Single point protecting home network  
-⚠️ **Configuration Errors** - Complex setup increases misconfiguration risk  
-⚠️ **Availability** - Self-hosted means self-maintained
+- **Self-Managed Security** - Responsibility for updates and patches
+- **VPS Compromise** - Single point protecting home network
+- **Configuration Errors** - Complex setup increases misconfiguration risk
+- **Availability** - Self-hosted means self-maintained
 
 **Mitigations:**
 
@@ -282,12 +282,12 @@ Since I work in sensitive environments (federal background), I'm not comfortable
 
 ### Why as Fallback?
 
-✅ **Independent Path** - Works when home network or Pangolin has issues  
-✅ **Excellent NAT Traversal** - Functions from restrictive networks  
-✅ **Cross-Platform** - Best-in-class mobile and desktop apps  
-✅ **Mesh Networking** - Device-to-device without full VPN  
-✅ **Strong Security** - End-to-end encryption, coordination servers never see traffic  
-✅ **Easy Setup** - 5-minute configuration
+- **Independent Path** - Works when home network or Pangolin has issues
+- **Excellent NAT Traversal** - Functions from restrictive networks
+- **Cross-Platform** - Best-in-class mobile and desktop apps
+- **Mesh Networking** - Device-to-device without full VPN
+- **Strong Security** - End-to-end encryption, coordination servers never see traffic
+- **Easy Setup** - 5-minute configuration
 
 ### Trust Model
 
@@ -304,18 +304,18 @@ While Tailscale uses coordination servers, it maintains strong security:
 
 **Security Strengths:**
 
-✅ WireGuard-based end-to-end encryption  
-✅ Regular third-party security audits  
-✅ Open-source clients (auditable)  
-✅ Strong company security practices  
-✅ No traffic data stored on coordination servers
+- WireGuard-based end-to-end encryption
+- Regular third-party security audits
+- Open-source clients (auditable)
+- Strong company security practices
+- No traffic data stored on coordination servers
 
 **Potential Risks:**
 
-⚠️ **Coordination Metadata** - Servers see network topology and connection times  
-⚠️ **Company Access** - Tailscale can see device list and network structure  
-⚠️ **Vendor Dependency** - Recent VC funding raises enshittification concerns  
-⚠️ **Third-Party Trust** - Must trust Tailscale's security and privacy practices
+- **Coordination Metadata** - Servers see network topology and connection times
+- **Company Access** - Tailscale can see device list and network structure
+- **Vendor Dependency** - Recent VC funding raises enshittification concerns
+- **Third-Party Trust** - Must trust Tailscale's security and privacy practices
 
 **Mitigations:**
 
@@ -334,12 +334,12 @@ While Tailscale uses coordination servers, it maintains strong security:
 
 ### Why for System Access?
 
-✅ **ZimaOS Built-in** - Native integration, zero additional setup  
-✅ **Direct IP Assignment** - Real IP address for SSH/terminal access  
-✅ **Terminal Access** - Direct SSH to NAS for maintenance  
-✅ **Independent Architecture** - Different from both Pangolin and Tailscale  
-✅ **Low Maintenance** - Managed through ZimaOS updates  
-✅ **Virtual L2 Network** - Behaves like physical switch
+- **ZimaOS Built-in** - Native integration, zero additional setup
+- **Direct IP Assignment** - Real IP address for SSH/terminal access
+- **Terminal Access** - Direct SSH to NAS for maintenance
+- **Independent Architecture** - Different from both Pangolin and Tailscale
+- **Low Maintenance** - Managed through ZimaOS updates
+- **Virtual L2 Network** - Behaves like physical switch
 
 ### Use Case: NAS Maintenance
 
@@ -347,12 +347,12 @@ Unlike Pangolin (web services) and Tailscale (device mesh), ZeroTier provides di
 
 **What I use it for:**
 
-* 🔧 SSH access to NAS for system maintenance
-* 📊 Direct terminal access to ZimaOS CLI
-* 🐳 Docker troubleshooting and container management
-* 📁 File system operations requiring elevated privileges
-* 🔍 System diagnostics and log analysis
-* ⚙️ ZimaOS configuration changes
+- SSH access to NAS for system maintenance
+- Direct terminal access to ZimaOS CLI
+- Docker troubleshooting and container management
+- File system operations requiring elevated privileges
+- System diagnostics and log analysis
+- ZimaOS configuration changes
 
 **Why not Pangolin for this?**
 
@@ -374,18 +374,18 @@ Pangolin excels at exposing web services with authentication, but for direct SSH
 
 **Security Strengths:**
 
-✅ Direct P2P connections when possible  
-✅ End-to-end encrypted tunnels  
-✅ Network-level access control (flow rules)  
-✅ Virtual network isolation  
-✅ ZimaOS integration and management
+- Direct P2P connections when possible
+- End-to-end encrypted tunnels
+- Network-level access control (flow rules)
+- Virtual network isolation
+- ZimaOS integration and management
 
 **Potential Risks:**
 
-⚠️ **Root Server Coordination** - ZeroTier's servers coordinate connections  
-⚠️ **Custom Protocol** - Less audited than WireGuard  
-⚠️ **Wide System Access** - Direct IP grants full network access  
-⚠️ **Metadata Visibility** - ZeroTier sees network membership
+- **Root Server Coordination** - ZeroTier's servers coordinate connections
+- **Custom Protocol** - Less audited than WireGuard
+- **Wide System Access** - Direct IP grants full network access
+- **Metadata Visibility** - ZeroTier sees network membership
 
 **Mitigations:**
 
@@ -418,11 +418,11 @@ certificatesResolvers:
 
 **Automatic Features:**
 
-* 🔄 **Auto-Generation** - Certificates created on first request
-* 🔄 **Auto-Renewal** - Renewed 30 days before expiration
-* ✅ **TLS 1.3** - Modern encryption protocols
-* ✅ **HSTS** - HTTP Strict Transport Security
-* ✅ **Rate Limiting** - Respects Let's Encrypt limits (50 certs/week/domain)
+- **Auto-Generation** - Certificates created on first request
+- **Auto-Renewal** - Renewed 30 days before expiration
+- TLS 1.3 - Modern encryption protocols
+- HSTS - HTTP Strict Transport Security
+- Rate Limiting - Respects Let's Encrypt limits (50 certs/week/domain)
 
 ### Certificate Management
 
@@ -437,7 +437,7 @@ certificatesResolvers:
 ### HTTPS Enforcement
 
 ```yaml
-# Global HTTP → HTTPS Redirect
+# Global HTTP â†’ HTTPS Redirect
 entryPoints:
   web:
     address: ":80"
@@ -456,17 +456,17 @@ entryPoints:
 
 **Security Benefits:**
 
-✅ Automatic certificate management (no human error)  
-✅ Industry-standard encryption (TLS 1.3)  
-✅ Certificate transparency logging  
-✅ Regular renewal (no expired certificates)  
-✅ Free, trusted certificates
+- Automatic certificate management (no human error)
+- Industry-standard encryption (TLS 1.3)
+- Certificate transparency logging
+- Regular renewal (no expired certificates)
+- Free, trusted certificates
 
 **Potential Concerns:**
 
-⚠️ **Rate Limits** - Can hit Let's Encrypt limits during testing  
-⚠️ **Challenge Requirements** - Port 443 must be accessible  
-⚠️ **Domain Validation** - Public proof of domain ownership
+âš ï¸ **Rate Limits** - Can hit Let's Encrypt limits during testing  
+âš ï¸ **Challenge Requirements** - Port 443 must be accessible  
+âš ï¸ **Domain Validation** - Public proof of domain ownership
 
 **Best Practices:**
 
@@ -484,22 +484,22 @@ entryPoints:
 
 **Repository:** [github.com/wiredoor/wiredoor](https://github.com/wiredoor/wiredoor)
 
-**Verdict:** ❌ Rejected
+**Verdict:** âŒ Rejected
 
 **Pros:**
 
-* ✅ Simpler WireGuard management than plain WireGuard
-* ✅ Lightweight footprint
-* ✅ Fast performance (native WireGuard)
-* ✅ Self-hosted with full control
+* âœ… Simpler WireGuard management than plain WireGuard
+* âœ… Lightweight footprint
+* âœ… Fast performance (native WireGuard)
+* âœ… Self-hosted with full control
 
 **Cons:**
 
-* ❌ Limited configuration options compared to Pangolin
-* ❌ No public subdomain functionality
-* ❌ No built-in reverse proxy or SSL management
-* ❌ Basic access control only
-* ❌ Less feature-rich for web service exposure
+* âŒ Limited configuration options compared to Pangolin
+* âŒ No public subdomain functionality
+* âŒ No built-in reverse proxy or SSL management
+* âŒ Basic access control only
+* âŒ Less feature-rich for web service exposure
 
 **Why Not Chosen:**
 
@@ -509,25 +509,25 @@ Wiredoor would be suitable for simple VPN access but lacks the sophisticated fea
 
 **Website:** [cloudflare.com/products/tunnel](https://www.cloudflare.com/products/tunnel/)
 
-**Verdict:** ❌ Rejected
+**Verdict:** âŒ Rejected
 
 **Pros:**
 
-* ✅ Excellent for web services
-* ✅ Zero-config SSL
-* ✅ Built-in DDoS protection
-* ✅ No VPS or server required
-* ✅ Free tier very generous
-* ✅ Instant setup (5 minutes)
+* âœ… Excellent for web services
+* âœ… Zero-config SSL
+* âœ… Built-in DDoS protection
+* âœ… No VPS or server required
+* âœ… Free tier very generous
+* âœ… Instant setup (5 minutes)
 
 **Cons:**
 
-* ❌ **All traffic routes through Cloudflare** - complete visibility
-* ❌ Third-party dependency (conflicts with privacy-first approach)
-* ❌ Vendor lock-in risk
-* ❌ Cannot meet data sovereignty requirements
-* ❌ No control over Cloudflare's infrastructure
-* ❌ Terms of Service changes at Cloudflare's discretion
+* âŒ **All traffic routes through Cloudflare** - complete visibility
+* âŒ Third-party dependency (conflicts with privacy-first approach)
+* âŒ Vendor lock-in risk
+* âŒ Cannot meet data sovereignty requirements
+* âŒ No control over Cloudflare's infrastructure
+* âŒ Terms of Service changes at Cloudflare's discretion
 
 **Why Not Chosen:**
 
@@ -549,25 +549,25 @@ While Cloudflare Tunnel is technically excellent and very convenient, it fundame
 
 **Website:** [wireguard.com](https://www.wireguard.com/)
 
-**Verdict:** ❌ Rejected
+**Verdict:** âŒ Rejected
 
 **Pros:**
 
-* ✅ Maximum performance
-* ✅ Minimal overhead
-* ✅ Complete control
-* ✅ Battle-tested security
-* ✅ Included in Linux kernel
+* âœ… Maximum performance
+* âœ… Minimal overhead
+* âœ… Complete control
+* âœ… Battle-tested security
+* âœ… Included in Linux kernel
 
 **Cons:**
 
-* ❌ Requires port forwarding (not possible with CGNAT)
-* ❌ No NAT traversal
-* ❌ Significant manual configuration overhead
-* ❌ No built-in management interface
-* ❌ Manual peer management
-* ❌ No automatic key rotation
-* ❌ Complex multi-device setup
+* âŒ Requires port forwarding (not possible with CGNAT)
+* âŒ No NAT traversal
+* âŒ Significant manual configuration overhead
+* âŒ No built-in management interface
+* âŒ Manual peer management
+* âŒ No automatic key rotation
+* âŒ Complex multi-device setup
 
 **Why Not Chosen:**
 
@@ -577,22 +577,22 @@ While WireGuard is the gold standard for VPN performance and security, the manua
 
 **Website:** [openvpn.net](https://openvpn.net/)
 
-**Verdict:** ❌ Rejected
+**Verdict:** âŒ Rejected
 
 **Pros:**
 
-* ✅ Mature and stable
-* ✅ Widely supported across platforms
-* ✅ Works over TCP (firewall-friendly)
-* ✅ Extensive configuration options
+* âœ… Mature and stable
+* âœ… Widely supported across platforms
+* âœ… Works over TCP (firewall-friendly)
+* âœ… Extensive configuration options
 
 **Cons:**
 
-* ❌ Higher resource overhead than WireGuard
-* ❌ Older technology (pre-dates modern crypto)
-* ❌ Significantly slower than WireGuard-based solutions
-* ❌ More complex configuration
-* ❌ Larger attack surface
+* âŒ Higher resource overhead than WireGuard
+* âŒ Older technology (pre-dates modern crypto)
+* âŒ Significantly slower than WireGuard-based solutions
+* âŒ More complex configuration
+* âŒ Larger attack surface
 
 **Why Not Chosen:**
 
@@ -615,10 +615,10 @@ I don't use things like Cloudflare Tunnel for this lab because they'd have to de
 
 ```
 Day-to-Day:
-├─ 70% Pangolin (primary web services)
-├─ 20% ZeroTier (SSH/terminal/maintenance)
-├─ 9% Tailscale (mobile access, quick checks)
-└─ 1% Other (testing, troubleshooting)
+â”œâ”€ 70% Pangolin (primary web services)
+â”œâ”€ 20% ZeroTier (SSH/terminal/maintenance)
+â”œâ”€ 9% Tailscale (mobile access, quick checks)
+â””â”€ 1% Other (testing, troubleshooting)
 ```
 
 **Use Case Breakdown:**
@@ -675,10 +675,10 @@ Day-to-Day:
 
 ---
 
-[← Back to Main README](README.md)
+[â† Back to Main README](README.md)
 
 ---
 
-**Built with** ❤️ **and** ☕
+Built with care and coffee.
 
-**Powered by** 🐧 Linux · 🐳 Docker · 🔒 WireGuard
+Powered by Linux, Docker, and WireGuard.

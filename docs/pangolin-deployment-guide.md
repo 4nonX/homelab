@@ -1,4 +1,4 @@
-# Pangolin Deployment Guide
+﻿# Pangolin Deployment Guide
 
 Complete step-by-step guide for deploying a self-hosted Pangolin tunnel infrastructure from scratch.
 
@@ -20,11 +20,11 @@ Complete step-by-step guide for deploying a self-hosted Pangolin tunnel infrastr
 
 ```
 Goal: Secure external access to homelab services
-├─ No port forwarding
-├─ Automatic SSL certificates
-├─ DDoS protection
-├─ Encrypted tunnel
-└─ Easy service management
+â”œâ”€ No port forwarding
+â”œâ”€ Automatic SSL certificates
+â”œâ”€ DDoS protection
+â”œâ”€ Encrypted tunnel
+â””â”€ Easy service management
 ```
 
 ## Deployment Steps
@@ -34,8 +34,8 @@ Goal: Secure external access to homelab services
 #### Step 1.1: Provision VPS
 
 **Recommended Providers:**
-- **IONOS** (€5/mo) - Used in this deployment
-- **Hetzner** (€4.51/mo) - Excellent performance
+- **IONOS** (â‚¬5/mo) - Used in this deployment
+- **Hetzner** (â‚¬4.51/mo) - Excellent performance
 - **Linode** ($5/mo) - Easy to use
 - **DigitalOcean** ($6/mo) - Great docs
 
@@ -630,7 +630,7 @@ EOF
 chmod +x ~/update-pangolin.sh
 ```
 
-## ✅ Post-Deployment Checklist
+## âœ… Post-Deployment Checklist
 
 ### Verification Steps
 
@@ -678,13 +678,13 @@ docker logs -f traefik --tail 100
 
 Your deployment is successful when:
 
-1. ✅ Services accessible from internet via HTTPS
-2. ✅ No port forwarding on home router
-3. ✅ Valid SSL certificates auto-renewing
-4. ✅ Tunnel stable for 24+ hours
-5. ✅ CrowdSec blocking suspicious IPs
-6. ✅ Logs clean without errors
-7. ✅ Backup and restore tested
+1. âœ… Services accessible from internet via HTTPS
+2. âœ… No port forwarding on home router
+3. âœ… Valid SSL certificates auto-renewing
+4. âœ… Tunnel stable for 24+ hours
+5. âœ… CrowdSec blocking suspicious IPs
+6. âœ… Logs clean without errors
+7. âœ… Backup and restore tested
 
 ## Troubleshooting
 
