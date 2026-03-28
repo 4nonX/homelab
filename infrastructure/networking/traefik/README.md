@@ -1,7 +1,7 @@
 # Traefik
 
 Traefik v3 runs on the VPS gateway (IONOS, Berlin) as part of the Pangolin stack.
-It is not managed from this repo directly — configuration lives on the VPS.
+It is not managed from this repo directly - configuration lives on the VPS.
 
 **Role:** TLS termination, HTTPS routing, Let's Encrypt certificate management.
 

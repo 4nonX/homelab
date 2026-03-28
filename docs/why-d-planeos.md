@@ -1,4 +1,4 @@
-# Why D-PlaneOS — From ZimaOS to a Custom NAS Layer
+# Why D-PlaneOS: From ZimaOS to a Custom NAS Layer
 
 > [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) is a self-developed NAS management layer
 > built on Debian + ZFS + Docker. This document explains what drove the switch from ZimaOS
@@ -15,12 +15,12 @@ that simplicity has real value.
 
 The original OS selection looked like this:
 
-| OS | Appeal | Problem |
+| OS | Pros | Cons |
 |---|---|---|
-| Ubuntu Server | Flexible, familiar | Entirely manual — no management layer |
+| Ubuntu Server | Flexible, familiar | Entirely manual - no management layer |
 | TrueNAS | ZFS, mature NAS features | Containers are second-class citizens |
 | Unraid | Easy Docker, good UI | Paid license, slower parity RAID, USB-bound license key |
-| Proxmox | Full virtualisation | Overkill — adds complexity without benefit for this use case |
+| Proxmox | Full virtualization | Overkill - adds complexity without much benefit here |
 | ZimaOS | Docker-first, simple UI, zero friction | Newer platform, smaller community |
 
 ZimaOS won because it had the lowest operational overhead to get 40+ services running in
@@ -30,8 +30,8 @@ production. That was the correct decision at the time.
 
 ## Where ZimaOS started to break down
 
-As the setup matured — more services, more interdependencies, more things that needed to
-stay running — the limitations of an imperative, GUI-managed system became harder to ignore:
+As the setup matured - more services, more interdependencies, more things that needed to
+stay running - the limitations of an imperative, GUI-managed system became harder to ignore:
 
 **No atomic rollbacks.** Every system update is a gamble. If a package upgrade breaks
 something, the recovery path is manual and time-consuming. There's no "boot into the
@@ -64,14 +64,14 @@ than with it.
 
 The obvious candidates:
 
-**TrueNAS Scale** — Excellent ZFS integration, mature NAS features, serious data
+**TrueNAS Scale** - Excellent ZFS integration, mature NAS features, serious data
 integrity story. But containers are genuinely second-class here. The platform is
 optimised for NAS workloads, not for running 40+ Docker Compose stacks. The
 operational model pushes toward Kubernetes for anything beyond simple apps, which
 adds significant complexity for no benefit in a homelab context.
 
 **Unraid** — Good Docker UX, good community, nice UI. But it requires a paid license
-($59–$129), the license is bound to a USB key (the USB becomes a single point of
+($59-$129), the license is bound to a USB key (the USB becomes a single point of
 failure), and its parity storage implementation is slower and less reliable than
 proper RAID with a battle-tested filesystem underneath it.
 
@@ -83,25 +83,25 @@ configuration, atomic rollbacks, reproducible builds, no configuration drift. Bu
 it's an OS, not a NAS management layer. It doesn't provide ZFS pool management,
 SMB/NFS share provisioning, a container orchestration UI, or user management out of
 the box. Building all of that on top of raw NixOS means building a management layer
-anyway — which is exactly what D-PlaneOS is.
+anyway, which is exactly what D-PlaneOS is.
 
 The gap that existed: a system with ZFS-grade storage management, Docker-native
-container orchestration, and a proper management UI — without Kubernetes complexity,
+container orchestration, and a proper management UI, without Kubernetes complexity,
 without a paid license, and without being coupled to a vendor's opinionated app store.
 
 ---
 
 ## What D-PlaneOS is
 
-[D-PlaneOS](https://github.com/4nonX/D-PlaneOS) fills that gap. It's a modern, ZFS-first NAS management system built as a high-performance **Go daemon** (`dplaned`). It replaces the scattered, imperative management tools of the past with a unified, declarative control plane.
+[D-PlaneOS](https://github.com/4nonX/D-PlaneOS) fills that gap. It's a ZFS-first NAS management system built as a Go daemon (`dplaned`). It replaces the scattered management tools of the past with a unified control plane.
 
 The underlying stack is **NixOS + ZFS + Docker Engine**:
-- **Storage**: Native ZFS pool and dataset management with real-time ZED integration.
-- **Orchestration**: Integrated Docker Compose stack management with atomic deployments.
-- **Identity**: Built-in RBAC and audit logging backed by a local PostgreSQL database.
-- **Interface**: Premium React-based UI served directly by nginx.
+- **Storage**: Native ZFS pool and dataset management.
+- **Orchestration**: Integrated Docker Compose stack management.
+- **Identity**: Built-in RBAC and audit logging.
+- **Interface**: React-based UI served by nginx.
 
-The design goal is explicit: the simplicity of CasaOS with the enterprise-grade storage capability of TrueNAS, built on the most advanced declarative OS platform available today. Pure Docker Compose throughout, ZFS as the filesystem, and NixOS as the immutable, reproducible base.
+I wanted the simplicity of CasaOS with the storage capability of TrueNAS, built on a declarative OS. Pure Docker Compose, ZFS, and NixOS as the reproducible base.
 
 The NixOS migration this homelab is currently executing will eventually run D-PlaneOS
 on a NixOS base rather than Debian — combining NixOS's declarative system management
