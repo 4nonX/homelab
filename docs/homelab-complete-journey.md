@@ -1,11 +1,11 @@
-# Building a Personal Cloud: From Hardware to Production
+﻿# Building a Personal Cloud: From Hardware to Production
 
 I wanted to document the whole process of building this homelab - from picking the parts to getting 40+ services running securely. This isn't just a basic NAS; it's a full private cloud setup that replaces most of my paid subscriptions.
 
 **Quick stats:**
 - **Timeline:** 6+ months from planning to production
-- **Investment:** ~€1,500 hardware + €60/year VPS
-- **Result:** Replaced €300+/year in SaaS subscriptions
+- **Investment:** ~â‚¬1,500 hardware + â‚¬60/year VPS
+- **Result:** Replaced â‚¬300+/year in SaaS subscriptions
 - **Scale:** 40+ services, 33TB storage, ~90%+ uptime
 
 ## Table of Contents
@@ -32,12 +32,12 @@ I wanted to document the whole process of building this homelab - from picking t
 
 **SaaS Subscription Fatigue:**
 ```
-Google One (200GB):        €30/year
-Dropbox Plus:              €120/year
-1Password Family:          €60/year
-Spotify Family:            €180/year
-Netflix Standard:          €156/year
-Total:                     €546/year
+Google One (200GB):        â‚¬30/year
+Dropbox Plus:              â‚¬120/year
+1Password Family:          â‚¬60/year
+Spotify Family:            â‚¬180/year
+Netflix Standard:          â‚¬156/year
+Total:                     â‚¬546/year
 ```
 
 **Privacy Concerns:**
@@ -57,21 +57,21 @@ Total:                     €546/year
 ### The Solution: Self-Hosted Infrastructure
 
 **Benefits:**
-- ✅ Complete data ownership and privacy
-- ✅ No monthly subscriptions (after initial investment)
-- ✅ Unlimited storage capacity
-- ✅ Full customization and control
-- ✅ Learning and skill development
-- ✅ No vendor lock-in
-- ✅ Network-level ad blocking
-- ✅ Professional portfolio project
+- Complete data ownership and privacy
+- No monthly subscriptions (after initial investment)
+- Unlimited storage capacity
+- Full customization and control
+- Learning and skill development
+- No vendor lock-in
+- Network-level ad-blocking
+- Professional portfolio project
 
 **Trade-offs:**
-- ⚠️ Upfront hardware cost
-- ⚠️ Maintenance responsibility
-- ⚠️ Power consumption (~€5-10/month)
-- ⚠️ Learning curve
-- ⚠️ You are your own IT support
+- Upfront hardware cost
+- Maintenance responsibility
+- Power consumption (~â‚¬5-10/month)
+- Learning curve
+- You are your own IT support
 
 **Decision:** Benefits outweigh costs for technical users and those valuing privacy and learning.
 
@@ -133,22 +133,22 @@ Total:                     €546/year
 
 ### Budget Constraints
 
-**Target Budget:** €1,500-2,000
+**Target Budget:** â‚¬1,500-2,000
 
 **Cost Breakdown Planning:**
 ```
-CPU:                €150-200
-Motherboard:        €100-150
-RAM:                €80-120
-Storage (OS):       €50-80
-Storage (Data):     €400-800
-Case:               €80-120
-PSU:                €60-100
-Miscellaneous:      €50-100
+CPU:                â‚¬150-200
+Motherboard:        â‚¬100-150
+RAM:                â‚¬80-120
+Storage (OS):       â‚¬50-80
+Storage (Data):     â‚¬400-800
+Case:               â‚¬80-120
+PSU:                â‚¬60-100
+Miscellaneous:      â‚¬50-100
 ---
-Total:              €970-1,670
-VPS (3 years):      €180
-Grand Total:        €1,150-1,850
+Total:              â‚¬970-1,670
+VPS (3 years):      â‚¬180
+Grand Total:        â‚¬1,150-1,850
 ```
 
 **Justification:** Recoups cost in 2-3 years vs. SaaS subscriptions
@@ -163,10 +163,10 @@ Grand Total:        €1,150-1,850
 
 | Option | Pros | Cons | Cost |
 |--------|------|------|------|
-| **Synology DS920+** | Easy setup, official support | Limited CPU, limited and expensive expansion, vendor lock-in | €600 base |
-| **QNAP TS-464** | Good specs, PCIe expansion | Unintuituve UI, limited upgradeability | €500 base |
-| **DIY Build** | Full control, better specs, upgradeable | Requires assembly, no warranty | €1,500 |
-| **Repurposed PC** | Cheap, immediate | Power hungry, limited SATA | €500 |
+| **Synology DS920+** | Easy setup, official support | Limited CPU, limited and expensive expansion, vendor lock-in | â‚¬600 base |
+| **QNAP TS-464** | Good specs, PCIe expansion | Unintuituve UI, limited upgradeability | â‚¬500 base |
+| **DIY Build** | Full control, better specs, upgradeable | Requires assembly, no warranty | â‚¬1,500 |
+| **Repurposed PC** | Cheap, immediate | Power hungry, limited SATA | â‚¬500 |
 
 **Decision:** DIY Build
 - Better CPU performance for Docker workloads
@@ -189,7 +189,7 @@ Grand Total:        €1,150-1,850
 - 4 cores / 8 threads (adequate for 40+ containers)
 - Intel UHD 730 graphics (hardware transcoding)
 - 60W TDP (energy efficient)
-- Excellent price/performance (~€150)
+- Excellent price/performance (~â‚¬150)
 - 13th gen Raptor Lake (modern architecture)
 
 **Alternatives Considered:**
@@ -207,7 +207,7 @@ Grand Total:        €1,150-1,850
 - Mini ITX form factor
 
 **Selection Criteria:**
-- ≥6 SATA III ports for storage
+- â‰¥6 SATA III ports for storage
 - 2x M.2 slots for OS and future expansion
 - Intel I225/I226 networking
 - Quality VRMs for stability
@@ -221,7 +221,7 @@ Grand Total:        €1,150-1,850
 - 3200MHz+ speed
 
 **Choice Rationale:**
-- 2x 16GB DDR4-3200 (~€80-100)
+- 2x 16GB DDR4-3200 (~â‚¬80-100)
 - Dual-channel for optimal performance
 - Room for 64GB upgrade if needed
 - Non-ECC (acceptable for home use)
@@ -261,11 +261,11 @@ Total minimum:         32GB
 **RAID5 Decision:**
 ```
 Options Considered:
-- RAID0: Maximum capacity, no redundancy ❌
-- RAID1: 50% capacity loss, simple ❌
-- RAID5: 1-drive redundancy, 75% capacity ✅
-- RAID6: 2-drive redundancy, 50% capacity, overkill ❌
-- RAID10: Fast, expensive, 50% capacity ❌
+- RAID0: Maximum capacity, no redundancy âŒ
+- RAID1: 50% capacity loss, simple âŒ
+- RAID5: 1-drive redundancy, 75% capacity âœ…
+- RAID6: 2-drive redundancy, 50% capacity, overkill âŒ
+- RAID10: Fast, expensive, 50% capacity âŒ
 ```
 
 **Why RAID5:**
@@ -335,7 +335,7 @@ Options Considered:
 **Results:**
 - Stable operation under load
 - All drives healthy (0 errors)
-- CPU temps: 35-55°C normal, <75°C load
+- CPU temps: 35-55Â°C normal, <75Â°C load
 - Power draw: ~30W idle, ~60W load
 
 ---
@@ -474,26 +474,26 @@ btrfs device stats /media/mainpool
 
 ```
 /DATA/ (NVMe - 107GB)
-├── .docker/              # Docker data
-├── bin/                  # Custom binaries (newt)
-├── AppData/              # Container configs
-│   ├── nextcloud/
-│   ├── immich/
-│   ├── vaultwarden/
-│   └── [40+ services]/
-└── newt.log             # Tunnel client log
+â”œâ”€â”€ .docker/              # Docker data
+â”œâ”€â”€ bin/                  # Custom binaries (newt)
+â”œâ”€â”€ AppData/              # Container configs
+â”‚   â”œâ”€â”€ nextcloud/
+â”‚   â”œâ”€â”€ immich/
+â”‚   â”œâ”€â”€ vaultwarden/
+â”‚   â””â”€â”€ [40+ services]/
+â””â”€â”€ newt.log             # Tunnel client log
 
 /media/mainpool/ (RAID5 - 33TB)
-├── media/
-│   ├── tv/              # Managed by Sonarr
-│   ├── movies/          # Managed by Radarr
-│   ├── music/           # Managed by Lidarr
-│   └── books/           # Managed by Kavita
-├── downloads/           # qBittorrent temp
-├── documents/           # Paperless-NGX storage
-├── photos/              # Immich library
-├── nextcloud/           # Nextcloud data
-└── backups/            # Local backup storage
+â”œâ”€â”€ media/
+â”‚   â”œâ”€â”€ tv/              # Managed by Sonarr
+â”‚   â”œâ”€â”€ movies/          # Managed by Radarr
+â”‚   â”œâ”€â”€ music/           # Managed by Lidarr
+â”‚   â””â”€â”€ books/           # Managed by Kavita
+â”œâ”€â”€ downloads/           # qBittorrent temp
+â”œâ”€â”€ documents/           # Paperless-NGX storage
+â”œâ”€â”€ photos/              # Immich library
+â”œâ”€â”€ nextcloud/           # Nextcloud data
+â””â”€â”€ backups/            # Local backup storage
 ```
 
 ### Backup Strategy
@@ -555,30 +555,30 @@ find /backups -type f -mtime +30 -delete
 
 ```
 Internet
-    │
-    ├─ ISP Router (NAT)
-    │     │
-    │     └─ Local Network (10.243.0.0/24)
-    │           │
-    │           ├─ NAS Server (10.243.0.1)
-    │           │   ├─ Docker Bridge Networks
-    │           │   │   ├─ media-network (172.20.0.0/16)
-    │           │   │   ├─ productivity-network (172.21.0.0/16)
-    │           │   │   ├─ database-network (172.22.0.0/16)
-    │           │   │   └─ gluetun-vpn (172.23.0.0/16)
-    │           │   └─ Newt Client (Pangolin tunnel)
-    │           │
-    │           ├─ Pi-hole (10.243.0.2) [DNS + DHCP]
-    │           ├─ Workstation (10.243.0.10)
-    │           ├─ Laptop (10.243.0.11)
-    │           └─ Mobile Devices (DHCP)
-    │
-    └─ VPS (Germany, Berlin)
-          └─ Pangolin Stack (217.xxx.xxx.xx)
-              ├─ Traefik (HTTPS proxy)
-              ├─ Pangolin (API)
-              ├─ Gerbil (Wireguard gateway)
-              └─ CrowdSec (Security)
+    â”‚
+    â”œâ”€ ISP Router (NAT)
+    â”‚     â”‚
+    â”‚     â””â”€ Local Network (10.243.0.0/24)
+    â”‚           â”‚
+    â”‚           â”œâ”€ NAS Server (10.243.0.1)
+    â”‚           â”‚   â”œâ”€ Docker Bridge Networks
+    â”‚           â”‚   â”‚   â”œâ”€ media-network (172.20.0.0/16)
+    â”‚           â”‚   â”‚   â”œâ”€ productivity-network (172.21.0.0/16)
+    â”‚           â”‚   â”‚   â”œâ”€ database-network (172.22.0.0/16)
+    â”‚           â”‚   â”‚   â””â”€ gluetun-vpn (172.23.0.0/16)
+    â”‚           â”‚   â””â”€ Newt Client (Pangolin tunnel)
+    â”‚           â”‚
+    â”‚           â”œâ”€ Pi-hole (10.243.0.2) [DNS + DHCP]
+    â”‚           â”œâ”€ Workstation (10.243.0.10)
+    â”‚           â”œâ”€ Laptop (10.243.0.11)
+    â”‚           â””â”€ Mobile Devices (DHCP)
+    â”‚
+    â””â”€ VPS (Germany, Berlin)
+          â””â”€ Pangolin Stack (217.xxx.xxx.xx)
+              â”œâ”€ Traefik (HTTPS proxy)
+              â”œâ”€ Pangolin (API)
+              â”œâ”€ Gerbil (Wireguard gateway)
+              â””â”€ CrowdSec (Security)
 ```
 
 ### Internal Network
@@ -663,21 +663,21 @@ networks:
 
 ```
 docker-compose/
-├── infrastructure/
-│   ├── pihole.yml
-│   ├── dockge.yml
-│   └── syncthing.yml
-├── media/
-│   ├── arr-stack.yml         # Sonarr, Radarr, etc.
-│   ├── downloaders.yml       # qBittorrent + Gluetun
-│   └── streaming.yml         # Emby, SwingMusic
-├── productivity/
-│   ├── nextcloud.yml
-│   ├── immich.yml
-│   ├── paperless.yml
-│   └── notes.yml
-└── security/
-    └── vaultwarden.yml
+â”œâ”€â”€ infrastructure/
+â”‚   â”œâ”€â”€ pihole.yml
+â”‚   â”œâ”€â”€ dockge.yml
+â”‚   â””â”€â”€ syncthing.yml
+â”œâ”€â”€ media/
+â”‚   â”œâ”€â”€ arr-stack.yml         # Sonarr, Radarr, etc.
+â”‚   â”œâ”€â”€ downloaders.yml       # qBittorrent + Gluetun
+â”‚   â””â”€â”€ streaming.yml         # Emby, SwingMusic
+â”œâ”€â”€ productivity/
+â”‚   â”œâ”€â”€ nextcloud.yml
+â”‚   â”œâ”€â”€ immich.yml
+â”‚   â”œâ”€â”€ paperless.yml
+â”‚   â””â”€â”€ notes.yml
+â””â”€â”€ security/
+    â””â”€â”€ vaultwarden.yml
 ```
 
 ### Deployment Process
@@ -774,13 +774,13 @@ volumes:
 **Current Allocation:**
 ```
 Total RAM: 32 GB
-├─ OS & System:        2 GB
-├─ Docker Daemon:      1 GB
-├─ Containers:         10 GB
-│   ├─ Heavy (Immich): 4 GB
-│   ├─ Medium (NC):    2 GB
-│   └─ Light (40+):    4 GB
-└─ Cache & Buffer:     19 GB
+â”œâ”€ OS & System:        2 GB
+â”œâ”€ Docker Daemon:      1 GB
+â”œâ”€ Containers:         10 GB
+â”‚   â”œâ”€ Heavy (Immich): 4 GB
+â”‚   â”œâ”€ Medium (NC):    2 GB
+â”‚   â””â”€ Light (40+):    4 GB
+â””â”€ Cache & Buffer:     19 GB
 ```
 
 **CPU Scheduling:**
@@ -862,7 +862,7 @@ I went with a hybrid approach:
 
 ### Costs
 
-The VPS costs about €5/month, plus €12/year for the domain. That's €72/year total - much cheaper than paying for a professional tunnelling service, and I've got full control over it. Plus, I learned a ton setting it up.
+The VPS costs about â‚¬5/month, plus â‚¬12/year for the domain. That's â‚¬72/year total - much cheaper than paying for a professional tunnelling service, and I've got full control over it. Plus, I learned a ton setting it up.
 
 ---
 
@@ -972,20 +972,20 @@ services:
 
 ```
 At Rest:
-├─ BTRFS: Checksumming for integrity
-├─ LUKS: Full disk encryption (optional)
-└─ Backup Encryption: GPG for archives
+â”œâ”€ BTRFS: Checksumming for integrity
+â”œâ”€ LUKS: Full disk encryption (optional)
+â””â”€ Backup Encryption: GPG for archives
 
 In Transit:
-├─ Wireguard: ChaCha20-Poly1305
-├─ HTTPS: TLS 1.3
-├─ SSH: Ed25519 keys
-└─ Internal: Docker overlay encryption (optional)
+â”œâ”€ Wireguard: ChaCha20-Poly1305
+â”œâ”€ HTTPS: TLS 1.3
+â”œâ”€ SSH: Ed25519 keys
+â””â”€ Internal: Docker overlay encryption (optional)
 
 Application Level:
-├─ Vaultwarden: End-to-end encryption
-├─ Nextcloud: Server-side encryption
-└─ Immich: Storage encryption available
+â”œâ”€ Vaultwarden: End-to-end encryption
+â”œâ”€ Nextcloud: Server-side encryption
+â””â”€ Immich: Storage encryption available
 ```
 
 **Backup Security:**
@@ -1140,7 +1140,7 @@ psql < /backups/postgres-latest.sql
 CPU:
 - Average load: 15-30%
 - Peak load: 80-90% (transcoding)
-- Temperature: 35-55°C normal
+- Temperature: 35-55Â°C normal
 
 Memory:
 - Used: ~10GB containers + 20GB cache
@@ -1229,51 +1229,51 @@ Estimated time: 8-12 hours
 I calculated the break-even point to see if this was actually worth the money compared to just paying for Google Drive, Dropbox, and Netflix. 
 
 **Investment:**
-- Hardware: ~€1,290
-- VPS/Domain (3 years): ~€216
-- **Total:** ~€1,500
+- Hardware: ~â‚¬1,290
+- VPS/Domain (3 years): ~â‚¬216
+- **Total:** ~â‚¬1,500
 
 **Operating Costs:**
-- Electricity: ~€75/year
-- VPS/Domain: ~€72/year
-- **Total:** ~€147/year
+- Electricity: ~â‚¬75/year
+- VPS/Domain: ~â‚¬72/year
+- **Total:** ~â‚¬147/year
 
 **SaaS replaced:**
-- Google, Dropbox, 1Password, Spotify, Netflix: ~€580/year
+- Google, Dropbox, 1Password, Spotify, Netflix: ~â‚¬580/year
 
-It takes about 3.5 years to "break even" financially. But honestly, the privacy and the stuff I learned are worth more than the €400 a year I'm saving.
+It takes about 3.5 years to "break even" financially. But honestly, the privacy and the stuff I learned are worth more than the â‚¬400 a year I'm saving.
 ```
 Year 1:
-- Investment:               -€1,506
-- Saved SaaS:               +€582
-- Operating:                -€147
-Net Year 1:                 -€1,071
+- Investment:               -â‚¬1,506
+- Saved SaaS:               +â‚¬582
+- Operating:                -â‚¬147
+Net Year 1:                 -â‚¬1,071
 
 Year 2:
-- Saved SaaS:               +€582
-- Operating:                -€147
-Net Year 2:                 +€435
-Cumulative:                 -€636
+- Saved SaaS:               +â‚¬582
+- Operating:                -â‚¬147
+Net Year 2:                 +â‚¬435
+Cumulative:                 -â‚¬636
 
 Year 3:
-- Saved SaaS:               +€582
-- Operating:                -€147
-Net Year 3:                 +€435
-Cumulative:                 -€201
+- Saved SaaS:               +â‚¬582
+- Operating:                -â‚¬147
+Net Year 3:                 +â‚¬435
+Cumulative:                 -â‚¬201
 
 Year 4:
-- Saved SaaS:               +€582
-- Operating:                -€147
-Net Year 4:                 +€435
-Cumulative:                 +€234 ✅
+- Saved SaaS:               +â‚¬582
+- Operating:                -â‚¬147
+Net Year 4:                 +â‚¬435
+Cumulative:                 +â‚¬234
 
 Break-even point: ~3.5 years
-ROI after 5 years: ~€1,400 profit
+ROI after 5 years: ~â‚¬1,400 profit
 ```
 
 ### TCO and final thoughts
 
-If you plan to run a lab for 5 years, the hardware amortizes pretty well. I'm looking at about €37/month all-in, which is still cheaper than the SaaS pile I had before. Plus, I have essentially unlimited storage and way more control.
+If you plan to run a lab for 5 years, the hardware amortizes pretty well. I'm looking at about â‚¬37/month all-in, which is still cheaper than the SaaS pile I had before. Plus, I have essentially unlimited storage and way more control.
 
 ---
 
@@ -1293,24 +1293,24 @@ If you plan to run a lab for 5 years, the hardware amortizes pretty well. I'm lo
 ### Would Do Differently
 
 **Hardware:**
-- ✅ Keep: Current CPU, RAM, storage approach
-- 🔄 Change: Start with more SATA ports for expansion
-- ➕ Add: UPS for power protection
+- âœ… Keep: Current CPU, RAM, storage approach
+- ðŸ”„ Change: Start with more SATA ports for expansion
+- âž• Add: UPS for power protection
 
 **Software:**
-- ✅ Keep: Docker-first approach, service selection
-- 🔄 Change: Implement monitoring from day one
-- ➕ Add: Centralized logging earlier
+- âœ… Keep: Docker-first approach, service selection
+- ðŸ”„ Change: Implement monitoring from day one
+- âž• Add: Centralized logging earlier
 
 **Network:**
-- ✅ Keep: Pangolin tunnel, network isolation
-- 🔄 Change: Plan reverse proxy before deployment
-- ➕ Add: VLAN segmentation for IoT devices
+- âœ… Keep: Pangolin tunnel, network isolation
+- ðŸ”„ Change: Plan reverse proxy before deployment
+- âž• Add: VLAN segmentation for IoT devices
 
 **Process:**
-- ✅ Keep: Documentation-first approach
-- 🔄 Change: Start with disaster recovery plan
-- ➕ Add: Regular security audits from start
+- âœ… Keep: Documentation-first approach
+- ðŸ”„ Change: Start with disaster recovery plan
+- âž• Add: Regular security audits from start
 
 ### Key Takeaways
 
@@ -1377,17 +1377,17 @@ I'm thinking about adding a second server for high availability eventually, mayb
 
 ```
 Site 1 (Primary - Germany):
-├─ K8s Cluster (3 nodes)
-├─ Storage (Ceph)
-└─ Database (Primary)
+â”œâ”€ K8s Cluster (3 nodes)
+â”œâ”€ Storage (Ceph)
+â””â”€ Database (Primary)
 
 Site 2 (DR - Netherlands):
-├─ K8s Cluster (3 nodes)
-├─ Storage (Ceph replica)
-└─ Database (Replica)
+â”œâ”€ K8s Cluster (3 nodes)
+â”œâ”€ Storage (Ceph replica)
+â””â”€ Database (Replica)
 
 Global Load Balancer:
-└─ GeoDNS routing
+â””â”€ GeoDNS routing
 ```
 
 **Enterprise Features:**
@@ -1401,12 +1401,12 @@ Global Load Balancer:
 
 ```
 10-person company:
-├─ 2x Sites                 €15,000
-├─ Annual operating:        €5,000
-├─ IT staff (part-time):    €20,000/year
-└─ Total Year 1:            €40,000
+â”œâ”€ 2x Sites                 â‚¬15,000
+â”œâ”€ Annual operating:        â‚¬5,000
+â”œâ”€ IT staff (part-time):    â‚¬20,000/year
+â””â”€ Total Year 1:            â‚¬40,000
 
-vs. Google Workspace:       €12,000/year
+vs. Google Workspace:       â‚¬12,000/year
 
 Break-even: ~4 years
 Benefit: Data sovereignty, compliance, customization
@@ -1416,15 +1416,15 @@ Benefit: Data sovereignty, compliance, customization
 
 | Scale | Approach | Cost/Year | Complexity |
 |-------|----------|-----------|------------|
-| **Personal** | Homelab (current) | €150 | Low |
-| **Small Team (5-10)** | Single server + backup | €500 | Low-Medium |
-| **SMB (10-50)** | HA cluster (2-3 nodes) | €2,000 | Medium |
-| **Enterprise (50-500)** | K8s cluster multi-site | €20,000+ | High |
-| **Large Enterprise (500+)** | Multi-datacenter K8s | €100,000+ | Very High |
+| **Personal** | Homelab (current) | â‚¬150 | Low |
+| **Small Team (5-10)** | Single server + backup | â‚¬500 | Low-Medium |
+| **SMB (10-50)** | HA cluster (2-3 nodes) | â‚¬2,000 | Medium |
+| **Enterprise (50-500)** | K8s cluster multi-site | â‚¬20,000+ | High |
+| **Large Enterprise (500+)** | Multi-datacenter K8s | â‚¬100,000+ | Very High |
 
 ### Skills Transferability
 
-**Homelab Skills → Enterprise Applications:**
+**Homelab Skills â†’ Enterprise Applications:**
 
 | Homelab Skill | Enterprise Equivalent |
 |---------------|----------------------|
@@ -1438,11 +1438,11 @@ Benefit: Data sovereignty, compliance, customization
 | Service deployment | CI/CD pipelines |
 
 **Demonstration Value:**
-- ✅ Shows end-to-end understanding
-- ✅ Proves hands-on experience
-- ✅ Demonstrates problem-solving
-- ✅ Indicates self-learning ability
-- ✅ Portfolio differentiation
+- Shows end-to-end understanding
+- Proves hands-on experience
+- Demonstrates problem-solving
+- Indicates self-learning ability
+- Portfolio differentiation
 
 ---
 
@@ -1451,34 +1451,34 @@ Benefit: Data sovereignty, compliance, customization
 ### Project Success Metrics
 
 **Technical Achievements:**
-- ✅ 40+ production services deployed
-- ✅ 90%+ uptime maintained
-- ✅ Zero data loss incidents
-- ✅ Professional external access (Pangolin)
-- ✅ Automated backup and monitoring
-- ✅ Security best practices implemented
+- 40+ production services deployed
+- 90%+ uptime maintained
+- Zero data loss incidents
+- Professional external access (Pangolin)
+- Automated backup and monitoring
+- Security best practices implemented
 
 **Financial Achievements:**
-- ✅ €1,506 initial investment
-- ✅ €582/year in SaaS costs eliminated
-- ✅ Break-even projected at 3.5 years
-- ✅ Positive ROI after 4 years
-- ✅ Unlimited storage vs. capacity-limited SaaS
+- â‚¬1,506 initial investment
+- â‚¬582/year in SaaS costs eliminated
+- Break-even projected at 3.5 years
+- Positive ROI after 4 years
+- Unlimited storage vs. capacity-limited SaaS
 
 **Learning Outcomes:**
-- ✅ Docker orchestration expertise
-- ✅ Linux system administration
-- ✅ Network architecture and security
-- ✅ Storage management (BTRFS, RAID)
-- ✅ VPS deployment and management
-- ✅ Infrastructure as Code practices
+- Docker orchestration expertise
+- Linux system administration
+- Network architecture and security
+- Storage management (BTRFS, RAID)
+- VPS deployment and management
+- Infrastructure as Code practices
 
 **Portfolio Value:**
-- ✅ Comprehensive technical documentation
-- ✅ Real-world production deployment
-- ✅ Scalability roadmap to enterprise
-- ✅ Demonstrates full-stack infrastructure skills
-- ✅ GitHub-ready sanitized configurations
+- Comprehensive technical documentation
+- Real-world production deployment
+- Scalability roadmap to enterprise
+- Demonstrates full-stack infrastructure skills
+- GitHub-ready sanitized configurations
 
 ### Next Steps
 
@@ -1526,10 +1526,10 @@ The architecture patterns, operational procedures, and technical decisions docum
 
 **Documentation Repository:** https://github.com/[username]/homelab-infrastructure
 
-**Technologies:** Docker · Linux · BTRFS · RAID5 · Pangolin · Traefik · Wireguard · CrowdSec · ZimaOS · 40+ Services
+**Technologies:** Docker Â· Linux Â· BTRFS Â· RAID5 Â· Pangolin Â· Traefik Â· Wireguard Â· CrowdSec Â· ZimaOS Â· 40+ Services
 
 **Timeline:** 6+ months from concept to production
 
-**Status:** ✅ Production-ready, actively maintained
+**Status:** Production-ready, actively maintained
 
 **License:** Documentation available for educational purposes

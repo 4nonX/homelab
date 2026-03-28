@@ -1,4 +1,4 @@
-# CrowdSec
+﻿# CrowdSec
 
 CrowdSec IDS/IPS runs on the VPS gateway alongside Traefik.
 

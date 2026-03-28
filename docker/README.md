@@ -1,4 +1,4 @@
-# docker/ - Legacy Source Directory
+﻿# docker/ - Legacy Source Directory
 
 > **Note:** This directory is preserved as the original source. All compose files have been
 > reorganised into the canonical structure at the repo root:

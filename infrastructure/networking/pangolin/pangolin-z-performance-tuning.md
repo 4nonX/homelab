@@ -1,4 +1,4 @@
-# Pangolin Performance Tuning Guide
+﻿# Pangolin Performance Tuning Guide
 
 > **Safe, proven optimizations for your Pangolin tunnel infrastructure**
 
@@ -276,7 +276,7 @@ sysctl net.ipv4.tcp_window_scaling
 
 ---
 
-## 🔧 Manual Optimizations
+## ðŸ”§ Manual Optimizations
 
 These require **testing and monitoring** specific to your environment.
 
@@ -307,7 +307,7 @@ sysctl net.ipv4.tcp_congestion_control
 
 ### Optional: BTRFS Mount Options
 
-**⚠️ Only if you understand BTRFS and have tested with your workload.**
+**âš ï¸ Only if you understand BTRFS and have tested with your workload.**
 
 **Current mount options:**
 ```bash
@@ -324,8 +324,8 @@ UUID=xxx /mnt/storage btrfs defaults,noatime,space_cache=v2 0 0
 - `space_cache=v2` - Faster free space calculations (v2 is newer, better)
 
 **DO NOT add:**
-- ❌ `compress` - Test separately, can hurt performance on already-compressed media
-- ❌ `autodefrag` - Can cause random I/O spikes, not needed for SSD/NVMe
+- âŒ `compress` - Test separately, can hurt performance on already-compressed media
+- âŒ `autodefrag` - Can cause random I/O spikes, not needed for SSD/NVMe
 
 **Test first:**
 ```bash
@@ -340,7 +340,7 @@ sudo mount -o remount,noatime,space_cache=v2 /mnt/storage
 
 ### Optional: Reduce Swappiness
 
-**⚠️ Only if you have at least 32GB RAM and monitor memory usage.**
+**âš ï¸ Only if you have at least 32GB RAM and monitor memory usage.**
 
 **Check current value:**
 ```bash
@@ -361,7 +361,7 @@ vm.swappiness = 10
 
 ---
 
-## 🤖 Safe Quick-Start Script
+## ðŸ¤– Safe Quick-Start Script
 
 This script applies **only the safest optimizations** automatically.
 
@@ -405,7 +405,7 @@ fi
 # Create backups
 echo "[1/4] Creating backups..."
 cp /etc/sysctl.conf /etc/sysctl.conf.backup.$(date +%Y%m%d_%H%M%S)
-echo -e "  ${GREEN}✓${NC} Backup created"
+echo -e "  ${GREEN}âœ“${NC} Backup created"
 
 # Network optimizations (safe, standard)
 echo "[2/4] Applying network optimizations..."
@@ -427,9 +427,9 @@ if sysctl net.ipv4.tcp_available_congestion_control 2>/dev/null | grep -q bbr; t
 net.ipv4.tcp_congestion_control = bbr
 net.core.default_qdisc = fq
 EOF
-    echo -e "  ${GREEN}✓${NC} Network tuning applied (with BBR)"
+    echo -e "  ${GREEN}âœ“${NC} Network tuning applied (with BBR)"
 else
-    echo -e "  ${GREEN}✓${NC} Network tuning applied (BBR not available)"
+    echo -e "  ${GREEN}âœ“${NC} Network tuning applied (BBR not available)"
 fi
 
 sysctl -p > /dev/null 2>&1
@@ -457,9 +457,9 @@ EOF
     systemctl daemon-reload
     systemctl enable nvme-scheduler.service > /dev/null 2>&1
     systemctl start nvme-scheduler.service
-    echo -e "  ${GREEN}✓${NC} NVMe scheduler optimized"
+    echo -e "  ${GREEN}âœ“${NC} NVMe scheduler optimized"
 else
-    echo -e "  ${YELLOW}⚠${NC} No NVMe found, skipping"
+    echo -e "  ${YELLOW}âš ${NC} No NVMe found, skipping"
 fi
 
 # Create verification script
@@ -486,17 +486,17 @@ chmod +x /usr/local/bin/verify-performance.sh
 
 echo ""
 echo "=========================================="
-echo -e "${GREEN}✅ Optimization Complete!${NC}"
+echo -e "${GREEN}âœ… Optimization Complete!${NC}"
 echo "=========================================="
 echo ""
 echo "Applied optimizations:"
-echo "  • TCP window scaling"
-echo "  • Network buffer sizes"
-echo "  • Connection timeouts"
+echo "  â€¢ TCP window scaling"
+echo "  â€¢ Network buffer sizes"
+echo "  â€¢ Connection timeouts"
 if sysctl net.ipv4.tcp_congestion_control 2>/dev/null | grep -q bbr; then
-    echo "  • BBR congestion control"
+    echo "  â€¢ BBR congestion control"
 fi
-[ -e /sys/block/nvme0n1/queue/scheduler ] && echo "  • NVMe I/O scheduler"
+[ -e /sys/block/nvme0n1/queue/scheduler ] && echo "  â€¢ NVMe I/O scheduler"
 echo ""
 echo "Next steps:"
 echo "  1. Verify: sudo verify-performance.sh"
@@ -507,10 +507,10 @@ echo ""
 echo "Backup: /etc/sysctl.conf.backup.$(date +%Y%m%d_%H%M%S)"
 echo ""
 echo -e "${YELLOW}NOTE: This script did NOT:${NC}"
-echo "  • Disable swap"
-echo "  • Change DNS settings"
-echo "  • Restart Docker"
-echo "  • Modify Wireguard configs"
+echo "  â€¢ Disable swap"
+echo "  â€¢ Change DNS settings"
+echo "  â€¢ Restart Docker"
+echo "  â€¢ Modify Wireguard configs"
 echo ""
 echo "Apply those manually if needed (see guide)."
 echo ""
@@ -631,19 +631,19 @@ sudo reboot
 
 **This guide intentionally avoids:**
 
-- ❌ Disabling swap (keep as safety net)
-- ❌ Changing DNS configuration
-- ❌ Restarting Docker automatically
-- ❌ Modifying systemd-resolved
-- ❌ Aggressive PostgreSQL tuning
-- ❌ Enabling compression without testing
-- ❌ Changing Wireguard routing (AllowedIPs)
+- âŒ Disabling swap (keep as safety net)
+- âŒ Changing DNS configuration
+- âŒ Restarting Docker automatically
+- âŒ Modifying systemd-resolved
+- âŒ Aggressive PostgreSQL tuning
+- âŒ Enabling compression without testing
+- âŒ Changing Wireguard routing (AllowedIPs)
 
 **Why?** These changes can break your system and require extensive testing specific to your workload.
 
 ---
 
-## ✅ Safety Checklist
+## âœ… Safety Checklist
 
 Before applying any optimization:
 

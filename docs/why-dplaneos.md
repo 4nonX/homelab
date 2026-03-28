@@ -1,6 +1,6 @@
-# Why D-PlaneOS: From ZimaOS to a Custom NAS Layer
+﻿# Why DPlaneOS: From ZimaOS to a Custom NAS Layer
 
-> [D-PlaneOS](https://github.com/4nonX/D-PlaneOS) is a self-developed NAS management layer
+> [DPlaneOS](https://github.com/4nonX/DPlaneOS) is a self-developed NAS management layer
 > built on Debian + ZFS + Docker. This document explains what drove the switch from ZimaOS
 > and why none of the existing options were the right fit.
 
@@ -70,20 +70,20 @@ optimised for NAS workloads, not for running 40+ Docker Compose stacks. The
 operational model pushes toward Kubernetes for anything beyond simple apps, which
 adds significant complexity for no benefit in a homelab context.
 
-**Unraid** — Good Docker UX, good community, nice UI. But it requires a paid license
+**Unraid** â€” Good Docker UX, good community, nice UI. But it requires a paid license
 ($59-$129), the license is bound to a USB key (the USB becomes a single point of
 failure), and its parity storage implementation is slower and less reliable than
 proper RAID with a battle-tested filesystem underneath it.
 
-**HexOS / CasaOS standalone** — Similar ceiling to ZimaOS. Docker-first and easy to
+**HexOS / CasaOS standalone** â€” Similar ceiling to ZimaOS. Docker-first and easy to
 operate, but the same absence of atomic system management and no serious ZFS story.
 
-**NixOS alone** — NixOS solves the OS-layer problems completely: declarative
+**NixOS alone** â€” NixOS solves the OS-layer problems completely: declarative
 configuration, atomic rollbacks, reproducible builds, no configuration drift. But
 it's an OS, not a NAS management layer. It doesn't provide ZFS pool management,
 SMB/NFS share provisioning, a container orchestration UI, or user management out of
 the box. Building all of that on top of raw NixOS means building a management layer
-anyway, which is exactly what D-PlaneOS is.
+anyway, which is exactly what DPlaneOS is.
 
 The gap that existed: a system with ZFS-grade storage management, Docker-native
 container orchestration, and a proper management UI, without Kubernetes complexity,
@@ -91,9 +91,9 @@ without a paid license, and without being coupled to a vendor's opinionated app 
 
 ---
 
-## What D-PlaneOS is
+## What DPlaneOS is
 
-[D-PlaneOS](https://github.com/4nonX/D-PlaneOS) fills that gap. It's a ZFS-first NAS management system built as a Go daemon (`dplaned`). It replaces the scattered management tools of the past with a unified control plane.
+[DPlaneOS](https://github.com/4nonX/DPlaneOS) fills that gap. It's a ZFS-first NAS management system built as a Go daemon (`dplaned`). It replaces the scattered management tools of the past with a unified control plane.
 
 The underlying stack is **NixOS + ZFS + Docker Engine**:
 - **Storage**: Native ZFS pool and dataset management.
@@ -103,9 +103,9 @@ The underlying stack is **NixOS + ZFS + Docker Engine**:
 
 I wanted the simplicity of CasaOS with the storage capability of TrueNAS, built on a declarative OS. Pure Docker Compose, ZFS, and NixOS as the reproducible base.
 
-The NixOS migration this homelab is currently executing will eventually run D-PlaneOS
-on a NixOS base rather than Debian — combining NixOS's declarative system management
-with D-PlaneOS's NAS management layer and ZFS. The homelab serves as the production
+The NixOS migration this homelab is currently executing will eventually run DPlaneOS
+on a NixOS base rather than Debian â€” combining NixOS's declarative system management
+with DPlaneOS's NAS management layer and ZFS. The homelab serves as the production
 testing environment for that combination.
 
 ---
@@ -113,10 +113,10 @@ testing environment for that combination.
 ## The storage migration in brief
 
 **Current:** BTRFS on mdadm RAID5 (inherited from ZimaOS, unacceptable long-term)  
-**Target:** ZFS RAID-Z2, managed through D-PlaneOS
+**Target:** ZFS RAID-Z2, managed through DPlaneOS
 
 ZFS RAID-Z2 provides dual-disk fault tolerance, eliminates the write-hole vulnerability,
-and integrates directly with D-PlaneOS's pool and dataset management. `zfs send` makes
+and integrates directly with DPlaneOS's pool and dataset management. `zfs send` makes
 replication and off-site backup straightforward in a way that BTRFS never quite delivered
 on in practice.
 
