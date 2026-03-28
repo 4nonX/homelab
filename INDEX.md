@@ -41,7 +41,7 @@ Complete map of every file in this repository.
 | File | Description |
 |---|---|
 | [docs/network-security.md](docs/network-security.md) | Network topology, security layers, firewall configuration |
-| [docs/network-remote-access.md](docs/network-remote-access.md) | Remote access strategy — Pangolin vs Tailscale vs ZeroTier, VPN architecture |
+| [docs/network-remote-access.md](docs/network-remote-access.md) | Remote access strategy - Pangolin vs Tailscale vs ZeroTier, VPN architecture |
 | [docs/pangolin-infrastructure.md](docs/pangolin-infrastructure.md) | Pangolin architecture deep-dive - components, security model, cost analysis |
 | [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md) | Step-by-step VPS setup - DNS, server deployment, client installation, hardening |
 | [docs/pangolin-configurations.md](docs/pangolin-configurations.md) | Sanitised config reference - Docker Compose, server config, client setup |
