@@ -19,9 +19,9 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
-| [docs/why-d-planeos.md](docs/why-d-planeos.md) | Why ZimaOS was replaced — limitations, alternatives considered, what D-PlaneOS solves |
+| [docs/why-d-planeos.md](docs/why-d-planeos.md) | Why ZimaOS was replaced - limitations, alternatives considered, what D-PlaneOS solves |
 | [docs/NIXOS-MIGRATION.md](docs/NIXOS-MIGRATION.md) | Full migration plan: ZimaOS → NixOS + D-PlaneOS, phased approach, risk assessment |
-| [docs/homelab-complete-journey.md](docs/homelab-complete-journey.md) | Full build narrative — hardware, OS selection, storage, networking, lessons learned |
+| [docs/homelab-complete-journey.md](docs/homelab-complete-journey.md) | Full build narrative - hardware, OS selection, storage, networking, lessons learned |
 
 ### Hardware & infrastructure
 
@@ -34,7 +34,7 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
-| [infrastructure/storage/README.md](infrastructure/storage/README.md) | Storage architecture — ZFS RAID-Z2 target, BTRFS migration, dataset layout, why ZFS |
+| [infrastructure/storage/README.md](infrastructure/storage/README.md) | Storage architecture - ZFS RAID-Z2 target, BTRFS migration, dataset layout, why ZFS |
 
 ### Networking & external access
 
@@ -42,13 +42,13 @@ Complete map of every file in this repository.
 |---|---|
 | [docs/network-security.md](docs/network-security.md) | Network topology, security layers, firewall configuration |
 | [docs/network-remote-access.md](docs/network-remote-access.md) | Remote access strategy — Pangolin vs Tailscale vs ZeroTier, VPN architecture |
-| [docs/pangolin-infrastructure.md](docs/pangolin-infrastructure.md) | Pangolin architecture deep-dive — components, security model, cost analysis |
-| [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md) | Step-by-step VPS setup — DNS, server deployment, client installation, hardening |
-| [docs/pangolin-configurations.md](docs/pangolin-configurations.md) | Sanitised config reference — Docker Compose, server config, client setup |
-| [docs/pangolin-vps-relay-guide.md](docs/pangolin-vps-relay-guide.md) | Raspberry Pi as Pangolin brain — static IP, installation, VPS relay, live cutover |
+| [docs/pangolin-infrastructure.md](docs/pangolin-infrastructure.md) | Pangolin architecture deep-dive - components, security model, cost analysis |
+| [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md) | Step-by-step VPS setup - DNS, server deployment, client installation, hardening |
+| [docs/pangolin-configurations.md](docs/pangolin-configurations.md) | Sanitised config reference - Docker Compose, server config, client setup |
+| [docs/pangolin-vps-relay-guide.md](docs/pangolin-vps-relay-guide.md) | Raspberry Pi as Pangolin brain - static IP, installation, VPS relay, live cutover |
 | [docs/pangolin-traefikdashboard-guide.md](docs/pangolin-traefikdashboard-guide.md) | Traefik dashboard setup behind Pangolin |
 | [docs/pangolin-upgrade-guide.md](docs/pangolin-upgrade-guide.md) | Version upgrade procedures, rollback, v1.12.2 → v1.14.1 migration |
-| [docs/pangolin-z-performance-tuning.md](docs/pangolin-z-performance-tuning.md) | Latency tuning — WireGuard MTU, keepalive, Traefik timeouts, sysctl |
+| [docs/pangolin-z-performance-tuning.md](docs/pangolin-z-performance-tuning.md) | Latency tuning - WireGuard MTU, keepalive, Traefik timeouts, sysctl |
 
 ### Services
 
@@ -56,7 +56,7 @@ Complete map of every file in this repository.
 |---|---|
 | [docs/media-stack.md](docs/media-stack.md) | Arr suite integration, VPN-gated downloads, quality profiles |
 | [docs/productivity-services.md](docs/productivity-services.md) | Nextcloud, Immich, Paperless-NGX, Vaultwarden setup notes |
-| [docs/nextcloud-optimization-guide.md](docs/nextcloud-optimization-guide.md) | Nextcloud performance — PostgreSQL tuning, Redis, Collabora, Talk HPB, troubleshooting |
+| [docs/nextcloud-optimization-guide.md](docs/nextcloud-optimization-guide.md) | Nextcloud performance - PostgreSQL tuning, Redis, Collabora, Talk HPB, troubleshooting |
 | [docs/homelab-dashboard-guide.md](docs/homelab-dashboard-guide.md) | Homelab dashboard setup and usage |
 | [docs/DOCKER-SERVICES.md](docs/DOCKER-SERVICES.md) | Full service inventory |
 
@@ -70,7 +70,7 @@ Complete map of every file in this repository.
 
 ---
 
-## Infrastructure — `infrastructure/`
+## Infrastructure - `infrastructure/`
 
 ### Networking
 
@@ -95,7 +95,7 @@ Complete map of every file in this repository.
 |---|---|
 | [infrastructure/monitoring/glances-dashboard.yml](infrastructure/monitoring/glances-dashboard.yml) | Glances system monitor + nginx homelab dashboard |
 | [infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) | Scrutiny — S.M.A.R.T disk health monitoring |
-| [infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) | Dockpeek — container health dashboard |
+| [infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) | Dockpeek - container health dashboard |
 
 ### Storage
 
@@ -105,49 +105,49 @@ Complete map of every file in this repository.
 
 ---
 
-## Services — `services/`
+## Services - `services/`
 
 ### Media
 
 | File | Description |
 |---|---|
 | [services/media/arr-suite.yml](services/media/arr-suite.yml) | Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun VPN |
-| [services/media/immich/immich.yml](services/media/immich/immich.yml) | Immich — Google Photos replacement |
-| [services/media/audiobookshelf/audiobookshelf.yml](services/media/audiobookshelf/audiobookshelf.yml) | Audiobookshelf — audiobooks + podcasts |
-| [services/media/navidrome/navidrome.yml](services/media/navidrome/navidrome.yml) | Navidrome — music streaming (Subsonic API) |
-| [services/media/swingmusic/swingmusic.yml](services/media/swingmusic/swingmusic.yml) | SwingMusic — self-hosted music player |
-| [services/media/pinchflat/pinchflat.yml](services/media/pinchflat/pinchflat.yml) | Pinchflat — YouTube archiver |
-| [services/media/stremio/stremio.yml](services/media/stremio/stremio.yml) | Stremio — streaming add-on server |
+| [services/media/immich/immich.yml](services/media/immich/immich.yml) | Immich - Google Photos replacement |
+| [services/media/audiobookshelf/audiobookshelf.yml](services/media/audiobookshelf/audiobookshelf.yml) | Audiobookshelf - audiobooks + podcasts |
+| [services/media/navidrome/navidrome.yml](services/media/navidrome/navidrome.yml) | Navidrome - music streaming (Subsonic API) |
+| [services/media/swingmusic/swingmusic.yml](services/media/swingmusic/swingmusic.yml) | SwingMusic - self-hosted music player |
+| [services/media/pinchflat/pinchflat.yml](services/media/pinchflat/pinchflat.yml) | Pinchflat - YouTube archiver |
+| [services/media/stremio/stremio.yml](services/media/stremio/stremio.yml) | Stremio - streaming add-on server |
 
 ### Productivity
 
 | File | Description |
 |---|---|
 | [services/productivity/nextcloud.yml](services/productivity/nextcloud.yml) | Nextcloud, Collabora Online, Talk HPB, Redis, PostgreSQL |
-| [services/productivity/big-bear-paperless-ngx/paperless.yml](services/productivity/big-bear-paperless-ngx/paperless.yml) | Paperless-NGX — document OCR and archive |
-| [services/productivity/big-bear-joplin/joplin.yml](services/productivity/big-bear-joplin/joplin.yml) | Joplin Server — note sync backend |
-| [services/productivity/memos/memos.yml](services/productivity/memos/memos.yml) | Memos — lightweight notes and journal |
-| [services/productivity/big-bear-linkwarden/linkwarden.yml](services/productivity/big-bear-linkwarden/linkwarden.yml) | Linkwarden — bookmark archiver with full-page capture |
-| [services/productivity/big-bear-wallos/wallos.yml](services/productivity/big-bear-wallos/wallos.yml) | Wallos — subscription and expense tracker |
+| [services/productivity/big-bear-paperless-ngx/paperless.yml](services/productivity/big-bear-paperless-ngx/paperless.yml) | Paperless-NGX - document OCR and archive |
+| [services/productivity/big-bear-joplin/joplin.yml](services/productivity/big-bear-joplin/joplin.yml) | Joplin Server - note sync backend |
+| [services/productivity/memos/memos.yml](services/productivity/memos/memos.yml) | Memos - lightweight notes and journal |
+| [services/productivity/big-bear-linkwarden/linkwarden.yml](services/productivity/big-bear-linkwarden/linkwarden.yml) | Linkwarden - bookmark archiver with full-page capture |
+| [services/productivity/big-bear-wallos/wallos.yml](services/productivity/big-bear-wallos/wallos.yml) | Wallos - subscription and expense tracker |
 
 ### Management
 
 | File | Description |
 |---|---|
-| [services/management/syncthing/syncthing.yml](services/management/syncthing/syncthing.yml) | Syncthing — peer-to-peer file sync |
-| [services/management/searxng/searxng.yml](services/management/searxng/searxng.yml) | SearXNG — self-hosted metasearch engine |
-| [services/management/stacks.yml](services/management/stacks.yml) | Stacks — compose stack management |
+| [services/management/syncthing/syncthing.yml](services/management/syncthing/syncthing.yml) | Syncthing - peer-to-peer file sync |
+| [services/management/searxng/searxng.yml](services/management/searxng/searxng.yml) | SearXNG - self-hosted metasearch engine |
+| [services/management/stacks.yml](services/management/stacks.yml) | Stacks - compose stack management |
 
 ### Development
 
 | File | Description |
 |---|---|
 | [services/development/d-planeos-website.yml](services/development/d-planeos-website.yml) | D-PlaneOS project website |
-| [services/development/aptifolio.yml](services/development/aptifolio.yml) | Aptifolio — Next.js frontend + FastAPI backend + PDF resume parser |
+| [services/development/aptifolio.yml](services/development/aptifolio.yml) | Aptifolio - Next.js frontend + FastAPI backend + PDF resume parser |
 
 ---
 
-## Scripts — `scripts/`
+## Scripts - `scripts/`
 
 | File | Description |
 |---|---|
