@@ -13,7 +13,7 @@ Complete map of every file in this repository.
 
 ---
 
-## Documentation — `docs/`
+## Documentation - `docs/`
 
 ### Platform & decisions
 
