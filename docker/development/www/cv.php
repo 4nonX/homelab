@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="de" x-data="{ lang: 'de' }">
 <head>
     <meta charset="UTF-8">
@@ -139,9 +139,9 @@
                             <a href="https://github.com/dandressen" class="text-[9px] font-bold text-blue-500 hover:underline underline-offset-2 tracking-tighter uppercase">GitHub Repo →</a>
                         </div>
                         <div class="pt-4 border-t border-white/5">
-                            <h4 class="font-bold text-sm uppercase mb-2">D-PlaneOS</h4>
+                            <h4 class="font-bold text-sm uppercase mb-2">DPlaneOS</h4>
                             <p class="text-[10px] text-gray-400 mb-2" x-text="lang === 'de' ? 'Docker-natives NAS-Betriebssystem auf Basis von ZFS und Debian.' : 'Docker-native NAS operating system based on ZFS and Debian.'"></p>
-                            <a href="https://github.com/dandressen/D-PlaneOS" class="text-[9px] font-bold text-blue-500 hover:underline underline-offset-2 tracking-tighter uppercase">GitHub Repo →</a>
+                            <a href="https://github.com/dandressen/DPlaneOS" class="text-[9px] font-bold text-blue-500 hover:underline underline-offset-2 tracking-tighter uppercase">GitHub Repo →</a>
                         </div>
                     </div>
                 </section>
@@ -186,3 +186,4 @@
 
 </body>
 </html>
+
