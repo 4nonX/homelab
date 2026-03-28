@@ -1,4 +1,4 @@
-﻿# Pangolin Stack Migration: v1.14.1
+# Pangolin Stack Migration: v1.14.1
 
 This document details the migration process and network optimization for the homelab tunnel infrastructure.
 
@@ -10,12 +10,12 @@ This document details the migration process and network optimization for the hom
 
 | Component | Repository | Version | Status | Link |
 |-----------|------------|---------|--------|------|
-| **Server** | `fosrl/pangolin` | 1.14.1 | ðŸŸ¢ Active | [GitHub](https://github.com/fosrl/pangolin) |
-| **Relay** | `fosrl/gerbil` | 1.1.1 | ðŸŸ¢ Active | [GitHub](https://github.com/fosrl/gerbil) |
-| **Middleware** | `fosrl/badger` | 1.3.1 | ðŸŸ¢ Active | [GitHub](https://github.com/fosrl/badger) |
-| **Reverse Proxy** | `traefik/traefik` | 2.10 | ðŸŸ¢ Active | [GitHub](https://github.com/traefik/traefik) |
-| **Security** | `crowdsecurity/crowdsec` | latest | ðŸŸ¢ Active | [GitHub](https://github.com/crowdsecurity/crowdsec) |
-| **Client** | `fosrl/newt` | 1.8.1 | ðŸŸ¢ Active | [GitHub](https://github.com/fosrl/newt) |
+| **Server** | `fosrl/pangolin` | 1.14.1 | 🟢 Active | [GitHub](https://github.com/fosrl/pangolin) |
+| **Relay** | `fosrl/gerbil` | 1.1.1 | 🟢 Active | [GitHub](https://github.com/fosrl/gerbil) |
+| **Middleware** | `fosrl/badger` | 1.3.1 | 🟢 Active | [GitHub](https://github.com/fosrl/badger) |
+| **Reverse Proxy** | `traefik/traefik` | 2.10 | 🟢 Active | [GitHub](https://github.com/traefik/traefik) |
+| **Security** | `crowdsecurity/crowdsec` | latest | 🟢 Active | [GitHub](https://github.com/crowdsecurity/crowdsec) |
+| **Client** | `fosrl/newt` | 1.8.1 | 🟢 Active | [GitHub](https://github.com/fosrl/newt) |
 
 ### Component Roles
 
@@ -45,14 +45,14 @@ This section covers specific considerations when upgrading from v1.12.2 to v1.14
 
 ### What Changed Between Versions
 
-**v1.12.2 â†’ v1.14.0:**
+**v1.12.2 → v1.14.0:**
 -  New WireGuard engine with improved performance
 -  Enhanced WebSocket Secure (WSS) handling
 -  Better connection metrics and monitoring
 -  Critical bug fixes for edge cases
 -  Optimized packet routing in Gerbil relay
 
-**v1.14.0 â†’ v1.14.1:**
+**v1.14.0 → v1.14.1:**
 -  Hotfix for reconnection logic
 -  Minor performance improvements
 -  Reduced memory footprint
@@ -62,11 +62,11 @@ This section covers specific considerations when upgrading from v1.12.2 to v1.14
 
 **No** - This is a **minor version update** (v1.14.x), not a major version change:
 
-* âœ… **Database schema unchanged** - No migration required
-* âœ… **Config format compatible** - v1.12.2 configs work with v1.14.1
-* âœ… **API backward compatible** - No breaking API changes
-* âœ… **Protocol compatible** - Same WireGuard handshake
-* âš ï¸ **MTU tuning recommended** - New engine performs better with optimized MTU
+* ✅ **Database schema unchanged** - No migration required
+* ✅ **Config format compatible** - v1.12.2 configs work with v1.14.1
+* ✅ **API backward compatible** - No breaking API changes
+* ✅ **Protocol compatible** - Same WireGuard handshake
+* ⚠️ **MTU tuning recommended** - New engine performs better with optimized MTU
 
 ### Key Differences from v1.12.2
 
@@ -84,15 +84,15 @@ This section covers specific considerations when upgrading from v1.12.2 to v1.14
 
 **Mandatory:**
 
-1. âœ… **Update MTU in client config** - Set to 1280 to prevent fragmentation
-2. âœ… **Update server image** - Pull v1.14.1 from Docker Hub
-3. âœ… **Update client binary** - Download Newt v1.8.1
+1. ✅ **Update MTU in client config** - Set to 1280 to prevent fragmentation
+2. ✅ **Update server image** - Pull v1.14.1 from Docker Hub
+3. ✅ **Update client binary** - Download Newt v1.8.1
 
 **Optional but Recommended:**
 
-4. âš ï¸ **Adjust keepAlive** - Change from 30s to 25s for better stability
-5. âš ï¸ **Enable enhanced monitoring** - New metrics available in v1.14.1
-6. âš ï¸ **Review security headers** - New defaults may differ
+4. ⚠️ **Adjust keepAlive** - Change from 30s to 25s for better stability
+5. ⚠️ **Enable enhanced monitoring** - New metrics available in v1.14.1
+6. ⚠️ **Review security headers** - New defaults may differ
 
 ### Configuration Compatibility
 
@@ -122,7 +122,7 @@ Without MTU and keepAlive settings, you'll use defaults that may not be optimal:
 
 ### Database Migration Notes
 
-**Good news:** No database migration required for v1.12.2 â†’ v1.14.1!
+**Good news:** No database migration required for v1.12.2 → v1.14.1!
 
 ```bash
 # Check current database schema
@@ -135,10 +135,10 @@ docker compose logs pangolin | grep "schema version"
 ```
 
 However, the upgrade will:
-- âœ… Add new indexes for better performance
-- âœ… Create new monitoring tables (non-breaking)
-- âœ… Preserve all existing data
-- âœ… No downtime for schema changes
+- ✅ Add new indexes for better performance
+- ✅ Create new monitoring tables (non-breaking)
+- ✅ Preserve all existing data
+- ✅ No downtime for schema changes
 
 ### Upgrade Path Strategy
 
@@ -152,34 +152,34 @@ docker compose up -d
 ```
 
 **Pros:**
-- âœ… Fastest method
-- âœ… Only one downtime window
-- âœ… All improvements at once
+- ✅ Fastest method
+- ✅ Only one downtime window
+- ✅ All improvements at once
 
 **Cons:**
-- âš ï¸ Larger version jump (troubleshooting harder if issues)
-- âš ï¸ Multiple changes at once
+- ⚠️ Larger version jump (troubleshooting harder if issues)
+- ⚠️ Multiple changes at once
 
 #### Approach 2: Staged Upgrade
 ```bash
-# Step 1: v1.12.2 â†’ v1.14.0
+# Step 1: v1.12.2 → v1.14.0
 docker compose pull fosrl/pangolin:1.14.0
 docker compose up -d
 # Test and verify
 sleep 300
 
-# Step 2: v1.14.0 â†’ v1.14.1  
+# Step 2: v1.14.0 → v1.14.1  
 docker compose pull fosrl/pangolin:1.14.1
 docker compose up -d
 ```
 
 **Pros:**
-- âœ… Easier to identify which version caused issues
-- âœ… More conservative approach
+- ✅ Easier to identify which version caused issues
+- ✅ More conservative approach
 
 **Cons:**
-- âš ï¸ Two downtime windows
-- âš ï¸ Takes longer overall
+- ⚠️ Two downtime windows
+- ⚠️ Takes longer overall
 
 **Recommendation:** Use **Approach 1** (direct upgrade) unless you have specific concerns.
 
@@ -203,12 +203,12 @@ These bugs from v1.12.2 are resolved in v1.14.1:
 
 | Metric | v1.12.2 | v1.14.1 | Change |
 |--------|---------|---------|--------|
-| **Latency** | 15-20ms | 10-15ms | â†“ 33% |
-| **Throughput** | 500-600 Mbps | 700-900 Mbps | â†‘ 40% |
-| **Memory Usage** | 150MB avg | 120MB avg | â†“ 20% |
-| **CPU Usage** | 5-8% | 3-5% | â†“ 40% |
-| **Reconnect Time** | 8-12s | 2-4s | â†“ 70% |
-| **Packet Loss** | 0.5-1% | 0.1-0.2% | â†“ 80% |
+| **Latency** | 15-20ms | 10-15ms | ↓ 33% |
+| **Throughput** | 500-600 Mbps | 700-900 Mbps | ↑ 40% |
+| **Memory Usage** | 150MB avg | 120MB avg | ↓ 20% |
+| **CPU Usage** | 5-8% | 3-5% | ↓ 40% |
+| **Reconnect Time** | 8-12s | 2-4s | ↓ 70% |
+| **Packet Loss** | 0.5-1% | 0.1-0.2% | ↓ 80% |
 
 ### Client Update Importance
 
@@ -218,22 +218,22 @@ These bugs from v1.12.2 are resolved in v1.14.1:
 
 | Scenario | Result |
 |----------|--------|
-| **v1.12.2 server + v1.7.x client** | âœ… Works fine (old setup) |
-| **v1.14.1 server + v1.7.x client** | âš ï¸ Works but misses optimizations |
-| **v1.14.1 server + v1.8.1 client** | âœ… Full performance (recommended) |
+| **v1.12.2 server + v1.7.x client** | ✅ Works fine (old setup) |
+| **v1.14.1 server + v1.7.x client** | ⚠️ Works but misses optimizations |
+| **v1.14.1 server + v1.8.1 client** | ✅ Full performance (recommended) |
 
 **Missing out without client update:**
-- âŒ No MTU optimization â†’ slower speeds
-- âŒ Old reconnection logic â†’ longer recovery
-- âŒ Legacy keepalive â†’ less stable
-- âŒ Missing new metrics â†’ less visibility
+- ❌ No MTU optimization → slower speeds
+- ❌ Old reconnection logic → longer recovery
+- ❌ Legacy keepalive → less stable
+- ❌ Missing new metrics → less visibility
 
-### Rollback Considerations (v1.14.1 â†’ v1.12.2)
+### Rollback Considerations (v1.14.1 → v1.12.2)
 
 **Easy rollback because:**
-- âœ… No database schema changes
-- âœ… Config format unchanged
-- âœ… Quick version swap
+- ✅ No database schema changes
+- ✅ Config format unchanged
+- ✅ Quick version swap
 
 **Rollback procedure:**
 
@@ -256,14 +256,14 @@ sudo systemctl start newt
 ```
 
 **When to rollback:**
-- ðŸ”´ New performance issues
-- ðŸ”´ Client compatibility problems  
-- ðŸ”´ Unexpected behavior
-- ðŸ”´ Security concerns
+- 🔴 New performance issues
+- 🔴 Client compatibility problems  
+- 🔴 Unexpected behavior
+- 🔴 Security concerns
 
 **Rollback window:** Can rollback anytime (no schema migration lock-in)
 
-### Testing Checklist for v1.12.2 â†’ v1.14.1
+### Testing Checklist for v1.12.2 → v1.14.1
 
 Before declaring upgrade successful:
 
@@ -315,7 +315,7 @@ Before declaring upgrade successful:
    docker compose logs pangolin | grep -i "warn\|error"
    ```
 
-### Common Migration Issues (v1.12.2 â†’ v1.14.1)
+### Common Migration Issues (v1.12.2 → v1.14.1)
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
@@ -329,14 +329,14 @@ Before declaring upgrade successful:
 
 **Compelling reasons:**
 
-1. âœ… **33% lower latency** - Faster response times
-2. âœ… **40% higher throughput** - Better transfer speeds
-3. âœ… **80% less packet loss** - More reliable connections
-4. âœ… **70% faster reconnects** - Quicker recovery
-5. âœ… **20% less memory** - More efficient resource usage
-6. âœ… **Critical bug fixes** - Resolves known issues
-7. âœ… **Better monitoring** - More visibility into tunnel health
-8. âœ… **Easy rollback** - Can revert if needed
+1. ✅ **33% lower latency** - Faster response times
+2. ✅ **40% higher throughput** - Better transfer speeds
+3. ✅ **80% less packet loss** - More reliable connections
+4. ✅ **70% faster reconnects** - Quicker recovery
+5. ✅ **20% less memory** - More efficient resource usage
+6. ✅ **Critical bug fixes** - Resolves known issues
+7. ✅ **Better monitoring** - More visibility into tunnel health
+8. ✅ **Easy rollback** - Can revert if needed
 
 **Bottom line:** This is a **low-risk, high-reward upgrade** with significant performance and stability improvements.
 
@@ -422,17 +422,17 @@ services:
 
 ## Verification & Validation
 
-> **â„¹ï¸ NOTE**  
+> **ℹ️ NOTE**  
 > Migration from v1.12.2 to v1.14.1 does NOT involve schema changes. This is a performance and stability update with backward-compatible database schema.
 
 ### Post-Migration Checks
 
 **Verify the following:**
 
-* âœ… **Handshake:** Established via WebSocket Secure (WSS)
-* âœ… **MTU:** Optimized at 1280 for Zero-Fragmentation
-* âœ… **Endpoint:** Client connects to correct server
-* âœ… **Services:** All exposed resources accessible
+* ✅ **Handshake:** Established via WebSocket Secure (WSS)
+* ✅ **MTU:** Optimized at 1280 for Zero-Fragmentation
+* ✅ **Endpoint:** Client connects to correct server
+* ✅ **Services:** All exposed resources accessible
 
 **Check logs:**
 
@@ -456,11 +456,11 @@ sudo journalctl -u newt -f
 
 | Phase | Duration | Status |
 |-------|----------|--------|
-| **Backup** | 5 min | âœ… Complete |
-| **Server Update** | 10 min | âœ… Complete |
-| **Client Update** | 5 min | âœ… Complete |
-| **Verification** | 10 min | âœ… Complete |
-| **Total** | ~30 min | âœ… Complete |
+| **Backup** | 5 min | ✅ Complete |
+| **Server Update** | 10 min | ✅ Complete |
+| **Client Update** | 5 min | ✅ Complete |
+| **Verification** | 10 min | ✅ Complete |
+| **Total** | ~30 min | ✅ Complete |
 
 ---
 
@@ -545,35 +545,35 @@ Major version updates typically include breaking changes that require manual int
 
 **Common breaking changes:**
 
-* ðŸ”´ **API Changes** - Endpoints, authentication methods, or request formats modified
-* ðŸ”´ **Database Schema** - Non-backward compatible schema migrations
-* ðŸ”´ **Configuration Format** - New or restructured config file format
-* ðŸ”´ **Protocol Changes** - WireGuard handshake or tunnel protocol updates
-* ðŸ”´ **Component Compatibility** - Server/relay/client version requirements
-* ðŸ”´ **Deprecated Features** - Previously available features removed
+* 🔴 **API Changes** - Endpoints, authentication methods, or request formats modified
+* 🔴 **Database Schema** - Non-backward compatible schema migrations
+* 🔴 **Configuration Format** - New or restructured config file format
+* 🔴 **Protocol Changes** - WireGuard handshake or tunnel protocol updates
+* 🔴 **Component Compatibility** - Server/relay/client version requirements
+* 🔴 **Deprecated Features** - Previously available features removed
 
 ### Pre-Upgrade Checklist
 
 **Before attempting a major version upgrade:**
 
-1. âœ… **Read Release Notes** - Review ALL breaking changes documented
-2. âœ… **Check Compatibility Matrix** - Verify server/relay/client version requirements
-3. âœ… **Full System Backup** - Not just configs, include database dumps
-4. âœ… **Test Environment** - Set up staging VPS to test upgrade first
-5. âœ… **Maintenance Window** - Schedule downtime during low-usage period
-6. âœ… **Rollback Plan** - Document and test rollback procedure
-7. âœ… **Client Preparation** - Ensure all clients can be updated simultaneously
-8. âœ… **Monitor Setup** - Have logging/monitoring ready to catch issues
+1. ✅ **Read Release Notes** - Review ALL breaking changes documented
+2. ✅ **Check Compatibility Matrix** - Verify server/relay/client version requirements
+3. ✅ **Full System Backup** - Not just configs, include database dumps
+4. ✅ **Test Environment** - Set up staging VPS to test upgrade first
+5. ✅ **Maintenance Window** - Schedule downtime during low-usage period
+6. ✅ **Rollback Plan** - Document and test rollback procedure
+7. ✅ **Client Preparation** - Ensure all clients can be updated simultaneously
+8. ✅ **Monitor Setup** - Have logging/monitoring ready to catch issues
 
 ### Version Compatibility Requirements
 
 | Component Relationship | Requirement | Impact if Violated |
 |------------------------|-------------|-------------------|
-| **Pangolin â†” Gerbil** | Must match major version | Tunnel establishment fails |
-| **Pangolin â†” Newt** | Within 1 major version | Connection may work but unstable |
-| **API â†” Database** | Exact schema version | Data corruption or loss |
-| **Traefik â†” Pangolin** | Plugin API compatibility | Reverse proxy failures |
-| **CrowdSec â†” Pangolin** | Bouncer API version | Security layer bypass |
+| **Pangolin ↔ Gerbil** | Must match major version | Tunnel establishment fails |
+| **Pangolin ↔ Newt** | Within 1 major version | Connection may work but unstable |
+| **API ↔ Database** | Exact schema version | Data corruption or loss |
+| **Traefik ↔ Pangolin** | Plugin API compatibility | Reverse proxy failures |
+| **CrowdSec ↔ Pangolin** | Bouncer API version | Security layer bypass |
 
 ### Client (Newt) Version Requirements
 
@@ -589,11 +589,11 @@ Major version updates typically include breaking changes that require manual int
 
 **Why Newt versions matter for major upgrades:**
 
-1. ðŸ”´ **Protocol Changes** - Major Pangolin versions may change WireGuard handshake or tunnel protocol
-2. ðŸ”´ **API Compatibility** - Client must understand new server API endpoints
-3. ðŸ”´ **Authentication** - Auth mechanism may change (tokens, certificates, etc.)
-4. ðŸ”´ **Configuration Format** - Client config structure may be incompatible
-5. ðŸ”´ **Feature Dependencies** - New Pangolin features require client support
+1. 🔴 **Protocol Changes** - Major Pangolin versions may change WireGuard handshake or tunnel protocol
+2. 🔴 **API Compatibility** - Client must understand new server API endpoints
+3. 🔴 **Authentication** - Auth mechanism may change (tokens, certificates, etc.)
+4. 🔴 **Configuration Format** - Client config structure may be incompatible
+5. 🔴 **Feature Dependencies** - New Pangolin features require client support
 
 #### Client Update Strategy for Major Upgrades
 
@@ -668,7 +668,7 @@ Major version updates typically include breaking changes that require manual int
    sleep 5
    sudo systemctl status newt
    
-   echo "âœ… Newt v2.0.0 update complete!"
+   echo "✅ Newt v2.0.0 update complete!"
    EOF
    
    chmod +x /tmp/update-newt-v2.sh
@@ -680,7 +680,7 @@ Major version updates typically include breaking changes that require manual int
    
    On [DATE] at [TIME], Pangolin VPN will be upgraded from v1.x to v2.0.
    
-   âš ï¸ ACTION REQUIRED: You must update your Newt client to v2.0.0
+   ⚠️ ACTION REQUIRED: You must update your Newt client to v2.0.0
    
    Without this update, you will LOSE CONNECTIVITY after the upgrade.
    
@@ -745,12 +745,12 @@ docker compose exec pangolin pangolin-cli clients list
 #### What Happens if Client Isn't Updated?
 
 **Before server upgrade:**
-- âœ… Old client (v1.x) + Old server (v1.x) = Works fine
-- âœ… New client (v2.x) + Old server (v1.x) = Usually backward compatible
+- ✅ Old client (v1.x) + Old server (v1.x) = Works fine
+- ✅ New client (v2.x) + Old server (v1.x) = Usually backward compatible
 
 **After server upgrade:**
-- âŒ Old client (v1.x) + New server (v2.x) = CONNECTION REFUSED
-- âœ… New client (v2.x) + New server (v2.x) = Works perfectly
+- ❌ Old client (v1.x) + New server (v2.x) = CONNECTION REFUSED
+- ✅ New client (v2.x) + New server (v2.x) = Works perfectly
 
 **Error messages you'll see with incompatible client:**
 
@@ -792,9 +792,9 @@ docker compose exec pangolin pangolin-cli clients list
 
 | Pangolin Update Type | Newt Update? | Example |
 |---------------------|--------------|---------|
-| **Patch** (1.14.0 â†’ 1.14.1) | âŒ No | Bug fixes only |
-| **Minor** (1.14.x â†’ 1.15.0) | âš ï¸ Maybe | Check release notes |
-| **Major** (1.x â†’ 2.0) | âœ… YES | Always required |
+| **Patch** (1.14.0 → 1.14.1) | ❌ No | Bug fixes only |
+| **Minor** (1.14.x → 1.15.0) | ⚠️ Maybe | Check release notes |
+| **Major** (1.x → 2.0) | ✅ YES | Always required |
 
 **How to check before upgrading:**
 
@@ -847,7 +847,7 @@ Location          | Device    | Newt Version | Last Updated
 Home NAS          | ZimaOS    | 2.0.0        | 2025-01-13
 Mobile (Android)  | Phone     | 2.0.0        | 2025-01-13
 Laptop            | ThinkPad  | 2.0.0        | 2025-01-13
-Parents' Home     | RPi4      | 1.8.1        | 2024-12-01  âš ï¸ NEEDS UPDATE
+Parents' Home     | RPi4      | 1.8.1        | 2024-12-01  ⚠️ NEEDS UPDATE
 EOF
 ```
 
@@ -893,7 +893,7 @@ docker compose up -d
 
 **Pre-upgrade notification (7 days before):**
 ```
-Subject: âš ï¸ ACTION REQUIRED - Pangolin Client Update by [DATE]
+Subject: ⚠️ ACTION REQUIRED - Pangolin Client Update by [DATE]
 
 We are upgrading Pangolin VPN to v2.0 on [DATE].
 
@@ -903,7 +903,7 @@ Download: https://github.com/fosrl/newt/releases/v2.0.0
 Instructions: [link]
 Deadline: [DATE] 11:59 PM
 
-âš ï¸ Without this update, you will lose VPN access after upgrade.
+⚠️ Without this update, you will lose VPN access after upgrade.
 
 Test your update: ssh into your device and run update script
 Questions? Reply to this email.
@@ -911,7 +911,7 @@ Questions? Reply to this email.
 
 **Upgrade day reminder:**
 ```
-Subject: ðŸš¨ FINAL REMINDER - Pangolin Upgrade Tonight
+Subject: 🚨 FINAL REMINDER - Pangolin Upgrade Tonight
 
 Server upgrade happens in 6 hours at [TIME].
 
@@ -927,13 +927,13 @@ After upgrade, old clients (v1.x) will NOT connect.
 
 **Post-upgrade status:**
 ```
-Subject: âœ… Pangolin v2.0 Upgrade Complete
+Subject: ✅ Pangolin v2.0 Upgrade Complete
 
 Upgrade successful! All systems operational.
 
 Client versions connected:
-- 5 clients on v2.0.0 âœ…
-- 1 client on v1.8.1 âŒ (please update immediately)
+- 5 clients on v2.0.0 ✅
+- 1 client on v1.8.1 ❌ (please update immediately)
 
 Need help updating? Instructions: [link]
 ```
@@ -1062,7 +1062,7 @@ sudo /tmp/update-newt.sh
 
 * Create centralized update script
 * Test on one client first
-* Roll out in phases (critical â†’ non-critical)
+* Roll out in phases (critical → non-critical)
 * Monitor connection status during rollout
 
 ### Monitoring During Major Upgrades
@@ -1085,11 +1085,11 @@ watch -n 5 'docker compose exec gerbil wg show'
 
 **Key metrics to watch:**
 
-* ðŸ“Š **Connection Success Rate** - Should remain >95%
-* ðŸ“Š **Database Query Performance** - Watch for schema-related slowdowns
-* ðŸ“Š **Memory Usage** - New version may have different footprint
-* ðŸ“Š **Error Rate** - Spike indicates compatibility issues
-* ðŸ“Š **Client Reconnection Time** - Should stabilize within 5 minutes
+* 📊 **Connection Success Rate** - Should remain >95%
+* 📊 **Database Query Performance** - Watch for schema-related slowdowns
+* 📊 **Memory Usage** - New version may have different footprint
+* 📊 **Error Rate** - Spike indicates compatibility issues
+* 📊 **Client Reconnection Time** - Should stabilize within 5 minutes
 
 ### Rollback Considerations
 
@@ -1097,11 +1097,11 @@ watch -n 5 'docker compose exec gerbil wg show'
 
 | Scenario | Rollback Possible? | Notes |
 |----------|-------------------|-------|
-| **Before DB migration** | âœ… Yes | Simple docker compose down/up |
-| **After successful migration** | âš ï¸ Maybe | May require DB schema downgrade |
-| **After failed migration** | âœ… Yes | Restore from backup |
-| **After 24+ hours** | âŒ Difficult | New data in new schema format |
-| **Clients updated** | âš ï¸ Partial | Must rollback clients too |
+| **Before DB migration** | ✅ Yes | Simple docker compose down/up |
+| **After successful migration** | ⚠️ Maybe | May require DB schema downgrade |
+| **After failed migration** | ✅ Yes | Restore from backup |
+| **After 24+ hours** | ❌ Difficult | New data in new schema format |
+| **Clients updated** | ⚠️ Partial | Must rollback clients too |
 
 **Safe rollback window:**
 
@@ -1124,9 +1124,9 @@ watch -n 5 'docker compose exec gerbil wg show'
    ```
 
 2. **Compatibility Testing**
-   * Test old client â†’ new server (should fail gracefully)
-   * Test new client â†’ old server (should fail gracefully)
-   * Test new client â†’ new server (should work)
+   * Test old client → new server (should fail gracefully)
+   * Test new client → old server (should fail gracefully)
+   * Test new client → new server (should work)
 
 3. **Load Testing**
    ```bash
@@ -1208,10 +1208,10 @@ services:
 
 **Why pin versions:**
 
-* âœ… Prevents automatic breaking updates
-* âœ… Ensures reproducible deployments
-* âœ… Controls upgrade timing
-* âœ… Simplifies troubleshooting
+* ✅ Prevents automatic breaking updates
+* ✅ Ensures reproducible deployments
+* ✅ Controls upgrade timing
+* ✅ Simplifies troubleshooting
 
 **When to update pins:**
 
@@ -1224,20 +1224,20 @@ services:
 
 **Update these documents after major upgrade:**
 
-* ðŸ“ **This upgrade guide** - Add lessons learned
-* ðŸ“ **Deployment guide** - Update version numbers
-* ðŸ“ **Configuration examples** - Reflect new format
-* ðŸ“ **Troubleshooting guide** - Add new error scenarios
-* ðŸ“ **Architecture diagrams** - Update if topology changed
+* 📝 **This upgrade guide** - Add lessons learned
+* 📝 **Deployment guide** - Update version numbers
+* 📝 **Configuration examples** - Reflect new format
+* 📝 **Troubleshooting guide** - Add new error scenarios
+* 📝 **Architecture diagrams** - Update if topology changed
 
 ### Emergency Contacts & Resources
 
 **When things go wrong:**
 
-* ðŸ”- [Pangolin GitHub Issues](https://github.com/fosrl/pangolin/issues)
-* ðŸ”- [Pangolin Community Discussions](https://github.com/orgs/fosrl/discussions)
-* ðŸ”- [Official Documentation](https://docs.pangolin.net)
-* ðŸ”- Backup admin contacts (if team environment)
+* 🔗 [Pangolin GitHub Issues](https://github.com/fosrl/pangolin/issues)
+* 🔗 [Pangolin Community Discussions](https://github.com/orgs/fosrl/discussions)
+* 🔗 [Official Documentation](https://docs.pangolin.net)
+* 🔗 Backup admin contacts (if team environment)
 
 **Information to provide when seeking help:**
 
@@ -1310,18 +1310,17 @@ docker compose down
 
 ---
 
-[â† Back to Main README](README.md)
+[← Back to Main README](README.md)
 
 ---
 
 **Last Updated:** 2025-01-13  
-**Migration Version:** v1.12.2 â†’ v1.14.1  
-**Migration Status:** âœ… Complete  
+**Migration Version:** v1.12.2 → v1.14.1  
+**Migration Status:** ✅ Complete  
 **Next Review:** v1.15.0 release
 
 ---
 
-**Built with** â¤ï¸ **and** â˜•
+**Built with** ❤️ **and** ☕
 
-**Powered by** ðŸ§ Linux Â· ðŸ³ Docker Â· ðŸ”’ WireGuard
-
+**Powered by** 🐧 Linux · 🐳 Docker · 🔒 WireGuard

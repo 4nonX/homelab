@@ -1,4 +1,4 @@
-﻿# Productivity & Self-Hosted Services
+# Productivity & Self-Hosted Services
 
 Comprehensive suite of self-hosted productivity tools replacing cloud services with local, privacy-focused alternatives.
 
@@ -222,11 +222,11 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 
 | Service | Mobile App | Status |
 |---------|------------|--------|
-| Nextcloud | Official | Configured |
-| Immich | Official | Active |
-| Joplin | Official | Syncing |
-| Vaultwarden | Bitwarden | Active |
-| Paperless-NGX | Web App | Responsive |
+| Nextcloud | Official | ✅ Configured |
+| Immich | Official | ✅ Active |
+| Joplin | Official | ✅ Syncing |
+| Vaultwarden | Bitwarden | ✅ Active |
+| Paperless-NGX | Web App | ✅ Responsive |
 
 ## Maintenance Tasks
 
@@ -248,8 +248,8 @@ Comprehensive suite of self-hosted productivity tools replacing cloud services w
 ---
 
 **Benefits:**
-- Full data ownership and privacy
-- No subscription costs
-- Customizable workflows
-- Local network performance
-- No vendor lock-in
+- ✅ Full data ownership and privacy
+- ✅ No subscription costs
+- ✅ Customizable workflows
+- ✅ Local network performance
+- ✅ No vendor lock-in

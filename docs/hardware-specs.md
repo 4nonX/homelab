@@ -1,8 +1,8 @@
-﻿# Hardware Specifications
+# Hardware Specifications
 
 Detailed hardware configuration and capabilities of the homelab server.
 
-## ðŸ–¥ï¸ Main Server: DIY NAS Build
+## 🖥️ Main Server: DIY NAS Build
 
 ### System Information
 - **Build Type:** Custom DIY NAS
@@ -60,10 +60,10 @@ Detailed hardware configuration and capabilities of the homelab server.
 **Memory Allocation:**
 ```
 Total: 32 GB
-â”œâ”€ System + ZimaOS: ~2 GB
-â”œâ”€ Docker Containers: ~8 GB
-â”œâ”€ Cache/Buffers: ~21 GB
-â””â”€ Available: ~1 GB free
+├─ System + ZimaOS: ~2 GB
+├─ Docker Containers: ~8 GB
+├─ Cache/Buffers: ~21 GB
+└─ Available: ~1 GB free
 ```
 
 **Container Memory Limits:**
@@ -111,16 +111,16 @@ Total: 32 GB
 **Storage Layout:**
 ```
 /dev/md0 (BTRFS RAID5)
-â”œâ”€ /media/mainpool (33TB mounted)
-   â”œâ”€ Media files
-   â”œâ”€ Downloads
-   â””â”€ Backups
+├─ /media/mainpool (33TB mounted)
+   ├─ Media files
+   ├─ Downloads
+   └─ Backups
 
 /dev/nvme0n1p8 (ext4)
-â”œâ”€ /DATA (107GB)
-   â”œâ”€ Docker containers
-   â”œâ”€ AppData
-   â””â”€ Configurations
+├─ /DATA (107GB)
+   ├─ Docker containers
+   ├─ AppData
+   └─ Configurations
 ```
 
 ### Network Interfaces
@@ -179,8 +179,8 @@ Total: 32 GB
 - Automatic fan curve adjustment
 
 **Operating Temperatures:**
-- CPU: 35-55Â°C typical, <85Â°C max
-- Ambient: 20-30Â°C recommended
+- CPU: 35-55°C typical, <85°C max
+- Ambient: 20-30°C recommended
 
 ### Expansion & I/O
 
@@ -196,7 +196,7 @@ Total: 32 GB
 - 4x 3.5" SATA drive bays
 - Hot-swap capable
 
-## ðŸ“Š Performance Benchmarks
+## 📊 Performance Benchmarks
 
 ### CPU Performance
 - **Passmark Score:** ~18,000 (multi-thread)
@@ -221,7 +221,7 @@ Total: 32 GB
 - **Bandwidth:** ~40-50 GB/s (dual-channel DDR4-3200)
 - **Latency:** ~70-80ns (typical DDR4)
 
-## ðŸ”§ Hardware Management
+## 🔧 Hardware Management
 
 **Monitoring Tools:**
 - `lscpu` - CPU information
@@ -238,7 +238,7 @@ Total: 32 GB
 - Power Management: Balanced
 - Wake-on-LAN: Configured
 
-## ðŸ“ˆ Capacity Planning
+## 📈 Capacity Planning
 
 ### Current Utilization
 - **CPU:** 15-30% average, 80-90% peaks (transcoding)
@@ -264,7 +264,7 @@ Total: 32 GB
 - **Storage:** Limited by available SATA ports
 - **Network:** 1 Gbps (upgradeable to 10G)
 
-## ðŸ› ï¸ Maintenance
+## 🛠️ Maintenance
 
 **Regular Tasks:**
 - BTRFS scrub: Monthly (`btrfs scrub start /media/mainpool`)
@@ -283,8 +283,8 @@ Total: 32 GB
 ---
 
 **Hardware Philosophy:**
-- âœ… Balanced performance and efficiency
-- âœ… Enterprise features (RAID5, BTRFS)
-- âœ… Adequate for 50+ containers
-- âœ… Room for growth
-- âœ… Energy efficient (~30W average)
+- ✅ Balanced performance and efficiency
+- ✅ Enterprise features (RAID5, BTRFS)
+- ✅ Adequate for 50+ containers
+- ✅ Room for growth
+- ✅ Energy efficient (~30W average)
