@@ -6,7 +6,7 @@
 [![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
 [![NAS](https://img.shields.io/badge/NAS_layer-DPlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/DPlaneOS)
 
-A reference implementation of a self-hosted home infrastructure stack: 60+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [DPlaneOS](https://github.com/4nonX/DPlaneOS) - a self-developed NAS management layer - currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
+A reference implementation of a self-hosted home infrastructure stack: 60+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [DPlaneOS](https://github.com/4nonX/DPlaneOS), a self-developed NAS management layer. Currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
 
 ---
 
