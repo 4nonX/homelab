@@ -2,7 +2,7 @@
 
 Complete inventory of all containerized services with links to their compose files.
 
-**Total Containers:** 100+ | **Compose Files:** 46
+**Services:** 60+ | **Containers:** 100+ | **Compose Files:** 46
 
 ---
 
