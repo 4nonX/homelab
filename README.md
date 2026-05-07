@@ -174,7 +174,7 @@ Layer 5 - Data integrity
 | Dan Portfolio | Personal portfolio site (PHP + Postfix relay) | [dan-portfolio.yml](services/development/dan-portfolio/dan-portfolio.yml) |
 | [Forgejo](https://forgejo.org) | Self-hosted Git forge | [forgejo.yml](services/development/forgejo/forgejo.yml) |
 | Nginx CV | Personal CV/resume web page | [nginx-cv.yml](services/development/nginx-cv/nginx-cv.yml) |
-| Aptifolio | [Next.js](https://nextjs.org) frontend + [FastAPI](https://fastapi.tiangolo.com) backend + PDF resume parser | [aptifolio.yml](services/development/aptifolio.yml) |
+| Resume Builder | [Next.js](https://nextjs.org) frontend + [FastAPI](https://fastapi.tiangolo.com) backend + AI-powered PDF resume parser | [resume-builder.yml](services/development/resume-builder.yml) |
 
 ---
 
@@ -274,8 +274,7 @@ homelab/
 │       ├── dan-portfolio/dan-portfolio.yml
 │       ├── forgejo/forgejo.yml
 │       ├── nginx-cv/nginx-cv.yml
-│       ├── aptifolio.yml
-│       └── aptifolio-dockge.yml
+│       └── resume-builder.yml
 ├── scripts/
 │   └── export-all-compose.sh
 ├── docs/

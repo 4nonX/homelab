@@ -120,7 +120,6 @@ Complete map of every file in this repository.
 | [services/media/arr-suite.yml](services/media/arr-suite.yml) | Emby, Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun VPN, Seerr, Maintainerr |
 | [services/media/books/books.yml](services/media/books/books.yml) | Books stack: Audiobookshelf, Grimmory, Bookkeep, Readmeabook |
 | [services/media/immich/immich.yml](services/media/immich/immich.yml) | Immich - Google Photos replacement |
-| [services/media/audiobookshelf/audiobookshelf.yml](services/media/audiobookshelf/audiobookshelf.yml) | Audiobookshelf - standalone audiobooks + podcasts instance |
 | [services/media/navidrome/navidrome.yml](services/media/navidrome/navidrome.yml) | Navidrome - music streaming (Subsonic API) |
 | [services/media/swingmusic/swingmusic.yml](services/media/swingmusic/swingmusic.yml) | SwingMusic - self-hosted music player |
 | [services/media/pinchflat/pinchflat.yml](services/media/pinchflat/pinchflat.yml) | Pinchflat - YouTube archiver |
@@ -163,7 +162,7 @@ Complete map of every file in this repository.
 | [services/development/dan-portfolio/dan-portfolio.yml](services/development/dan-portfolio/dan-portfolio.yml) | Personal portfolio site (PHP + Postfix relay) |
 | [services/development/forgejo/forgejo.yml](services/development/forgejo/forgejo.yml) | Forgejo - self-hosted Git forge |
 | [services/development/nginx-cv/nginx-cv.yml](services/development/nginx-cv/nginx-cv.yml) | Nginx CV page |
-| [services/development/aptifolio.yml](services/development/aptifolio.yml) | Aptifolio - Next.js frontend + FastAPI backend + PDF resume parser |
+| [services/development/resume-builder.yml](services/development/resume-builder.yml) | Resume Builder - Next.js frontend + FastAPI backend + AI-powered PDF resume parser |
 
 ---
 

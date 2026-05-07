@@ -113,7 +113,7 @@ Complete inventory of all containerized services with links to their compose fil
 | Dan Portfolio | [dan-portfolio.yml](../services/development/dan-portfolio/dan-portfolio.yml) | Personal portfolio site (PHP + Postfix relay) |
 | Forgejo | [forgejo.yml](../services/development/forgejo/forgejo.yml) | Self-hosted Git forge |
 | Nginx CV | [nginx-cv.yml](../services/development/nginx-cv/nginx-cv.yml) | Personal CV/resume web page |
-| Aptifolio | [aptifolio.yml](../services/development/aptifolio.yml) | Next.js + FastAPI + PDF resume parser |
+| Resume Builder | [resume-builder.yml](../services/development/resume-builder.yml) | Next.js frontend + FastAPI backend + AI-powered PDF resume parser |
 
 ---
 
