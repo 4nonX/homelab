@@ -25,6 +25,9 @@ docker/*/uploads/
 docker/*/html/
 docker/*/*/html/
 
+# Claude Code local config
+CLAUDE.md
+
 # OS files
 .DS_Store
 Thumbs.db
