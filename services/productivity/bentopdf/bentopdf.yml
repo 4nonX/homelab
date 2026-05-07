@@ -1,0 +1,13 @@
+services:
+  bentopdf:
+    image: ghcr.io/alam00000/bentopdf:latest
+    container_name: bentopdf
+    ports:
+      - 8787:8080
+    volumes:
+      - /DATA/AppData/bentopdf/data:/app/data
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - SECRET_KEY=${BENTOPDF_SECRET_KEY}
+    restart: unless-stopped

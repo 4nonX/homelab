@@ -104,11 +104,18 @@ Layer 5 - Data integrity
 | [Lidarr](https://github.com/Lidarr/Lidarr) | Music automation | [arr-suite.yml](services/media/arr-suite.yml) |
 | [Prowlarr](https://github.com/Prowlarr/Prowlarr) | Indexer management | [arr-suite.yml](services/media/arr-suite.yml) |
 | [Bazarr](https://github.com/morpheus65535/bazarr) | Subtitle automation | [arr-suite.yml](services/media/arr-suite.yml) |
+| [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Cloudflare bypass for indexers | [arr-suite.yml](services/media/arr-suite.yml) |
+| [Recyclarr](https://github.com/recyclarr/recyclarr) | TRaSH Guides quality profile sync | [arr-suite.yml](services/media/arr-suite.yml) |
+| [Maintainerr](https://github.com/jorenn92/Maintainerr) | Media library cleanup rules | [arr-suite.yml](services/media/arr-suite.yml) |
+| [Seerr](https://github.com/seerr/seerr) | Media request management | [arr-suite.yml](services/media/arr-suite.yml) |
 | [qBittorrent](https://github.com/qbittorrent/qBittorrent) | Download client (via [Gluetun](https://github.com/qdm12/gluetun) VPN) | [arr-suite.yml](services/media/arr-suite.yml) |
 | [Gluetun](https://github.com/qdm12/gluetun) | WireGuard VPN gateway for downloads | [arr-suite.yml](services/media/arr-suite.yml) |
+| [Audiobookshelf](https://github.com/advplyr/audiobookshelf) | Audiobooks + podcast server | [books.yml](services/media/books/books.yml) |
+| Grimmory | Ebook library (Booklore-based, MariaDB) | [books.yml](services/media/books/books.yml) |
+| Bookkeep | Book discovery and request manager | [books.yml](services/media/books/books.yml) |
+| Readmeabook | Audiobook request manager | [books.yml](services/media/books/books.yml) |
 | [SwingMusic](https://github.com/swingmx/swingmusic) | Self-hosted music player | [swingmusic.yml](services/media/swingmusic/swingmusic.yml) |
 | [Navidrome](https://github.com/navidrome/navidrome) | Music streaming (Subsonic API) | [navidrome.yml](services/media/navidrome/navidrome.yml) |
-| [Audiobookshelf](https://github.com/advplyr/audiobookshelf) | Audiobooks + podcast server | [audiobookshelf.yml](services/media/audiobookshelf/audiobookshelf.yml) |
 | [Pinchflat](https://github.com/kieraneglin/pinchflat) | YouTube archiver | [pinchflat.yml](services/media/pinchflat/pinchflat.yml) |
 | [Stremio Server](https://github.com/Stremio/server-docker) | Streaming add-on server | [stremio.yml](services/media/stremio/stremio.yml) |
 
@@ -119,6 +126,12 @@ Layer 5 - Data integrity
 | [Nextcloud](https://github.com/nextcloud/server) + [Collabora](https://github.com/CollaboraOnline/online) | File sync, cloud office suite | [nextcloud.yml](services/productivity/nextcloud.yml) |
 | [Nextcloud Talk HPB](https://github.com/strukturag/nextcloud-spreed-signaling) | High-performance video call backend | [nextcloud.yml](services/productivity/nextcloud.yml) |
 | [Immich](https://github.com/immich-app/immich) | Google Photos replacement | [immich.yml](services/media/immich/immich.yml) |
+| [CryptPad](https://github.com/cryptpad/cryptpad) | End-to-end encrypted collaborative office | [cryptpad.yml](services/productivity/cryptpad/cryptpad.yml) |
+| [TriliumNext Notes](https://github.com/TriliumNext/Trilium) | Hierarchical personal knowledge base | [trilium.yml](services/productivity/trilium/trilium.yml) |
+| Glass Keep | Lightweight notes app | [glass-keep.yml](services/productivity/glass-keep/glass-keep.yml) |
+| [Librum](https://github.com/Librum-Reader/Librum-Server) | Self-hosted ebook reading and library | [librum.yml](services/productivity/librum/librum.yml) |
+| BentoPDF | PDF tools web app | [bentopdf.yml](services/productivity/bentopdf/bentopdf.yml) |
+| [Revolt.chat](https://github.com/revoltchat) | Self-hosted Discord alternative | [revolt.yml](services/productivity/revolt/revolt.yml) |
 | [Paperless-NGX](https://github.com/paperless-ngx/paperless-ngx) | Document OCR and archive | [paperless.yml](services/productivity/big-bear-paperless-ngx/paperless.yml) |
 | [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | Self-hosted [Bitwarden](https://bitwarden.com) server | [vaultwarden.yml](infrastructure/security/vaultwarden/vaultwarden.yml) |
 | [Joplin Server](https://github.com/laurent22/joplin) | Note sync backend | [joplin.yml](services/productivity/big-bear-joplin/joplin.yml) |
@@ -131,15 +144,25 @@ Layer 5 - Data integrity
 | Service | Purpose | Compose |
 |---|---|---|
 | [Pi-hole](https://github.com/pi-hole/pi-hole) | Network-wide DNS + ad-blocking | [pihole.yml](infrastructure/networking/pihole/pihole.yml) |
+| [Newt](https://github.com/fosrl/newt) | Pangolin tunnel client | [newt.yml](infrastructure/networking/newt/newt.yml) |
+| Tailscale DERP | Self-hosted Tailscale relay server | [tailscale-derper.yml](infrastructure/networking/tailscale-derper/tailscale-derper.yml) |
 | [Traefik](https://github.com/traefik/traefik) v3 | Reverse proxy, TLS termination | VPS-managed - see [infrastructure/networking/traefik/](infrastructure/networking/traefik/README.md) |
 | [Pangolin](https://github.com/fosrl/pangolin) + [Gerbil](https://github.com/fosrl/gerbil) | Self-hosted Cloudflare Tunnel | VPS + Pi - see [infrastructure/networking/pangolin/](infrastructure/networking/pangolin/README.md) |
 | [CrowdSec](https://github.com/crowdsecurity/crowdsec) | IDS/IPS, collaborative threat intel | VPS-managed - see [infrastructure/security/crowdsec/](infrastructure/security/crowdsec/README.md) |
+| [MinIO](https://github.com/minio/minio) | S3-compatible local object storage | [minio.yml](infrastructure/storage/minio/minio.yml) |
+| [Beszel](https://github.com/henrygd/beszel) | Lightweight server resource monitoring hub | [beszel.yml](infrastructure/monitoring/beszel/beszel.yml) |
+| Beszel Agent | Per-host metrics collector | [beszel-agent.yml](infrastructure/monitoring/beszel-agent/beszel-agent.yml) |
 | [Dockge](https://github.com/louislam/dockge) | Docker Compose management UI | [dockge.yml](infrastructure/monitoring/big-bear-dockge/dockge.yml) |
 | [Dockpeek](https://github.com/louislam/dockge) | Container health dashboard | [dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) |
 | [Scrutiny](https://github.com/AnalogJ/scrutiny) | S.M.A.R.T disk health monitoring | [scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) |
 | [Glances](https://github.com/nicolargo/glances) | System resource monitoring | [glances-dashboard.yml](infrastructure/monitoring/glances-dashboard.yml) |
+| [Homarr](https://github.com/ajnart/homarr) | Service dashboard | [homarr.yml](services/management/homarr/homarr.yml) |
+| [Kasm](https://www.kasmweb.com) | Containerized browser/desktop streaming | [kasm.yml](services/management/kasm/kasm.yml) |
+| Heaper | Docker host resource and container manager | [heaper.yml](services/management/heaper/heaper.yml) |
+| [Arcane](https://github.com/getarcaneapp/arcane) | Docker management UI | [arcane.yml](services/management/arcane/arcane.yml) |
 | [Syncthing](https://github.com/syncthing/syncthing) | Peer-to-peer file sync (config backup) | [syncthing.yml](services/management/syncthing/syncthing.yml) |
 | [SearXNG](https://github.com/searxng/searxng) | Self-hosted metasearch engine | [searxng.yml](services/management/searxng/searxng.yml) |
+| Zelest Stacks | Compose stack management UI | [stacks.yml](services/management/stacks.yml) |
 | [PostgreSQL](https://www.postgresql.org) (×8) | Relational database instances | Per-service |
 | [Redis](https://redis.io) (×3) | In-memory cache instances | Per-service |
 
@@ -147,7 +170,10 @@ Layer 5 - Data integrity
 
 | Service | Purpose | Location |
 |---|---|---|
-| [DPlaneOS](https://github.com/4nonX/DPlaneOS) website | Project landing page | [DPlaneOS-website.yml](services/development/DPlaneOS-website.yml) |
+| [DPlaneOS](https://github.com/4nonX/DPlaneOS) website | Project landing page (nginx static) | [d-planeos-website.yml](services/development/d-planeos-website.yml) |
+| Dan Portfolio | Personal portfolio site (PHP + Postfix relay) | [dan-portfolio.yml](services/development/dan-portfolio/dan-portfolio.yml) |
+| [Forgejo](https://forgejo.org) | Self-hosted Git forge | [forgejo.yml](services/development/forgejo/forgejo.yml) |
+| Nginx CV | Personal CV/resume web page | [nginx-cv.yml](services/development/nginx-cv/nginx-cv.yml) |
 | Aptifolio | [Next.js](https://nextjs.org) frontend + [FastAPI](https://fastapi.tiangolo.com) backend + PDF resume parser | [aptifolio.yml](services/development/aptifolio.yml) |
 
 ---
@@ -186,6 +212,8 @@ homelab/
 ├── infrastructure/
 │   ├── networking/
 │   │   ├── pihole/pihole.yml
+│   │   ├── newt/newt.yml
+│   │   ├── tailscale-derper/tailscale-derper.yml
 │   │   ├── traefik/          # Traefik config notes (VPS-managed)
 │   │   └── pangolin/
 │   │       ├── README.md                    # Tunnel docs + component map
@@ -202,16 +230,19 @@ homelab/
 │   │   ├── vaultwarden/vaultwarden.yml
 │   │   └── crowdsec/         # CrowdSec notes (VPS-managed)
 │   ├── monitoring/
+│   │   ├── beszel/beszel.yml
+│   │   ├── beszel-agent/beszel-agent.yml
 │   │   ├── big-bear-scrutiny/scrutiny.yml
 │   │   ├── big-bear-dockge/dockge.yml
 │   │   ├── big-bear-dockpeek/dockpeek.yml
 │   │   └── glances-dashboard.yml
 │   └── storage/
+│       ├── minio/minio.yml
 │       └── README.md
 ├── services/
 │   ├── media/
-│   │   ├── arr-suite.yml              # Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun
-│   │   ├── audiobookshelf/audiobookshelf.yml
+│   │   ├── arr-suite.yml              # Emby, Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun, Seerr, Maintainerr
+│   │   ├── books/books.yml            # Audiobookshelf, Grimmory, Bookkeep, Readmeabook
 │   │   ├── immich/immich.yml
 │   │   ├── navidrome/navidrome.yml
 │   │   ├── pinchflat/pinchflat.yml
@@ -219,17 +250,30 @@ homelab/
 │   │   └── swingmusic/swingmusic.yml
 │   ├── productivity/
 │   │   ├── nextcloud.yml              # Nextcloud, Collabora, Talk HPB, Redis, PostgreSQL
+│   │   ├── bentopdf/bentopdf.yml
+│   │   ├── cryptpad/cryptpad.yml
+│   │   ├── glass-keep/glass-keep.yml
+│   │   ├── librum/librum.yml
+│   │   ├── revolt/revolt.yml
+│   │   ├── trilium/trilium.yml
 │   │   ├── big-bear-joplin/joplin.yml
 │   │   ├── big-bear-linkwarden/linkwarden.yml
 │   │   ├── big-bear-paperless-ngx/paperless.yml
 │   │   ├── big-bear-wallos/wallos.yml
 │   │   └── memos/memos.yml
 │   ├── management/
+│   │   ├── homarr/homarr.yml
+│   │   ├── kasm/kasm.yml
+│   │   ├── heaper/heaper.yml
+│   │   ├── arcane/arcane.yml
 │   │   ├── stacks.yml
 │   │   ├── syncthing/syncthing.yml
 │   │   └── searxng/searxng.yml
 │   └── development/
-│       ├── DPlaneOS-website.yml
+│       ├── d-planeos-website.yml
+│       ├── dan-portfolio/dan-portfolio.yml
+│       ├── forgejo/forgejo.yml
+│       ├── nginx-cv/nginx-cv.yml
 │       ├── aptifolio.yml
 │       └── aptifolio-dockge.yml
 ├── scripts/

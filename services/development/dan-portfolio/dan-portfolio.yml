@@ -1,0 +1,30 @@
+services:
+  webserver:
+    image: php:8.2-apache
+    container_name: dan-portfolio
+    restart: always
+    ports:
+      - 54089:80
+    volumes:
+      - /DATA/AppData/big-bear-dockge/stacks/dan-portfolio/www:/var/www/html
+    networks:
+      - internal-mail
+
+  mail-relay:
+    image: juanluisbaptiste/postfix:latest
+    container_name: postfix-relay2
+    restart: always
+    environment:
+      - MAILNAME=${MAIL_DOMAIN}
+      - MYNETWORKS=127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - SMTP_SERVER=smtp.protonmail.ch
+      - SMTP_PORT=587
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${DAN_PORTFOLIO_SMTP_PASSWORD}
+      - SERVER_HOSTNAME=${MAIL_DOMAIN}
+    networks:
+      - internal-mail
+
+networks:
+  internal-mail:
+    driver: bridge

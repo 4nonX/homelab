@@ -1,0 +1,21 @@
+name: danpage.d-net
+
+services:
+  nginx:
+    image: nginx:alpine
+    container_name: nginx-cv-final
+    restart: unless-stopped
+    ports:
+      - 8383:8383
+    volumes:
+      - /media/mainpool/nginx/www:/usr/share/nginx/html:ro
+      - /media/mainpool/nginx/log:/var/log/nginx
+      - /media/mainpool/nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    environment:
+      - TZ=Europe/Berlin
+    networks:
+      - cv-net
+
+networks:
+  cv-net:
+    driver: bridge

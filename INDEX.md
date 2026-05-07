@@ -78,6 +78,8 @@ Complete map of every file in this repository.
 | File | Description |
 |---|---|
 | [infrastructure/networking/pihole/pihole.yml](infrastructure/networking/pihole/pihole.yml) | Pi-hole - DNS + network-wide ad-blocking |
+| [infrastructure/networking/newt/newt.yml](infrastructure/networking/newt/newt.yml) | Newt - Pangolin tunnel client (WireGuard-based reverse proxy) |
+| [infrastructure/networking/tailscale-derper/tailscale-derper.yml](infrastructure/networking/tailscale-derper/tailscale-derper.yml) | Tailscale DERP relay server |
 | [infrastructure/networking/pangolin/README.md](infrastructure/networking/pangolin/README.md) | Pangolin component map, traffic flow, links to all Pangolin docs |
 | [infrastructure/networking/traefik/README.md](infrastructure/networking/traefik/README.md) | Traefik config notes (VPS-managed) |
 
@@ -95,6 +97,8 @@ Complete map of every file in this repository.
 | File | Description |
 |---|---|
 | [infrastructure/monitoring/glances-dashboard.yml](infrastructure/monitoring/glances-dashboard.yml) | Glances system monitor + nginx homelab dashboard |
+| [infrastructure/monitoring/beszel/beszel.yml](infrastructure/monitoring/beszel/beszel.yml) | Beszel - lightweight server resource monitoring hub |
+| [infrastructure/monitoring/beszel-agent/beszel-agent.yml](infrastructure/monitoring/beszel-agent/beszel-agent.yml) | Beszel agent - per-host metrics collector |
 | [infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) | Scrutiny - S.M.A.R.T disk health monitoring |
 | [infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) | Dockpeek - container health dashboard |
 
@@ -102,6 +106,7 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
+| [infrastructure/storage/minio/minio.yml](infrastructure/storage/minio/minio.yml) | MinIO - S3-compatible local object storage |
 | [infrastructure/storage/README.md](infrastructure/storage/README.md) | ZFS RAID-Z2 target, BTRFS legacy state, migration plan, dataset layout |
 
 ---
@@ -112,9 +117,10 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
-| [services/media/arr-suite.yml](services/media/arr-suite.yml) | Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun VPN |
+| [services/media/arr-suite.yml](services/media/arr-suite.yml) | Emby, Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun VPN, Seerr, Maintainerr |
+| [services/media/books/books.yml](services/media/books/books.yml) | Books stack: Audiobookshelf, Grimmory, Bookkeep, Readmeabook |
 | [services/media/immich/immich.yml](services/media/immich/immich.yml) | Immich - Google Photos replacement |
-| [services/media/audiobookshelf/audiobookshelf.yml](services/media/audiobookshelf/audiobookshelf.yml) | Audiobookshelf - audiobooks + podcasts |
+| [services/media/audiobookshelf/audiobookshelf.yml](services/media/audiobookshelf/audiobookshelf.yml) | Audiobookshelf - standalone audiobooks + podcasts instance |
 | [services/media/navidrome/navidrome.yml](services/media/navidrome/navidrome.yml) | Navidrome - music streaming (Subsonic API) |
 | [services/media/swingmusic/swingmusic.yml](services/media/swingmusic/swingmusic.yml) | SwingMusic - self-hosted music player |
 | [services/media/pinchflat/pinchflat.yml](services/media/pinchflat/pinchflat.yml) | Pinchflat - YouTube archiver |
@@ -125,6 +131,12 @@ Complete map of every file in this repository.
 | File | Description |
 |---|---|
 | [services/productivity/nextcloud.yml](services/productivity/nextcloud.yml) | Nextcloud, Collabora Online, Talk HPB, Redis, PostgreSQL |
+| [services/productivity/bentopdf/bentopdf.yml](services/productivity/bentopdf/bentopdf.yml) | BentoPDF - PDF tools web app |
+| [services/productivity/cryptpad/cryptpad.yml](services/productivity/cryptpad/cryptpad.yml) | CryptPad - end-to-end encrypted collaborative office suite |
+| [services/productivity/glass-keep/glass-keep.yml](services/productivity/glass-keep/glass-keep.yml) | Glass Keep - lightweight notes app |
+| [services/productivity/librum/librum.yml](services/productivity/librum/librum.yml) | Librum - self-hosted ebook reading and library server |
+| [services/productivity/revolt/revolt.yml](services/productivity/revolt/revolt.yml) | Revolt.chat - self-hosted Discord alternative |
+| [services/productivity/trilium/trilium.yml](services/productivity/trilium/trilium.yml) | TriliumNext Notes - hierarchical knowledge base |
 | [services/productivity/big-bear-paperless-ngx/paperless.yml](services/productivity/big-bear-paperless-ngx/paperless.yml) | Paperless-NGX - document OCR and archive |
 | [services/productivity/big-bear-joplin/joplin.yml](services/productivity/big-bear-joplin/joplin.yml) | Joplin Server - note sync backend |
 | [services/productivity/memos/memos.yml](services/productivity/memos/memos.yml) | Memos - lightweight notes and journal |
@@ -135,15 +147,22 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
+| [services/management/homarr/homarr.yml](services/management/homarr/homarr.yml) | Homarr - service dashboard |
+| [services/management/kasm/kasm.yml](services/management/kasm/kasm.yml) | Kasm - containerized browser/desktop streaming |
+| [services/management/heaper/heaper.yml](services/management/heaper/heaper.yml) | Heaper - Docker host resource and container manager |
+| [services/management/arcane/arcane.yml](services/management/arcane/arcane.yml) | Arcane - Docker management UI |
 | [services/management/syncthing/syncthing.yml](services/management/syncthing/syncthing.yml) | Syncthing - peer-to-peer file sync |
 | [services/management/searxng/searxng.yml](services/management/searxng/searxng.yml) | SearXNG - self-hosted metasearch engine |
-| [services/management/stacks.yml](services/management/stacks.yml) | Stacks - compose stack management |
+| [services/management/stacks.yml](services/management/stacks.yml) | Zelest Stacks - compose stack management UI |
 
 ### Development
 
 | File | Description |
 |---|---|
-| [services/development/DPlaneOS-website.yml](services/development/DPlaneOS-website.yml) | DPlaneOS project website |
+| [services/development/d-planeos-website.yml](services/development/d-planeos-website.yml) | DPlaneOS marketing website (nginx static) |
+| [services/development/dan-portfolio/dan-portfolio.yml](services/development/dan-portfolio/dan-portfolio.yml) | Personal portfolio site (PHP + Postfix relay) |
+| [services/development/forgejo/forgejo.yml](services/development/forgejo/forgejo.yml) | Forgejo - self-hosted Git forge |
+| [services/development/nginx-cv/nginx-cv.yml](services/development/nginx-cv/nginx-cv.yml) | Nginx CV page |
 | [services/development/aptifolio.yml](services/development/aptifolio.yml) | Aptifolio - Next.js frontend + FastAPI backend + PDF resume parser |
 
 ---
