@@ -1,12 +1,12 @@
 ﻿# Homelab Infrastructure
 
 [![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
-[![Services](https://img.shields.io/badge/services-30+-blue?style=flat-square)](https://github.com/4nonX/homelab)
+[![Services](https://img.shields.io/badge/services-100+-blue?style=flat-square)](https://github.com/4nonX/homelab)
 [![Storage](https://img.shields.io/badge/storage-33TB_→_ZFS_RAID--Z2-orange?style=flat-square)](infrastructure/storage/README.md)
 [![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
 [![NAS](https://img.shields.io/badge/NAS_layer-DPlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/DPlaneOS)
 
-A reference implementation of a self-hosted home infrastructure stack: 60+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [DPlaneOS](https://github.com/4nonX/DPlaneOS), a self-developed NAS management layer. Currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
+A reference implementation of a self-hosted home infrastructure stack: 100+ containerised services, 33 TB storage, zero port-forwarding. Runs on NixOS with [DPlaneOS](https://github.com/4nonX/DPlaneOS), a self-developed NAS management layer. Currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
 
 ---
 
@@ -47,7 +47,7 @@ Raspberry Pi 5 - local LAN hub (Pangolin brain)
             │
             ▼
 Home network - 10.XXX.0.0/24
-  ├─ NAS server (10.XXX.0.1)     40+ containers, 33 TB storage
+  ├─ NAS server (10.XXX.0.1)     100+ containers, 33 TB storage
   └─ Pi-hole  (10.XXX.0.2)       DNS, ad-blocking
 ```
 
