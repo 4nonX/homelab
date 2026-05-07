@@ -5,7 +5,7 @@
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![Maintenance](https://img.shields.io/badge/Maintained-Yes-brightgreen.svg)](https://github.com/yourusername/homelab)
 
-> Step-by-step procedure for updating Nextcloud in Docker — covers the ordered post-update `occ` commands, common failure modes, and how to diagnose a 502 behind Traefik/Pangolin.
+> Step-by-step procedure for updating Nextcloud in Docker. Covers the ordered post-update `occ` commands, common failure modes, and how to diagnose a 502 behind Traefik/Pangolin.
 
 ---
 
@@ -67,7 +67,7 @@ Wait for the container to reach a running state before executing any `occ` comma
 
 ```bash
 docker ps | grep nextcloud
-# STATUS should show "Up" — not "Restarting" or "Exited"
+# STATUS should show "Up" (not "Restarting" or "Exited")
 ```
 
 ---
@@ -210,7 +210,7 @@ Expected output: `+PONG`. Any other result means the Redis container is down or 
 
 ## Traefik 502 / 504 Errors
 
-A 502 or 504 through Traefik when using a Pangolin/Newt tunnel almost always means **the Nextcloud container itself is not responding** — not a tunnel or proxy issue.
+A 502 or 504 through Traefik when using a Pangolin/Newt tunnel almost always means **the Nextcloud container itself is not responding**, not a tunnel or proxy issue.
 
 ```
 Browser → Traefik (VPS) → Pangolin tunnel → Newt (home) → Nextcloud container
@@ -242,7 +242,7 @@ A healthy `status.php` response:
 {"installed":true,"version":"29.x.x","versionstring":"29.x.x","edition":"","maintenance":false}
 ```
 
-`"maintenance":true` in this output means maintenance mode is still active — run step 2 of the [post-update sequence](#2-disable-maintenance-mode).
+`"maintenance":true` in this output means maintenance mode is still active. Run step 2 of the [post-update sequence](#2-disable-maintenance-mode).
 
 ---
 
@@ -257,7 +257,7 @@ docker exec -u www-data nextcloud php occ <command>
 | Command | When to run |
 |---------|-------------|
 | `maintenance:mode --on` | Before pulling a new image |
-| `upgrade` | After every image update — always first |
+| `upgrade` | After every image update (always first) |
 | `maintenance:mode --off` | Immediately after upgrade completes |
 | `db:add-missing-indices` | After every update |
 | `db:add-missing-columns` | After every update |
@@ -290,7 +290,7 @@ After completing the post-update sequence, confirm the following:
 
 | Document | Description |
 |----------|-------------|
-| [nextcloud-optimization-guide.md](nextcloud-optimization-guide.md) | Full stack setup — PostgreSQL, Redis, Collabora, Talk HPB |
+| [nextcloud-optimization-guide.md](nextcloud-optimization-guide.md) | Full stack setup: PostgreSQL, Redis, Collabora, Talk HPB |
 | [pangolin-upgrade-guide.md](pangolin-upgrade-guide.md) | Updating the Pangolin tunnel stack |
 | [docker-infrastructure.md](docker-infrastructure.md) | Docker Compose patterns and update procedures |
 | [productivity-services.md](productivity-services.md) | Overview of all productivity services |
