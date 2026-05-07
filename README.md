@@ -243,6 +243,7 @@ homelab/
 │   ├── media-stack.md
 │   ├── productivity-services.md
 │   ├── nextcloud-optimization-guide.md
+│   ├── nextcloud-update-guide.md
 │   ├── homelab-dashboard-guide.md
 │   ├── pangolin-infrastructure.md
 │   ├── pangolin-deployment-guide.md
@@ -332,6 +333,7 @@ Net savings: €435/yr → break-even Year 4
 | [Media Stack](docs/media-stack.md) | Arr suite + Emby configuration |
 | [Productivity Services](docs/productivity-services.md) | Nextcloud, Immich, Paperless setup |
 | [Nextcloud Optimisation](docs/nextcloud-optimization-guide.md) | PostgreSQL + Redis + PHP tuning |
+| [Nextcloud Update Guide](docs/nextcloud-update-guide.md) | Post-update occ commands, failure diagnosis, 502 behind Traefik |
 | [Dashboard Guide](docs/homelab-dashboard-guide.md) | Homelab dashboard setup |
 | [NixOS Migration Plan](docs/NIXOS-MIGRATION.md) | ZimaOS → NixOS migration roadmap |
 | [Service Index](docs/DOCKER-SERVICES.md) | Full service inventory |

@@ -57,6 +57,7 @@ Complete map of every file in this repository.
 | [docs/media-stack.md](docs/media-stack.md) | Arr suite integration, VPN-gated downloads, quality profiles |
 | [docs/productivity-services.md](docs/productivity-services.md) | Nextcloud, Immich, Paperless-NGX, Vaultwarden setup notes |
 | [docs/nextcloud-optimization-guide.md](docs/nextcloud-optimization-guide.md) | Nextcloud performance - PostgreSQL tuning, Redis, Collabora, Talk HPB, troubleshooting |
+| [docs/nextcloud-update-guide.md](docs/nextcloud-update-guide.md) | Nextcloud update procedure - ordered occ commands, failure diagnosis, 502 behind Traefik |
 | [docs/homelab-dashboard-guide.md](docs/homelab-dashboard-guide.md) | Homelab dashboard setup and usage |
 | [docs/DOCKER-SERVICES.md](docs/DOCKER-SERVICES.md) | Full service inventory |
 

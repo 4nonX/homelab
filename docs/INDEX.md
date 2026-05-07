@@ -76,15 +76,24 @@
     - Failure modes & recovery
     - FAQ
 
+11. **[nextcloud-update-guide.md](nextcloud-update-guide.md)** - Updating Nextcloud in Docker
+    - Pre-update backup and maintenance mode
+    - Ordered post-update occ command sequence
+    - Diagnosing container failures
+    - 502/504 errors behind Traefik/Pangolin
+    - Redis/memcache failure recovery
+    - Full command reference
+    - Verification checklist
+
 ### 📺 Service Categories
 
-11. **[media-stack.md](media-stack.md)** - Media automation
+12. **[media-stack.md](media-stack.md)** - Media automation
     - Arr Suite integration
     - VPN-secured downloads
     - Streaming services
     - Quality profiles
 
-12. **[productivity-services.md](productivity-services.md)** - Productivity apps
+13. **[productivity-services.md](productivity-services.md)** - Productivity apps
     - Nextcloud setup
     - Immich photo management
     - Paperless-NGX documents
@@ -92,31 +101,31 @@
 
 ### 🌐 External Access (Pangolin)
 
-13. **[network-remote-access.md](network-remote-access.md)** - Remote Access Strategy
+14. **[network-remote-access.md](network-remote-access.md)** - Remote Access Strategy
     - Multi-layered VPN architecture
     - Pangolin/Tailscale/ZeroTier comparison
     - Security integration
 
-14. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
+15. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
     - Why Pangolin?
     - Multi-layer security
     - Performance characteristics
     - Cost analysis
 
-15. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
+16. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
     - Docker Compose files
     - Server configuration
     - Client setup
     - Troubleshooting
 
-16. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step-deployment
+17. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step-deployment
     - VPS setup
     - DNS configuration
     - Server deployment
     - Client installation
     - Security hardening
 
-17. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step-upgrade
+18. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step-upgrade
     - Architecture versions
     - Migrating from v1.12.2 to v1.14.1
     - Technical execution
@@ -131,7 +140,7 @@
     - Related documentation
     - Resources
 
-18. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
+19. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
     - Architecture overview
     - Phase 1: Hardware & OS setup
     - Phase 2: Network mounting (Static IP)
@@ -140,7 +149,7 @@
     - Phase 5: Live cutover
     - Pro/Con analysis
 
-19. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin latency issues
+20. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin latency issues
     - WireGuard MTU optimization
     - WireGuard persistent keepalive
     - Traefik timeout optimization
@@ -151,8 +160,8 @@
 
 ### 🗂 Architecture & Diagrams
 
-20. **[architecture-diagram.html](architecture-diagram.html)** - Overall system architecture  
-21. **[dataflow-diagram.html](dataflow-diagram.html)** - Service data flows  
-22. **[security-diagram.html](security-diagram.html)** - Security layers & controls
+21. **[architecture-diagram.html](architecture-diagram.html)** - Overall system architecture  
+22. **[dataflow-diagram.html](dataflow-diagram.html)** - Service data flows  
+23. **[security-diagram.html](security-diagram.html)** - Security layers & controls
 
 
