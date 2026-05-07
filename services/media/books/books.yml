@@ -1,0 +1,156 @@
+services:
+  audiobookshelf:
+    image: ghcr.io/advplyr/audiobookshelf:latest
+    container_name: audiobookshelf
+    restart: unless-stopped
+    ports:
+      - 13378:80
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+    volumes:
+      - /media/mainpool/embysvr/Audiobooks:/audiobooks
+      - /media/mainpool/embysvr/Podcasts:/podcasts
+      - /DATA/AppData/audiobookshelf/config:/config
+      - /DATA/AppData/audiobookshelf/metadata:/metadata
+    networks:
+      - books-net
+
+  grimmory:
+    image: grimmory/grimmory:latest
+    container_name: grimmory
+    restart: unless-stopped
+    ports:
+      - 6060:6060
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - DATABASE_URL=jdbc:mariadb://grimmory-db:3306/grimmory
+      - DATABASE_USERNAME=grimmory
+      - DATABASE_PASSWORD=${GRIMMORY_DB_PASSWORD}
+    volumes:
+      - /DATA/AppData/grimmory/data:/app/data
+      - /DATA/AppData/grimmory/books:/books
+      - /DATA/AppData/grimmory/bookdrop:/bookdrop
+    depends_on:
+      grimmory-db:
+        condition: service_healthy
+    networks:
+      - books-net
+
+  grimmory-db:
+    image: lscr.io/linuxserver/mariadb:11.4.5
+    container_name: grimmory-db
+    restart: unless-stopped
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - MYSQL_ROOT_PASSWORD=${GRIMMORY_DB_PASSWORD}
+      - MYSQL_DATABASE=grimmory
+      - MYSQL_USER=grimmory
+      - MYSQL_PASSWORD=${GRIMMORY_DB_PASSWORD}
+    volumes:
+      - /DATA/AppData/grimmory-db:/config
+    healthcheck:
+      test:
+        - CMD
+        - mariadb-admin
+        - ping
+        - -h
+        - localhost
+      interval: 10s
+      timeout: 10s
+      retries: 20
+      start_period: 60s
+    networks:
+      - books-net
+
+  bookkeep:
+    image: akiraslingshot/bookkeep:latest
+    container_name: bookkeep
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    environment:
+      - TZ=Europe/Berlin
+      - DATABASE_URL=postgresql://bookkeep:${BOOKKEEP_DB_PASSWORD}@bookkeep-db:5432/bookkeep_db
+      - REDIS_URL=redis://bookkeep-redis:6379/0
+      - HARDCOVER_API_TOKEN=${HARDCOVER_API_TOKEN}
+      - BOOKKEEP_SECRET_KEY=${BOOKKEEP_SECRET_KEY}
+    volumes:
+      - /DATA/AppData/bookkeep:/config
+      - /DATA/AppData/grimmory/books:/downloads/ebooks
+      - /DATA/AppData/grimmory/bookdrop:/downloads/bookdrop
+      - /DATA/Downloads:/downloads/torrents
+    depends_on:
+      bookkeep-db:
+        condition: service_healthy
+      bookkeep-redis:
+        condition: service_started
+      grimmory:
+        condition: service_started
+    networks:
+      - books-net
+      - mediastack
+
+  bookkeep-db:
+    image: postgres:16-alpine
+    container_name: bookkeep-db
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=bookkeep_db
+      - POSTGRES_USER=bookkeep
+      - POSTGRES_PASSWORD=${BOOKKEEP_DB_PASSWORD}
+    volumes:
+      - /DATA/AppData/bookkeep-db:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U bookkeep -d bookkeep_db
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - books-net
+
+  bookkeep-redis:
+    image: redis:7-alpine
+    container_name: bookkeep-redis
+    restart: unless-stopped
+    volumes:
+      - /DATA/AppData/bookkeep-redis:/data
+    networks:
+      - books-net
+
+  readmeabook:
+    image: ghcr.io/kikootwo/readmeabook:latest
+    container_name: readmeabook
+    restart: unless-stopped
+    ports:
+      - 3030:3030
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Berlin
+      - PUBLIC_URL=${READMEABOOK_PUBLIC_URL:-http://localhost:3030}
+    volumes:
+      - /DATA/AppData/readmeabook/config:/app/config
+      - /DATA/AppData/readmeabook/cache:/app/cache
+      - /DATA/AppData/readmeabook/postgres:/var/lib/postgresql/data
+      - /DATA/AppData/readmeabook/redis:/var/lib/redis
+      - /DATA/Downloads:/downloads
+      - /media/mainpool/embysvr/Audiobooks:/media
+    depends_on:
+      - audiobookshelf
+    networks:
+      - books-net
+      - mediastack
+
+networks:
+  books-net:
+    driver: bridge
+  mediastack:
+    external: true

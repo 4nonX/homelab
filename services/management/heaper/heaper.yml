@@ -1,0 +1,23 @@
+services:
+  heaper:
+    image: ghcr.io/janlunge/heaper:latest
+    platform: linux/amd64
+    container_name: heaper
+    restart: unless-stopped
+    mem_limit: 4g
+    memswap_limit: 4g
+    ports:
+      - "3010:80"
+    environment:
+      - HOSTNAME=localhost
+      - POSTGRES_USER=heaper
+      - POSTGRES_PASSWORD=${HEAPER_DB_PASSWORD}
+      - POSTGRES_DB=heaper
+      - ENABLE_INTERNAL_POSTGRES=true
+    volumes:
+      - /DATA/AppData/heaper/postgres:/var/lib/postgresql/data
+      - /DATA/AppData/heaper/data:/usr/src/app/data
+      - /DATA/AppData/heaper/config:/usr/src/app/config
+      - /DATA/AppData/heaper/thumbnails:/mnt/thumbnails
+      - /DATA/AppData/heaper/storage:/mnt/storage
+      - /DATA/AppData/heaper/backups:/mnt/backups

@@ -1,0 +1,12 @@
+services:
+  homarr:
+    container_name: homarr
+    image: ghcr.io/ajnart/homarr:latest
+    restart: unless-stopped
+    ports:
+      - "7575:7575"
+    volumes:
+      - /DATA/AppData/big-bear-homarr/configs:/app/data/configs
+      - /DATA/AppData/big-bear-homarr/icons:/app/public/icons
+      - /DATA/AppData/big-bear-homarr/data:/data
+      - /var/run/docker.sock:/var/run/docker.sock

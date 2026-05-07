@@ -1,0 +1,17 @@
+services:
+  kasm:
+    container_name: big-bear-kasm
+    image: linuxserver/kasm:latest
+    network_mode: bridge
+    privileged: true
+    restart: unless-stopped
+    ports:
+      - "4532:4532"
+      - "444:444"
+    environment:
+      KASM_PORT: "444"
+    volumes:
+      - /DATA/AppData/big-bear-kasm/opt:/opt
+      - /DATA/AppData/big-bear-kasm/profiles:/profiles
+      - /dev/input:/dev/input
+      - /run/udev/data:/run/udev/data

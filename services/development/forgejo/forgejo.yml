@@ -1,0 +1,60 @@
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:14
+    container_name: forgejo
+    restart: always
+    ports:
+      - 3131:3000
+      - 222:22
+    environment:
+      USER_UID: 1000
+      USER_GID: 1000
+      GITEA__database__DB_TYPE: mysql
+      GITEA__database__HOST: forgejo-db:3306
+      GITEA__database__NAME: forgejo
+      GITEA__database__USER: forgejo
+      GITEA__database__PASSWD: ${FORGEJO_DB_PASSWORD}
+      GITEA__server__ROOT_URL: ${FORGEJO_ROOT_URL}
+      GITEA__server__DOMAIN: ${FORGEJO_DOMAIN}
+      GITEA__server__PROTOCOL: http
+      GITEA__server__SSH_PORT: 222
+    volumes:
+      - /DATA/AppData/big-bear-dockge/stacks/forgejo/data:/data
+    depends_on:
+      - forgejo-db
+      - mail-relay
+    networks:
+      - forgejo-net
+
+  forgejo-db:
+    image: mariadb:11
+    container_name: forgejo-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${FORGEJO_DB_PASSWORD}
+      MYSQL_DATABASE: forgejo
+      MYSQL_USER: forgejo
+      MYSQL_PASSWORD: ${FORGEJO_DB_PASSWORD}
+    volumes:
+      - /DATA/AppData/big-bear-dockge/stacks/forgejo/mariadb:/var/lib/mysql
+    networks:
+      - forgejo-net
+
+  mail-relay:
+    image: juanluisbaptiste/postfix:latest
+    container_name: postfix-relay
+    restart: always
+    environment:
+      - MAILNAME=${MAIL_DOMAIN}
+      - MYNETWORKS=127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16
+      - SMTP_SERVER=smtp.protonmail.ch
+      - SMTP_PORT=587
+      - SMTP_USERNAME=${SMTP_USERNAME}
+      - SMTP_PASSWORD=${FORGEJO_SMTP_PASSWORD}
+      - SERVER_HOSTNAME=${MAIL_DOMAIN}
+    networks:
+      - forgejo-net
+
+networks:
+  forgejo-net:
+    driver: bridge

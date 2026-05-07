@@ -1,0 +1,21 @@
+services:
+  cryptpad:
+    image: cryptpad/cryptpad:latest
+    container_name: cryptpad
+    restart: unless-stopped
+    environment:
+      - CPAD_MAIN_DOMAIN=${CRYPTPAD_MAIN_DOMAIN}
+      - CPAD_SANDBOX_DOMAIN=${CRYPTPAD_SANDBOX_DOMAIN}
+      - CPAD_CONF=/cryptpad/config/config.js
+      - CPAD_TRUSTED_PROXY=true
+      - CPAD_HTTP2_DISABLE=true
+    volumes:
+      - /DATA/AppData/cryptpad/data:/cryptpad/data
+      - /DATA/AppData/cryptpad/config:/cryptpad/config
+      - /DATA/AppData/cryptpad/customize:/cryptpad/customize
+      - /DATA/AppData/cryptpad/blobs:/cryptpad/blobs
+      - /DATA/AppData/cryptpad/block:/cryptpad/block
+      - /DATA/AppData/cryptpad/logs:/cryptpad/logs
+    ports:
+      - 3000:3000
+      - 3001:3001

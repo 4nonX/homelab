@@ -1,0 +1,19 @@
+services:
+  tailscale-derper:
+    container_name: tailscale-derper
+    image: fredliang/derper:latest
+    network_mode: bridge
+    ports:
+      - target: 443
+        published: "3443"
+        protocol: tcp
+      - target: 3478
+        published: "3478"
+        protocol: udp
+    environment:
+      DERP_ADDR: :443
+      DERP_CERT_MODE: manual
+      DERP_DOMAIN: ${DERP_DOMAIN}
+    restart: unless-stopped
+    volumes:
+      - /DATA/AppData/derper/certs:/app/certs

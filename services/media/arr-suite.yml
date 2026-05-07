@@ -1,4 +1,3 @@
-version: "3.8"
 services:
   gluetun:
     image: qmcgaw/gluetun:latest
@@ -16,7 +15,7 @@ services:
     environment:
       - VPN_SERVICE_PROVIDER=protonvpn
       - VPN_TYPE=wireguard
-      - WIREGUARD_PRIVATE_KEY={wireguard_private_key}
+      - WIREGUARD_PRIVATE_KEY=${WIREGUARD_PRIVATE_KEY}
       - WIREGUARD_ADDRESSES=10.2.0.2/32
       - SERVER_COUNTRIES=Germany
       - VPN_PORT_FORWARDING=on
@@ -32,7 +31,7 @@ services:
     network_mode: service:gluetun
     volumes:
       - /DATA/AppData/qbittorrent:/config
-      - /DATA/Downloads:/downloads
+      - /DATA/Downloads:/mainpool/Downloads/qBittorrent/downloads
     environment:
       - PUID=1000
       - PGID=1000
@@ -184,23 +183,6 @@ services:
     volumes:
       - /DATA/AppData/recyclarr:/config
     environment:
-      - TZ=Europe/Berlin
-    restart: unless-stopped
-    networks:
-      - mediastack
-
-  homarr:
-    image: ghcr.io/ajnart/homarr:latest
-    container_name: homarr
-    ports:
-      - 7575:7575
-    volumes:
-      - /DATA/AppData/homarr/configs:/app/data/configs
-      - /DATA/AppData/homarr/icons:/app/public/icons
-      - /DATA/AppData/homarr/data:/data
-    environment:
-      - PUID=1000
-      - PGID=1000
       - TZ=Europe/Berlin
     restart: unless-stopped
     networks:

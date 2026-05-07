@@ -1,0 +1,15 @@
+services:
+  glass-keep:
+    image: nikunjsingh/glass-keep:latest
+    container_name: glass-keep
+    restart: unless-stopped
+    environment:
+      NODE_ENV: production
+      API_PORT: "8189"
+      JWT_SECRET: ${GLASS_KEEP_JWT_SECRET}
+      DB_FILE: /app/data/notes.db
+      ADMIN_EMAILS: ${GLASS_KEEP_ADMIN_EMAIL}
+    ports:
+      - "8189:8189"
+    volumes:
+      - /DATA/AppData/glass-keep:/app/data

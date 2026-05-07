@@ -1,0 +1,65 @@
+services:
+  librum:
+    image: ghcr.io/librum-reader/librum-server:latest
+    hostname: librum
+    container_name: librum
+    ports:
+      - 5044:5000
+    networks:
+      - librum
+    volumes:
+      - librum_storage:/var/lib/librum-server/librum_storage
+    environment:
+      - JWTValidIssuer=exampleIssuer
+      - JWTKey=${LIBRUM_JWT_KEY}
+      - SMTPEndpoint=smtp.protonmail.ch
+      - SMTPUsername=${SMTP_USERNAME}
+      - SMTPPassword=${LIBRUM_SMTP_PASSWORD}
+      - SMTPMailFrom=${SMTP_USERNAME}
+      - DBConnectionString=Server=mariadb;port=3306;Database=librum;Uid=librum;Pwd=${LIBRUM_DB_PASSWORD};
+      - AdminEmail=${LIBRUM_ADMIN_EMAIL}
+      - AdminPassword=${LIBRUM_ADMIN_PASSWORD}
+      - OpenAIToken=${LIBRUM_OPENAI_TOKEN}
+    restart: unless-stopped
+    depends_on:
+      librum_db:
+        condition: service_healthy
+
+  librum_db:
+    image: mariadb:10.11
+    hostname: mariadb
+    container_name: librum_db
+    networks:
+      - librum
+    volumes:
+      - librum_db:/var/lib/mysql
+    environment:
+      - MARIADB_USER=librum
+      - MARIADB_PASSWORD=${LIBRUM_DB_PASSWORD}
+      - MARIADB_DATABASE=librum
+      - MARIADB_ROOT_PASSWORD=${LIBRUM_DB_ROOT_PASSWORD}
+    restart: unless-stopped
+    healthcheck:
+      test:
+        - CMD
+        - mariadb-admin
+        - ping
+        - -u
+        - librum
+        - -p${LIBRUM_DB_PASSWORD}
+        - -h
+        - 127.0.0.1
+      interval: 20s
+      timeout: 40s
+      retries: 3
+      start_period: 30s
+
+networks:
+  librum:
+    name: librum
+
+volumes:
+  librum_storage:
+    name: librum
+  librum_db:
+    name: librum_db
