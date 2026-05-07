@@ -11,9 +11,9 @@ services:
                 reservations: {}
         environment:
             DOCKER_HOST: unix:///var/run/docker.sock
-            PASSWORD: ***REMOVED***
-            SECRET_KEY: ***REMOVED***
-            USERNAME: DanDressen
+            PASSWORD: ${DOCKPEEK_PASSWORD}
+            SECRET_KEY: ${DOCKPEEK_SECRET_KEY}
+            USERNAME: ${DOCKPEEK_USERNAME}
         image: ghcr.io/dockpeek/dockpeek:v1.7.2
         labels:
             icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/dockpeek.png

@@ -14,7 +14,7 @@ services:
                     memory: "67108864"
         environment:
             FTLCONF_dns_listeningMode: all
-            FTLCONF_webserver_api_password: ***REMOVED***
+            FTLCONF_webserver_api_password: ${PIHOLE_WEBPASSWORD}
             TZ: Europe/Berlin
         image: pihole/pihole:2025.07.1
         labels:
@@ -478,7 +478,7 @@ x-casaos:
             - [Pi-hole 官方网站](https://pi-hole.net/)
             - [Pi-hole GitHub](https://github.com/pi-hole/pi-hole)
     developer: Pi-hole
-    hostname: ***REMOVED***
+    hostname: ""
     icon: https://cdn.jsdelivr.net/gh/IceWhaleTech/CasaOS-AppStore@main/Apps/Pihole/icon.png
     index: ""
     is_uncontrolled: true

@@ -1,0 +1,15 @@
+title = "Homelab secret scan"
+
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Known safe patterns in this repo"
+regexes = [
+  # ${VAR} placeholders throughout compose files
+  '''\$\{[A-Z_]+\}''',
+  # casaos app store URLs
+  '''cdn\.jsdelivr\.net''',
+  # gitleaks demo/example strings in docs
+  '''changeme''',
+]
