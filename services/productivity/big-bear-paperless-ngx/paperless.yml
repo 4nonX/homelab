@@ -22,18 +22,18 @@ services:
             COMPOSE_PROJECT_NAME: big-bear-paperless-ngx
             LIBVA_DRIVER_NAME: iHD
             OMP_THREAD_LIMIT: "4"
-            PAPERLESS_ADMIN_PASSWORD: XXXXXXXXXXXXXXXXXXX
-            PAPERLESS_ADMIN_USER: XXXXXXXXXXXXXXXXXXXXXX
-            PAPERLESS_ALLOWED_HOSTS: paperless.mydomain.com,1XX.1XX.X.1XX,localhost
-            PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.d-net.me,http://***REMOVED***:8000
+            PAPERLESS_ADMIN_PASSWORD: ${PAPERLESS_ADMIN_PASSWORD}
+            PAPERLESS_ADMIN_USER: ${PAPERLESS_ADMIN_USER}
+            PAPERLESS_ALLOWED_HOSTS: ${PAPERLESS_ALLOWED_HOSTS}
+            PAPERLESS_CSRF_TRUSTED_ORIGINS: ${PAPERLESS_CSRF_TRUSTED_ORIGINS}
             PAPERLESS_DBHOST: big-bear-paperless-ngx-db
-            PAPERLESS_DBPASS: ***REMOVED***
-            PAPERLESS_DBUSER: bigbear
+            PAPERLESS_DBPASS: ${PAPERLESS_DB_PASSWORD}
+            PAPERLESS_DBUSER: ${PAPERLESS_DB_USER}
             PAPERLESS_REDIS: redis://big-bear-paperless-ngx-broker:6379
             PAPERLESS_TIKA_ENABLED: "true"
             PAPERLESS_TIKA_ENDPOINT: http://big-bear-paperless-ngx-tika:9998
             PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://big-bear-paperless-ngx-gotenberg:3000
-            PAPERLESS_URL: https://paperless.d-net.me
+            PAPERLESS_URL: ${PAPERLESS_URL}
         image: ghcr.io/paperless-ngx/paperless-ngx:latest
         labels:
             icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/paperless-ngx.png
@@ -153,8 +153,8 @@ services:
                 reservations: {}
         environment:
             POSTGRES_DB: paperless
-            POSTGRES_PASSWORD: XXXXXXXXXX
-            POSTGRES_USER: XXXXXXXXXX
+            POSTGRES_PASSWORD: ${PAPERLESS_DB_PASSWORD}
+            POSTGRES_USER: ${PAPERLESS_DB_USER}
         image: library/postgres:latest
         labels:
             icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/paperless-ngx.png
@@ -223,7 +223,7 @@ x-casaos:
     description:
         en_us: Paperless-ngx is a community-supported open-source document management system that transforms your physical documents into a searchable online archive so you can keep, well, less paper.
     developer: paperless-ngx
-    hostname: http://***REMOVED***
+    hostname: ""
     icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/paperless-ngx.png
     index: /
     is_uncontrolled: false
