@@ -39,7 +39,7 @@ fi
 echo "✓ Configuration verified"
 echo ""
 
-echo "Starting Aptifolio Clone..."
+echo "Starting Resume Builder..."
 echo ""
 
 # Create necessary directories

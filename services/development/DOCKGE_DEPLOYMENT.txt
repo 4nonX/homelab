@@ -5,8 +5,8 @@ OPTION 1: Using Dockge UI (Recommended)
 ----------------------------------------
 
 1. PREPARE FILES ON YOUR NAS
-   - Copy the entire 'aptifolio-clone' folder to your NAS
-   - Suggested location: /volume1/docker/aptifolio-clone
+   - Copy the entire 'resume-builder' folder to your NAS
+   - Suggested location: /volume1/docker/resume-builder
    - Make sure all files are there (backend/, frontend/, .env, docker-compose.yml, etc.)
 
 2. ACCESS DOCKGE
@@ -28,9 +28,9 @@ OPTION 1: Using Dockge UI (Recommended)
 
    AFTER (absolute - adjust to your NAS path):
    volumes:
-     - /volume1/docker/aptifolio-clone/uploads:/uploads
-     - /volume1/docker/aptifolio-clone/postgres-data:/var/lib/postgresql/data
-     - /volume1/docker/aptifolio-clone/backend:/app
+     - /volume1/docker/resume-builder/uploads:/uploads
+     - /volume1/docker/resume-builder/postgres-data:/var/lib/postgresql/data
+     - /volume1/docker/resume-builder/backend:/app
 
 5. SET ENVIRONMENT VARIABLES
    In Dockge, you can either:
@@ -43,7 +43,7 @@ OPTION 1: Using Dockge UI (Recommended)
       - GEMINI_API_KEY=AIzaSyDSEXfhCfwIypAR8TNVWHV7OhALQy3HvmE
       - JWT_SECRET=8f7e6d5c4b3a2918f7e6d5c4b3a29187f6e5d4c3b2a19180
       - POSTGRES_PASSWORD=db_secure_pass_2024_portfolio_builder_private
-      - DATABASE_URL=postgresql://aptifolio:db_secure_pass_2024_portfolio_builder_private@postgres:5432/aptifolio
+      - DATABASE_URL=postgresql://resume_builder:db_secure_pass_2024_portfolio_builder_private@postgres:5432/resume_builder
 
 6. DEPLOY
    - Click "Deploy" or "Start"
@@ -88,7 +88,7 @@ REVERSE PROXY (Optional)
 
 If using Caddy or another reverse proxy on your NAS:
 
-1. Remove Caddy service from docker-compose.yml (lines for aptifolio-caddy)
+1. Remove Caddy service from docker-compose.yml (lines for resume_builder-caddy)
 2. Configure your existing reverse proxy to forward to:
    - Frontend: localhost:3000
    - Backend: localhost:8000
@@ -110,7 +110,7 @@ Issue: "Port already in use"
 → Change ports in docker-compose.yml as shown above
 
 Issue: "Permission denied" on volumes
-→ Check folder permissions: chmod -R 755 /volume1/docker/aptifolio-clone
+→ Check folder permissions: chmod -R 755 /volume1/docker/resume-builder
 
 Issue: "Cannot connect to database"
 → Wait 30 seconds, postgres takes time to initialize
@@ -133,12 +133,12 @@ BACKUP
 ------
 
 Important directories to backup:
-- /volume1/docker/aptifolio-clone/postgres-data (database)
-- /volume1/docker/aptifolio-clone/uploads (resumes)
-- /volume1/docker/aptifolio-clone/.env (configuration)
+- /volume1/docker/resume-builder/postgres-data (database)
+- /volume1/docker/resume-builder/uploads (resumes)
+- /volume1/docker/resume-builder/.env (configuration)
 
 You can use Hyper Backup or:
-  tar -czf portfolio-backup.tar.gz /volume1/docker/aptifolio-clone
+  tar -czf portfolio-backup.tar.gz /volume1/docker/resume-builder
 
 
 MONITORING

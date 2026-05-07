@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 import os
 
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://aptifolio:changeme_secure_password@localhost:5432/aptifolio")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://resume_builder:changeme_secure_password@localhost:5432/resume_builder")
 
 # Create engine
 engine = create_engine(

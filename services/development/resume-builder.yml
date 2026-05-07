@@ -1,28 +1,26 @@
-version: '3.8'
-
 services:
   postgres:
     image: postgres:16-alpine
-    container_name: aptifolio-db
+    container_name: resume-builder-db
     environment:
-      POSTGRES_USER: aptifolio
-      POSTGRES_PASSWORD: changeme_secure_password
-      POSTGRES_DB: aptifolio
+      POSTGRES_USER: resume_builder
+      POSTGRES_PASSWORD: ${RESUME_BUILDER_DB_PASSWORD}
+      POSTGRES_DB: resume_builder
     volumes:
       - ./postgres-data:/var/lib/postgresql/data
     networks:
-      - aptifolio-network
+      - resume-builder-network
     restart: unless-stopped
 
   backend:
     build: ./backend
-    container_name: aptifolio-backend
+    container_name: resume-builder-backend
     environment:
-      DATABASE_URL: postgresql://aptifolio:changeme_secure_password@postgres:5432/aptifolio
-      JWT_SECRET: changeme_jwt_secret_key_min_32_chars
+      DATABASE_URL: postgresql://resume_builder:${RESUME_BUILDER_DB_PASSWORD}@postgres:5432/resume_builder
+      JWT_SECRET: ${RESUME_BUILDER_JWT_SECRET}
       GEMINI_API_KEY: ${GEMINI_API_KEY}
       UPLOAD_DIR: /uploads
-      FRONTEND_URL: http://localhost:3000
+      FRONTEND_URL: ${RESUME_BUILDER_FRONTEND_URL:-http://localhost:3000}
     volumes:
       - ./uploads:/uploads
       - ./backend:/app
@@ -31,25 +29,25 @@ services:
     depends_on:
       - postgres
     networks:
-      - aptifolio-network
+      - resume-builder-network
     restart: unless-stopped
 
   frontend:
     build: ./frontend
-    container_name: aptifolio-frontend
+    container_name: resume-builder-frontend
     environment:
-      NEXT_PUBLIC_API_URL: http://localhost:8000
+      NEXT_PUBLIC_API_URL: ${RESUME_BUILDER_API_URL:-http://localhost:8000}
     ports:
       - "3000:3000"
     depends_on:
       - backend
     networks:
-      - aptifolio-network
+      - resume-builder-network
     restart: unless-stopped
 
   caddy:
     image: caddy:2-alpine
-    container_name: aptifolio-caddy
+    container_name: resume-builder-caddy
     ports:
       - "80:80"
       - "443:443"
@@ -61,11 +59,11 @@ services:
       - frontend
       - backend
     networks:
-      - aptifolio-network
+      - resume-builder-network
     restart: unless-stopped
 
 networks:
-  aptifolio-network:
+  resume-builder-network:
     driver: bridge
 
 volumes:
