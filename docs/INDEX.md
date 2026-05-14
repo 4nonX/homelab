@@ -99,33 +99,41 @@
     - Paperless-NGX documents
     - Password management
 
+14. **[DOCKER-SERVICES.md](DOCKER-SERVICES.md)** - Full service inventory
+    - Complete catalogue of all running containers
+    - Service categories, images, and purposes
+
 ### 🌐 External Access (Pangolin)
 
-14. **[network-remote-access.md](network-remote-access.md)** - Remote Access Strategy
+15. **[network-remote-access.md](network-remote-access.md)** - Remote Access Strategy
     - Multi-layered VPN architecture
     - Pangolin/Tailscale/ZeroTier comparison
     - Security integration
 
-15. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
+16. **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete architecture
     - Why Pangolin?
     - Multi-layer security
     - Performance characteristics
     - Cost analysis
 
-16. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
+17. **[pangolin-configurations.md](pangolin-configurations.md)** - Sanitized configs
     - Docker Compose files
     - Server configuration
     - Client setup
     - Troubleshooting
 
-17. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step-deployment
+18. **[pangolin-deployment-guide.md](pangolin-deployment-guide.md)** - Step-by-step-deployment
     - VPS setup
     - DNS configuration
     - Server deployment
     - Client installation
     - Security hardening
 
-18. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step-upgrade
+19. **[pangolin-traefikdashboard-guide.md](pangolin-traefikdashboard-guide.md)** - Traefik dashboard behind Pangolin
+    - Enabling the Traefik API and dashboard
+    - Securing the dashboard route via Pangolin
+
+20. **[pangolin-upgrade-guide.md](pangolin-upgrade-guide.md)** - Step-by-step-upgrade
     - Architecture versions
     - Migrating from v1.12.2 to v1.14.1
     - Technical execution
@@ -140,7 +148,7 @@
     - Related documentation
     - Resources
 
-19. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
+21. **[pangolin-vps-relay-guide.md](pangolin-vps-relay-guide.md)** - Raspberry-Pi as Pangolin Brain
     - Architecture overview
     - Phase 1: Hardware & OS setup
     - Phase 2: Network mounting (Static IP)
@@ -149,7 +157,7 @@
     - Phase 5: Live cutover
     - Pro/Con analysis
 
-20. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin latency issues
+22. **[pangolin-z-performance-tuning.md](pangolin-z-performance-tuning.md)** - Mitigating Pangolin latency issues
     - WireGuard MTU optimization
     - WireGuard persistent keepalive
     - Traefik timeout optimization
@@ -158,10 +166,19 @@
     - NVMe I/O scheduler (NAS only)
     - TCP window scaling (network performance)
 
+23. **[pangolin-ha-setup.md](pangolin-ha-setup.md)** - Active-passive HA failover for Pangolin
+    - Architecture overview (primary + standby VPS)
+    - Litestream continuous SQLite replication to Backblaze B2
+    - Wildcard certificates via Cloudflare DNS-01 on both nodes
+    - Automatic failover via Cloudflare API (RTO ~7-8 min)
+    - Manual failback script with write-preserving DB handover
+    - Operational notes: split-brain, EE licensing, maintenance windows
+    - Troubleshooting: cert issuance, Litestream, CrowdSec, SMTP, DNS API
+
 ### 🗂 Architecture & Diagrams
 
-21. **[architecture-diagram.html](architecture-diagram.html)** - Overall system architecture  
-22. **[dataflow-diagram.html](dataflow-diagram.html)** - Service data flows  
-23. **[security-diagram.html](security-diagram.html)** - Security layers & controls
+24. **[architecture-diagram.html](architecture-diagram.html)** - Overall system architecture  
+25. **[dataflow-diagram.html](dataflow-diagram.html)** - Service data flows  
+26. **[security-diagram.html](security-diagram.html)** - Security layers & controls
 
 

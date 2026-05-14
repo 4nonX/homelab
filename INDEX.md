@@ -19,6 +19,8 @@ Complete map of every file in this repository.
 
 | File | Description |
 |---|---|
+| [docs/EXECUTIVE_SUMMARY.md](docs/EXECUTIVE_SUMMARY.md) | At-a-glance overview - key achievements, business value, quick stats |
+| [docs/PORTFOLIO.md](docs/PORTFOLIO.md) | Portfolio showcase - skills demonstration, technical implementation, GitHub-optimised presentation |
 | [docs/why-dplaneos.md](docs/why-dplaneos.md) | Why ZimaOS was replaced - limitations, alternatives considered, what DPlaneOS solves |
 | [docs/NIXOS-MIGRATION.md](docs/NIXOS-MIGRATION.md) | Full migration plan: ZimaOS → NixOS + DPlaneOS, phased approach, risk assessment |
 | [docs/homelab-complete-journey.md](docs/homelab-complete-journey.md) | Full build narrative - hardware, OS selection, storage, networking, lessons learned |
@@ -49,6 +51,7 @@ Complete map of every file in this repository.
 | [docs/pangolin-traefikdashboard-guide.md](docs/pangolin-traefikdashboard-guide.md) | Traefik dashboard setup behind Pangolin |
 | [docs/pangolin-upgrade-guide.md](docs/pangolin-upgrade-guide.md) | Version upgrade procedures, rollback, v1.12.2 → v1.14.1 migration |
 | [docs/pangolin-z-performance-tuning.md](docs/pangolin-z-performance-tuning.md) | Latency tuning - WireGuard MTU, keepalive, Traefik timeouts, sysctl |
+| [docs/pangolin-ha-setup.md](docs/pangolin-ha-setup.md) | Active-passive HA failover - Litestream B2 replication, Cloudflare DNS flip, ~7-8 min RTO |
 
 ### Services
 
@@ -82,8 +85,8 @@ Complete map of every file in this repository.
 | [infrastructure/networking/tailscale-derper/tailscale-derper.yml](infrastructure/networking/tailscale-derper/tailscale-derper.yml) | Tailscale DERP relay server |
 | [infrastructure/networking/pangolin/README.md](infrastructure/networking/pangolin/README.md) | Pangolin component map, traffic flow, links to all Pangolin docs |
 | [infrastructure/networking/traefik/README.md](infrastructure/networking/traefik/README.md) | Traefik config notes (VPS-managed) |
-
-| **[Terraform IaC](infrastructure/networking/pangolin/terraform/pangolin-terraform-iac.md)** | Terraform setup, backup strategy, DR key decisions | new |
+| [infrastructure/networking/pangolin/terraform/pangolin-terraform-iac.md](infrastructure/networking/pangolin/terraform/pangolin-terraform-iac.md) | Terraform IaC - DNS, VPS provisioning, backup strategy, DR key decisions |
+| [infrastructure/networking/pangolin/terraform/DR_RUNBOOK.md](infrastructure/networking/pangolin/terraform/DR_RUNBOOK.md) | Disaster recovery runbook - full VPS rebuild in ~15 min |
 
 ### Security
 
@@ -100,6 +103,7 @@ Complete map of every file in this repository.
 | [infrastructure/monitoring/beszel/beszel.yml](infrastructure/monitoring/beszel/beszel.yml) | Beszel - lightweight server resource monitoring hub |
 | [infrastructure/monitoring/beszel-agent/beszel-agent.yml](infrastructure/monitoring/beszel-agent/beszel-agent.yml) | Beszel agent - per-host metrics collector |
 | [infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) | Scrutiny - S.M.A.R.T disk health monitoring |
+| [infrastructure/monitoring/big-bear-dockge/dockge.yml](infrastructure/monitoring/big-bear-dockge/dockge.yml) | Dockge - Docker Compose stack management UI |
 | [infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) | Dockpeek - container health dashboard |
 
 ### Storage
