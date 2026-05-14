@@ -373,6 +373,7 @@ Net savings: €435/yr → break-even Year 4
 | [Pangolin Upgrade Guide](docs/pangolin-upgrade-guide.md) | Version upgrade procedures |
 | [Pangolin Performance Tuning](docs/pangolin-z-performance-tuning.md) | Kernel sysctl optimisations |
 | [Pangolin Traefik Dashboard](docs/pangolin-traefikdashboard-guide.md) | Dashboard configuration |
+| [Pangolin HA Setup](docs/pangolin-ha-setup.md) | Active-passive failover: Litestream B2 replication, Cloudflare DNS flip, ~7-8 min RTO |
 | [Media Stack](docs/media-stack.md) | Arr suite + Emby configuration |
 | [Productivity Services](docs/productivity-services.md) | Nextcloud, Immich, Paperless setup |
 | [Nextcloud Optimisation](docs/nextcloud-optimization-guide.md) | PostgreSQL + Redis + PHP tuning |
