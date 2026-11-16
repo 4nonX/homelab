@@ -13,7 +13,7 @@ port-forwarding.
 
 This repository is the public, sanitized mirror of the setup. Every compose file and script here is the one that runs,
 with domains, LAN addresses, host ports and personal values replaced by placeholders (`example.com`, `${..._PORT}`,
-`192.0.2.x`, `*.lan`). Secrets were never in git; they live in OpenBao.
+`192.0.2.x`, `*.lan`). Secrets are never stored in git, they live in OpenBao.
 
 > **[INDEX.md](INDEX.md)** - map of every file. **[legacy/](legacy/README.md)** - the previous NixOS/ZimaOS-era setup, kept for reference.
 
