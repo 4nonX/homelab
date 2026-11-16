@@ -1,0 +1,163 @@
+# netbox - based on the official compose file (netbox-community/netbox-docker)
+# adapted: pinned images, host port 8999, settings inline (secrets in .env)
+name: netbox
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:81e77a4833487b8132fe4b00bedd39dc3f74b8641e387f19312a48f7de218c2e
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: "netbox"
+      POSTGRES_USER: "netbox"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD}"
+    volumes:
+      - netbox-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U netbox -d netbox
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 300s
+  redis:
+    image: redis:7-alpine@sha256:7f7d30b7fdd09467bac58198a1f166dd69789d348d4fe859cccb20e0cf287fbe
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - redis-server --appendonly yes --requirepass "$$REDIS_PASSWORD"
+    environment:
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+    volumes:
+      - netbox-redis-data:/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli -a "$$REDIS_PASSWORD" ping | grep -q PONG
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 300s
+  redis-cache:
+    image: redis:7-alpine@sha256:7f7d30b7fdd09467bac58198a1f166dd69789d348d4fe859cccb20e0cf287fbe
+    restart: unless-stopped
+    command:
+      - sh
+      - -c
+      - redis-server --requirepass "$$REDIS_CACHE_PASSWORD"
+    environment:
+      REDIS_CACHE_PASSWORD: "${REDIS_CACHE_PASSWORD}"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - redis-cli -a "$$REDIS_CACHE_PASSWORD" ping | grep -q PONG
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 300s
+  netbox:
+    image: netboxcommunity/netbox:latest-5.0.1@sha256:980b4cba2c53bf806762b890e0d683eb23413330aa1f94f0c06f0cad31603f39
+    restart: unless-stopped
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      redis-cache:
+        condition: service_healthy
+    environment:
+      SKIP_SUPERUSER: "false"
+      SUPERUSER_NAME: "${SUPERUSER_NAME}"
+      SUPERUSER_EMAIL: "${SUPERUSER_EMAIL}"
+      SUPERUSER_PASSWORD: "${SUPERUSER_PASSWORD}"
+      DB_HOST: "postgres"
+      DB_NAME: "netbox"
+      DB_USER: "netbox"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REDIS_DATABASE: "0"
+      REDIS_SSL: "false"
+      REDIS_CACHE_HOST: "redis-cache"
+      REDIS_CACHE_PORT: "6379"
+      REDIS_CACHE_PASSWORD: "${REDIS_CACHE_PASSWORD}"
+      REDIS_CACHE_DATABASE: "1"
+      REDIS_CACHE_SSL: "false"
+      SECRET_KEY: "${SECRET_KEY}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS}"
+    volumes:
+      - netbox-media:/opt/netbox/netbox/media
+      - netbox-reports:/opt/netbox/netbox/reports
+      - netbox-scripts:/opt/netbox/netbox/scripts
+      - /srv/appdata/netbox/sso.py:/etc/netbox/config/sso.py:ro
+    ports:
+      - "${NETBOX_PORT}:8080"
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -f
+        - http://localhost:8080/login/
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 300s
+  netbox-worker:
+    image: netboxcommunity/netbox:latest-5.0.1@sha256:980b4cba2c53bf806762b890e0d683eb23413330aa1f94f0c06f0cad31603f39
+    restart: unless-stopped
+    depends_on:
+      netbox:
+        condition: service_healthy
+    command:
+      - /opt/netbox/venv/bin/python
+      - /opt/netbox/netbox/manage.py
+      - rqworker
+    environment:
+      DB_HOST: "postgres"
+      DB_NAME: "netbox"
+      DB_USER: "netbox"
+      DB_PASSWORD: "${POSTGRES_PASSWORD}"
+      REDIS_HOST: "redis"
+      REDIS_PORT: "6379"
+      REDIS_PASSWORD: "${REDIS_PASSWORD}"
+      REDIS_DATABASE: "0"
+      REDIS_SSL: "false"
+      REDIS_CACHE_HOST: "redis-cache"
+      REDIS_CACHE_PORT: "6379"
+      REDIS_CACHE_PASSWORD: "${REDIS_CACHE_PASSWORD}"
+      REDIS_CACHE_DATABASE: "1"
+      REDIS_CACHE_SSL: "false"
+      SECRET_KEY: "${SECRET_KEY}"
+      ALLOWED_HOSTS: "${ALLOWED_HOSTS}"
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - ps -aux | grep -v grep | grep -q rqworker || exit 1
+      interval: 30s
+      timeout: 20s
+      retries: 10
+      start_period: 300s
+volumes:
+  netbox-postgres-data:
+  netbox-redis-data:
+  netbox-media:
+  netbox-reports:
+  netbox-scripts:
+x-netbox-env:
+  DB_HOST: postgres
+  DB_NAME: netbox
+  DB_USER: netbox
+  DB_PASSWORD: ${POSTGRES_PASSWORD}
+  REDIS_HOST: redis
+  REDIS_PORT: '6379'
+  REDIS_PASSWORD: ${REDIS_PASSWORD}
+  REDIS_DATABASE: '0'
+  REDIS_SSL: 'false'
+  REDIS_CACHE_HOST: redis-cache
+  REDIS_CACHE_PORT: '6379'
+  REDIS_CACHE_PASSWORD: ${REDIS_CACHE_PASSWORD}
+  REDIS_CACHE_DATABASE: '1'
+  REDIS_CACHE_SSL: 'false'
+  SECRET_KEY: ${SECRET_KEY}
+  ALLOWED_HOSTS: ${ALLOWED_HOSTS}

@@ -1,0 +1,128 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: >-
+  OpenBao auto-unseal for the homelab: one KMS key, one IAM user that may only
+  encrypt/decrypt with that key, and an email alert on every use of the key.
+  Deploy in eu-central-1 (Frankfurt). Create the access key for the user afterwards
+  in the IAM console; it is deliberately not part of this template.
+
+Parameters:
+  AlertEmail:
+    Type: String
+    Description: Email address that receives an alert on every use of the unseal key.
+    AllowedPattern: ".+@.+\\..+"
+
+Resources:
+  UnsealUser:
+    Type: AWS::IAM::User
+    Properties:
+      UserName: openbao-unseal
+      Tags:
+        - { Key: purpose, Value: openbao-auto-unseal }
+
+  UnsealKey:
+    Type: AWS::KMS::Key
+    Properties:
+      Description: OpenBao auto-unseal key (homelab pve / bao LXC)
+      KeySpec: SYMMETRIC_DEFAULT
+      KeyUsage: ENCRYPT_DECRYPT
+      EnableKeyRotation: true
+      PendingWindowInDays: 30
+      KeyPolicy:
+        Version: "2012-10-17"
+        Statement:
+          - Sid: AccountAdministration
+            Effect: Allow
+            Principal: { AWS: !Sub "arn:aws:iam::${AWS::AccountId}:root" }
+            Action: "kms:*"
+            Resource: "*"
+          - Sid: OpenBaoUnsealOnly
+            Effect: Allow
+            Principal: { AWS: !GetAtt UnsealUser.Arn }
+            Action: [ "kms:Encrypt", "kms:Decrypt", "kms:DescribeKey" ]
+            Resource: "*"
+      Tags:
+        - { Key: purpose, Value: openbao-auto-unseal }
+
+  UnsealKeyAlias:
+    Type: AWS::KMS::Alias
+    Properties:
+      AliasName: alias/openbao-unseal
+      TargetKeyId: !Ref UnsealKey
+
+  # The user's only permissions: these three actions on this one key.
+  UnsealUserPolicy:
+    Type: AWS::IAM::Policy
+    Properties:
+      PolicyName: openbao-unseal-kms
+      Users: [ !Ref UnsealUser ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Action: [ "kms:Encrypt", "kms:Decrypt", "kms:DescribeKey" ]
+            Resource: !GetAtt UnsealKey.Arn
+
+  AlertTopic:
+    Type: AWS::SNS::Topic
+    Properties:
+      TopicName: openbao-unseal-key-use
+      Subscription:
+        - { Protocol: email, Endpoint: !Ref AlertEmail }
+
+  AlertTopicPolicy:
+    Type: AWS::SNS::TopicPolicy
+    Properties:
+      Topics: [ !Ref AlertTopic ]
+      PolicyDocument:
+        Version: "2012-10-17"
+        Statement:
+          - Effect: Allow
+            Principal: { Service: events.amazonaws.com }
+            Action: "sns:Publish"
+            Resource: !Ref AlertTopic
+
+  # Decrypt (unseal, and OpenBao's daily seal health check) and every change to the key
+  # (policy, grants, disable, deletion...). Encrypt/DescribeKey/GenerateDataKey are left out:
+  # they cannot reveal anything and would only add noise.
+  # Decrypt is a read-only management event, which EventBridge only delivers to rules in
+  # state ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS.
+  KeyUseRule:
+    Type: AWS::Events::Rule
+    Properties:
+      Name: openbao-unseal-key-use
+      Description: Email on any use of the OpenBao unseal key
+      State: ENABLED_WITH_ALL_CLOUDTRAIL_MANAGEMENT_EVENTS
+      EventPattern:
+        source: [ "aws.kms" ]
+        detail-type: [ "AWS API Call via CloudTrail" ]
+        detail:
+          eventSource: [ "kms.amazonaws.com" ]
+          eventName: [ { "anything-but": [ "Encrypt", "DescribeKey", "GenerateDataKey" ] } ]
+          resources:
+            ARN: [ !GetAtt UnsealKey.Arn ]
+      Targets:
+        - Id: email
+          Arn: !Ref AlertTopic
+          InputTransformer:
+            InputPathsMap:
+              event: "$.detail.eventName"
+              who: "$.detail.userIdentity.arn"
+              ip: "$.detail.sourceIPAddress"
+              time: "$.detail.eventTime"
+            InputTemplate: >-
+              "OpenBao unseal key: <event> by <who> from <ip> at <time>.
+              Expected: one Decrypt per day (seal health check) and one when OpenBao or the
+              Proxmox host restarts. Anything else, or any key change you did not make:
+              IAM > Users > openbao-unseal > Security credentials > deactivate the access key."
+
+Outputs:
+  KeyArn:
+    Value: !GetAtt UnsealKey.Arn
+  KeyId:
+    Value: !Ref UnsealKey
+  KeyAlias:
+    Value: !Ref UnsealKeyAlias
+  Region:
+    Value: !Ref AWS::Region
+  UnsealUserName:
+    Value: !Ref UnsealUser

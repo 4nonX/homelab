@@ -1,0 +1,35 @@
+# typehaus - own project, compose file from its repository
+# adapted: pinned images, data paths, host ports (secrets in .env)
+name: typehaus
+services:
+  typehaus:
+    image: ghcr.io/4nonx/typehaus:1.2.0@sha256:e95b3924e0bb3b1a1359e58c79ceff35523151d044fa7b71379ec34ed0c1a2cb
+    container_name: typehaus
+    restart: unless-stopped
+    # image runs as nonroot (65532) without any capabilities
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    environment:
+      TYPEHAUS_BASE_URL: "${TYPEHAUS_BASE_URL:?Set TYPEHAUS_BASE_URL in .env (the address users and agents open)}"
+      TYPEHAUS_ADMIN_USER: "${TYPEHAUS_ADMIN_USER:-admin}"
+      TYPEHAUS_ADMIN_PASSWORD: "${TYPEHAUS_ADMIN_PASSWORD:-}"
+      TYPEHAUS_TRUST_PROXY: "${TYPEHAUS_TRUST_PROXY:-true}"
+      TYPEHAUS_POLL_SECONDS: "${TYPEHAUS_POLL_SECONDS:-60}"
+      TYPEHAUS_MAX_UPLOAD_MB: "${TYPEHAUS_MAX_UPLOAD_MB:-512}"
+      TYPEHAUS_SESSION_HOURS: "${TYPEHAUS_SESSION_HOURS:-168}"
+      TYPEHAUS_LOCAL_LOGIN: "${TYPEHAUS_LOCAL_LOGIN:-true}"
+      TYPEHAUS_OIDC_ISSUER: "${TYPEHAUS_OIDC_ISSUER:-}"
+      TYPEHAUS_OIDC_CLIENT_ID: "${TYPEHAUS_OIDC_CLIENT_ID:-}"
+      TYPEHAUS_OIDC_CLIENT_SECRET: "${TYPEHAUS_OIDC_CLIENT_SECRET:-}"
+      TYPEHAUS_OIDC_NAME: "${TYPEHAUS_OIDC_NAME:-}"
+      TYPEHAUS_OIDC_GROUPS_CLAIM: "${TYPEHAUS_OIDC_GROUPS_CLAIM:-}"
+      TYPEHAUS_OIDC_ADMIN_GROUP: "${TYPEHAUS_OIDC_ADMIN_GROUP:-}"
+      TYPEHAUS_OIDC_AUTO_CREATE: "${TYPEHAUS_OIDC_AUTO_CREATE:-true}"
+    volumes:
+      - typehaus-data:/data
+    ports:
+      - "${TYPEHAUS_BIND:-127.0.0.1}:${TYPEHAUS_PORT}:8080"
+volumes:
+  typehaus-data:

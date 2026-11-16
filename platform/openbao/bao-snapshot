@@ -1,0 +1,12 @@
+#!/bin/bash
+# Daily OpenBao Raft snapshot to /var/backups/openbao (ZFS dataset mainpool/backups/openbao). Keeps 14 days.
+set -euo pipefail
+A=https://127.0.0.1:8200; D=/var/backups/openbao; KEEP_DAYS=14
+T=$(jq -n --rawfile r /etc/bao-backup/role_id --rawfile s /etc/bao-backup/secret_id "{role_id:\$r, secret_id:\$s}" |
+    curl -fsS --cacert /opt/openbao/tls/ca.crt -X POST $A/v1/auth/approle/login -d @- | jq -r .auth.client_token)
+trap "curl -fsS -o /dev/null --cacert /opt/openbao/tls/ca.crt -X POST -H \"X-Vault-Token: \$T\" $A/v1/auth/token/revoke-self || true" EXIT
+umask 077; f="$D/bao-$(date +%Y%m%d-%H%M%S).snap"
+curl -fsS --cacert /opt/openbao/tls/ca.crt -H "X-Vault-Token: $T" -o "$f.part" $A/v1/sys/storage/raft/snapshot
+[ -s "$f.part" ] && tar -tzf "$f.part" >/dev/null && mv "$f.part" "$f" || { rm -f "$f.part"; echo "snapshot invalid" >&2; exit 1; }
+find "$D" -name "bao-*.snap" -mtime +$KEEP_DAYS -delete
+echo "saved $f ($(stat -c %s "$f") bytes); kept: $(ls "$D"/bao-*.snap | wc -l)"

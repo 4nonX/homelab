@@ -1,28 +1,31 @@
 ﻿# Homelab Infrastructure
 
 [![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
-[![Services](https://img.shields.io/badge/services-60+-blue?style=flat-square)](https://github.com/4nonX/homelab)
-[![Storage](https://img.shields.io/badge/storage-33TB_→_ZFS_RAID--Z2-orange?style=flat-square)](infrastructure/storage/README.md)
-[![OS](https://img.shields.io/badge/OS-NixOS-5277C3?style=flat-square&logo=nixos)](https://nixos.org)
-[![NAS](https://img.shields.io/badge/NAS_layer-DPlaneOS-blueviolet?style=flat-square)](https://github.com/4nonX/DPlaneOS)
+[![Stacks](https://img.shields.io/badge/stacks-34-blue?style=flat-square)](stacks/)
+[![Containers](https://img.shields.io/badge/containers-85-blue?style=flat-square)](stacks/)
+[![Hypervisor](https://img.shields.io/badge/Proxmox_VE-9-E57000?style=flat-square&logo=proxmox)](https://www.proxmox.com)
+[![Storage](https://img.shields.io/badge/storage-ZFS-orange?style=flat-square)](docs/data-protection.md)
+[![GitOps](https://img.shields.io/badge/deploy-GitOps_(Komodo)-6E40C9?style=flat-square)](docs/gitops-pipeline.md)
 
-A reference implementation of a self-hosted home infrastructure stack: 60+ self-hosted services across 100+ containers, 33 TB storage, zero port-forwarding. Runs on NixOS with [DPlaneOS](https://github.com/4nonX/DPlaneOS), a self-developed NAS management layer. Currently migrating storage from BTRFS RAID5 to ZFS RAID-Z2.
+A self-hosted home infrastructure: 34 Docker Compose stacks (85 containers) on a single Proxmox VE host, deployed
+by GitOps from a git repository, secrets in OpenBao, public access through a Pangolin tunnel with zero
+port-forwarding.
 
----
+This repository is the public, sanitized mirror of the setup. Every compose file and script here is the one that runs,
+with domains, LAN addresses, host ports and personal values replaced by placeholders (`example.com`, `${..._PORT}`,
+`192.0.2.x`, `*.lan`). Secrets were never in git; they live in OpenBao.
 
-> **[INDEX.md](INDEX.md)** - complete map of every file in this repository.
+> **[INDEX.md](INDEX.md)** - map of every file. **[legacy/](legacy/README.md)** - the previous NixOS/ZimaOS-era setup, kept for reference.
 
 ## Contents
 
 - [Architecture](#architecture)
+- [How a change gets deployed](#how-a-change-gets-deployed)
 - [Security model](#security-model)
 - [Service matrix](#service-matrix)
-- [Storage strategy](#storage-strategy)
+- [Storage and data protection](#storage-and-data-protection)
 - [Repository structure](#repository-structure)
-- [Tech stack](#tech-stack)
-- [Cost analysis](#cost-analysis)
 - [Documentation](#documentation)
-- [Quick start](#quick-start)
 
 ---
 
@@ -32,327 +35,118 @@ A reference implementation of a self-hosted home infrastructure stack: 60+ self-
 Internet
   │
   ▼
-VPS - IONOS, Berlin (2 vCPU / 2 GB RAM / 80 GB NVMe)
-  ├─ UFW firewall        ports 80, 443, 51820 only
-  ├─ CrowdSec IDS/IPS   community blocklists, Traefik bouncer
-  ├─ Traefik v3          TLS 1.3 termination, Let's Encrypt
-  └─ Gerbil              WireGuard endpoint (Pangolin component)
-            │
-            │  WireGuard tunnel - ChaCha20-Poly1305, encrypted
-            ▼
-Raspberry Pi 5 - local LAN hub (Pangolin brain)
-  ├─ Pangolin server     identity, routing control plane
-  ├─ Newt                tunnel termination
-  └─ Traefik (inner)     internal routing → services
-            │
-            ▼
-Home network - 10.XXX.0.0/24
-  ├─ NAS server (10.XXX.0.1)     100+ containers, 33 TB storage
-  └─ Pi-hole  (10.XXX.0.2)       DNS, ad-blocking
+VPS: Pangolin (Traefik + Gerbil), TLS, identity-aware access
+  │   WireGuard tunnel, outbound from home; no open ports at home
+  ▼
+Proxmox VE host  ─ ZFS pool "mainpool" (sanoid snapshots)
+  ├─ VM  docker     Docker + Komodo Periphery, all 34 stacks
+  │     ├─ newt                tunnel client (Pangolin site)
+  │     ├─ traefik-internal    one router for LAN and internet, authentik forward-auth
+  │     ├─ authentik           SSO for every app that supports OIDC
+  │     └─ 31 app stacks       media, documents, notes, photos, dev, dashboards
+  ├─ VM  komodo     Komodo Core: pulls the git repo, deploys changed stacks
+  ├─ LXC bao        OpenBao: all stack secrets, auto-unseal via AWS KMS
+  └─ LXC samba      SMB shares on ZFS datasets, snapshots as "Previous Versions"
 ```
 
-> **Key design decision:** [Pangolin](https://github.com/fosrl/pangolin) tunnel instead of port-forwarding means the home IP is never
-> exposed, there is no dynamic DNS dependency, and the home router attack surface is zero.
+- **Outside = inside.** Every public route ends at the internal Traefik on the Docker VM, the same router the LAN uses.
+  Who gets authentik in front of an app is decided in one table ([gen.py](stacks/traefik-internal/gen.py)).
+- **Separation by guest.** Secrets (OpenBao), deployment control (Komodo) and workloads (Docker) sit in separate
+  guests. Containers on the Docker VM are firewalled away from OpenBao; only the host-side renderer talks to it.
+- **Nothing calls in.** Komodo polls git, Renovate runs in GitHub Actions, the tunnel is outbound. No webhook and no
+  port on the home router.
 
-Interactive diagrams: [Architecture](https://4nonx.github.io/homelab/architecture-diagram.html) · [Security layers](https://4nonx.github.io/homelab/security-diagram.html) · [Data flow](https://4nonx.github.io/homelab/dataflow-diagram.html)
+Details: [docs/architecture.md](docs/architecture.md).
+
+---
+
+## How a change gets deployed
+
+```
+git push (or merged Renovate PR)
+  └─> Komodo procedure, every 5 min: DeployStackIfChanged for all stacks
+        ├─ pre_deploy   komodo-predeploy     render .env from OpenBao (kv/stacks/<stack>)
+        ├─ compose      komodo-compose       docker compose, secret values masked in all logs
+        └─ post_deploy  komodo-postdeploy    wait until every container is running, healthy and stable
+                                             (otherwise the deploy is marked failed)
+secret changed in OpenBao
+  └─> komodo-bao-watch (timer, 5 min): compares rendered .env with OpenBao, redeploys that stack
+```
+
+- Images are pinned to version and digest. **Renovate** opens update PRs weekly; nothing merges on its own.
+- **Trivy** compares every image a PR changes with the image it replaces and marks the PR red only when it
+  brings in a fixable CRITICAL CVE the running image does not have. Findings that are already in production do not
+  block a digest refresh.
+
+Details and all scripts: [docs/gitops-pipeline.md](docs/gitops-pipeline.md), [platform/](platform/).
 
 ---
 
 ## Security model
 
-Defense in depth: each layer is independently hardened and does not rely on the correctness of outer layers.
-
 ```
-Layer 1 - Perimeter (VPS)
-  UFW: only ports 80, 443, 51820 reachable from internet
-  CrowdSec: IP reputation, automated banning, community threat feeds
-  DDoS mitigation: IONOS network-level
-
-Layer 2 - Transport
-  WireGuard: encrypted tunnel between VPS and home network
-  TLS 1.3: enforced at both outer (VPS Traefik) and inner (Pi Traefik) layers
-  Let's Encrypt: certificates auto-renewed, HSTS enabled
-
-Layer 3 - Network isolation
-  Docker bridge networks scoped per service group
-  Databases not exposed to host network interface
-  Services communicate only via explicitly defined networks
-
-Layer 4 - Application
-  Per-service authentication; OIDC where supported
-  2FA enforced on Vaultwarden and Nextcloud
-  Vaultwarden for shared credential management
-
-Layer 5 - Data integrity
-  ZFS end-to-end checksumming: every block verified on read, silent corruption repaired from RAID-Z2 parity
-  RAID-Z2: dual-disk fault tolerance, no write-hole vulnerability (unlike BTRFS RAID5)
-  Scheduled scrubs verify the full pool
-  Current: migrating from BTRFS RAID5 - see infrastructure/storage/README.md
+Edge          Pangolin on a VPS: TLS, SSO + 2FA in front of admin UIs, no inbound ports at home
+Routing       one internal Traefik for LAN and internet; authentik forward-auth for apps without own login
+Identity      authentik (OIDC) for every app that supports it, local accounts only as fallback
+Secrets       OpenBao: per-stack paths, AppRoles bound to their host, short-lived tokens, audit log,
+              AWS KMS auto-unseal with an email on every use of the key; containers cannot reach it
+Containers    images pinned by digest, Trivy gate on updates, Docker API only through read-only
+              socket proxies, own images non-root with no capabilities
+Data          ZFS checksums, sanoid snapshots taken on the host (a compromised VM cannot delete them)
 ```
+
+The home LAN is treated as trusted: apps also answer on their LAN ports without authentik. Only the internet path is
+gated. Details: [docs/security.md](docs/security.md).
 
 ---
 
 ## Service matrix
 
-### Media
+| Area | Stacks |
+|---|---|
+| Edge, routing, identity | [newt](stacks/newt/), [traefik-internal](stacks/traefik-internal/), [authentik](stacks/authentik/), [pihole](stacks/pihole/), [tailscale](stacks/tailscale/) |
+| Media | [emby-arr](stacks/emby-arr/) (Emby, Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, Seerr, qBittorrent behind Gluetun, FlareSolverr, Recyclarr, Maintainerr), [navidrome](stacks/navidrome/), [swingmusic](stacks/swingmusic/), [pinchflat](stacks/pinchflat/), [stremio](stacks/stremio/), [stremio-server](stacks/stremio-server/) |
+| Books | [boox](stacks/boox/) (Audiobookshelf, Grimmory, Bookkeep, ReadMeABook) |
+| Files, photos, office | [nextcloud](stacks/nextcloud/) (+ Talk HPB, office, whiteboard), [immich](stacks/immich/), [paperless-ngx](stacks/paperless-ngx/), [bentopdf](stacks/bentopdf/) |
+| Notes and knowledge | [trilium](stacks/trilium/), [joplin](stacks/joplin/), [memos](stacks/memos/), [bookstack](stacks/bookstack/), [linkwarden](stacks/linkwarden/) |
+| Personal finance and planning | [sure](stacks/sure/), [wallos](stacks/wallos/), [calendar-ce](stacks/calendar-ce/) |
+| Development and own projects | [forgejo](stacks/forgejo/), [danvas](stacks/danvas/), [typehaus](stacks/typehaus/), [haven](stacks/haven/), [dan-portfolio](stacks/dan-portfolio/), [dplaneos-website2](stacks/dplaneos-website2/) |
+| Operations | [homarr](stacks/homarr/) (dashboard), [dockpeek](stacks/dockpeek/) (container overview), [netbox](stacks/netbox/) (inventory), [searxng](stacks/searxng/) |
 
-| Service | Purpose | Compose |
-|---|---|---|
-| [Emby](https://emby.media) | Media server | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Sonarr](https://github.com/Sonarr/Sonarr) | TV show automation | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Radarr](https://github.com/Radarr/Radarr) | Movie automation | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Lidarr](https://github.com/Lidarr/Lidarr) | Music automation | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Prowlarr](https://github.com/Prowlarr/Prowlarr) | Indexer management | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Bazarr](https://github.com/morpheus65535/bazarr) | Subtitle automation | [arr-suite.yml](services/media/arr-suite.yml) |
-| [FlareSolverr](https://github.com/FlareSolverr/FlareSolverr) | Cloudflare bypass for indexers | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Recyclarr](https://github.com/recyclarr/recyclarr) | TRaSH Guides quality profile sync | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Maintainerr](https://github.com/jorenn92/Maintainerr) | Media library cleanup rules | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Seerr](https://github.com/seerr/seerr) | Media request management | [arr-suite.yml](services/media/arr-suite.yml) |
-| [qBittorrent](https://github.com/qbittorrent/qBittorrent) | Download client (via [Gluetun](https://github.com/qdm12/gluetun) VPN) | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Gluetun](https://github.com/qdm12/gluetun) | WireGuard VPN gateway for downloads | [arr-suite.yml](services/media/arr-suite.yml) |
-| [Audiobookshelf](https://github.com/advplyr/audiobookshelf) | Audiobooks + podcast server | [books.yml](services/media/books/books.yml) |
-| Grimmory | Ebook library (Booklore-based, MariaDB) | [books.yml](services/media/books/books.yml) |
-| Bookkeep | Book discovery and request manager | [books.yml](services/media/books/books.yml) |
-| Readmeabook | Audiobook request manager | [books.yml](services/media/books/books.yml) |
-| [SwingMusic](https://github.com/swingmx/swingmusic) | Self-hosted music player | [swingmusic.yml](services/media/swingmusic/swingmusic.yml) |
-| [Navidrome](https://github.com/navidrome/navidrome) | Music streaming (Subsonic API) | [navidrome.yml](services/media/navidrome/navidrome.yml) |
-| [Pinchflat](https://github.com/kieraneglin/pinchflat) | YouTube archiver | [pinchflat.yml](services/media/pinchflat/pinchflat.yml) |
-| [Stremio Server](https://github.com/Stremio/server-docker) | Streaming add-on server | [stremio.yml](services/media/stremio/stremio.yml) |
-
-### Productivity & cloud
-
-| Service | Purpose | Compose |
-|---|---|---|
-| [Nextcloud](https://github.com/nextcloud/server) + [Collabora](https://github.com/CollaboraOnline/online) | File sync, cloud office suite | [nextcloud.yml](services/productivity/nextcloud.yml) |
-| [Nextcloud Talk HPB](https://github.com/strukturag/nextcloud-spreed-signaling) | High-performance video call backend | [nextcloud.yml](services/productivity/nextcloud.yml) |
-| [Immich](https://github.com/immich-app/immich) | Google Photos replacement | [immich.yml](services/media/immich/immich.yml) |
-| [CryptPad](https://github.com/cryptpad/cryptpad) | End-to-end encrypted collaborative office | [cryptpad.yml](services/productivity/cryptpad/cryptpad.yml) |
-| [TriliumNext Notes](https://github.com/TriliumNext/Trilium) | Hierarchical personal knowledge base | [trilium.yml](services/productivity/trilium/trilium.yml) |
-| Glass Keep | Lightweight notes app | [glass-keep.yml](services/productivity/glass-keep/glass-keep.yml) |
-| [Librum](https://github.com/Librum-Reader/Librum-Server) | Self-hosted ebook reading and library | [librum.yml](services/productivity/librum/librum.yml) |
-| BentoPDF | PDF tools web app | [bentopdf.yml](services/productivity/bentopdf/bentopdf.yml) |
-| [Revolt.chat](https://github.com/revoltchat) | Self-hosted Discord alternative | [revolt.yml](services/productivity/revolt/revolt.yml) |
-| [Paperless-NGX](https://github.com/paperless-ngx/paperless-ngx) | Document OCR and archive | [paperless.yml](services/productivity/big-bear-paperless-ngx/paperless.yml) |
-| [Vaultwarden](https://github.com/dani-garcia/vaultwarden) | Self-hosted [Bitwarden](https://bitwarden.com) server | [vaultwarden.yml](infrastructure/security/vaultwarden/vaultwarden.yml) |
-| [Joplin Server](https://github.com/laurent22/joplin) | Note sync backend | [joplin.yml](services/productivity/big-bear-joplin/joplin.yml) |
-| [Memos](https://github.com/usememos/memos) | Lightweight notes / journal | [memos.yml](services/productivity/memos/memos.yml) |
-| [Linkwarden](https://github.com/linkwarden/linkwarden) | Bookmark archiver with full-page capture | [linkwarden.yml](services/productivity/big-bear-linkwarden/linkwarden.yml) |
-| [Wallos](https://github.com/ellite/Wallos) | Subscription and expense tracker | [wallos.yml](services/productivity/big-bear-wallos/wallos.yml) |
-
-### Infrastructure & management
-
-| Service | Purpose | Compose |
-|---|---|---|
-| [Pi-hole](https://github.com/pi-hole/pi-hole) | Network-wide DNS + ad-blocking | [pihole.yml](infrastructure/networking/pihole/pihole.yml) |
-| [Newt](https://github.com/fosrl/newt) | Pangolin tunnel client | [newt.yml](infrastructure/networking/newt/newt.yml) |
-| Tailscale DERP | Self-hosted Tailscale relay server | [tailscale-derper.yml](infrastructure/networking/tailscale-derper/tailscale-derper.yml) |
-| [Traefik](https://github.com/traefik/traefik) v3 | Reverse proxy, TLS termination | VPS-managed - see [infrastructure/networking/traefik/](infrastructure/networking/traefik/README.md) |
-| [Pangolin](https://github.com/fosrl/pangolin) + [Gerbil](https://github.com/fosrl/gerbil) | Self-hosted Cloudflare Tunnel | VPS + Pi - see [infrastructure/networking/pangolin/](infrastructure/networking/pangolin/README.md) |
-| [CrowdSec](https://github.com/crowdsecurity/crowdsec) | IDS/IPS, collaborative threat intel | VPS-managed - see [infrastructure/security/crowdsec/](infrastructure/security/crowdsec/README.md) |
-| [MinIO](https://github.com/minio/minio) | S3-compatible local object storage | [minio.yml](infrastructure/storage/minio/minio.yml) |
-| [Beszel](https://github.com/henrygd/beszel) | Lightweight server resource monitoring hub | [beszel.yml](infrastructure/monitoring/beszel/beszel.yml) |
-| Beszel Agent | Per-host metrics collector | [beszel-agent.yml](infrastructure/monitoring/beszel-agent/beszel-agent.yml) |
-| [Dockge](https://github.com/louislam/dockge) | Docker Compose management UI | [dockge.yml](infrastructure/monitoring/big-bear-dockge/dockge.yml) |
-| [Dockpeek](https://github.com/louislam/dockge) | Container health dashboard | [dockpeek.yml](infrastructure/monitoring/big-bear-dockpeek/dockpeek.yml) |
-| [Scrutiny](https://github.com/AnalogJ/scrutiny) | S.M.A.R.T disk health monitoring | [scrutiny.yml](infrastructure/monitoring/big-bear-scrutiny/scrutiny.yml) |
-| [Glances](https://github.com/nicolargo/glances) | System resource monitoring | [glances-dashboard.yml](infrastructure/monitoring/glances-dashboard.yml) |
-| [Homarr](https://github.com/ajnart/homarr) | Service dashboard | [homarr.yml](services/management/homarr/homarr.yml) |
-| [Kasm](https://www.kasmweb.com) | Containerized browser/desktop streaming | [kasm.yml](services/management/kasm/kasm.yml) |
-| Heaper | Docker host resource and container manager | [heaper.yml](services/management/heaper/heaper.yml) |
-| [Arcane](https://github.com/getarcaneapp/arcane) | Docker management UI | [arcane.yml](services/management/arcane/arcane.yml) |
-| [Syncthing](https://github.com/syncthing/syncthing) | Peer-to-peer file sync (config backup) | [syncthing.yml](services/management/syncthing/syncthing.yml) |
-| [SearXNG](https://github.com/searxng/searxng) | Self-hosted metasearch engine | [searxng.yml](services/management/searxng/searxng.yml) |
-| Zelest Stacks | Compose stack management UI | [stacks.yml](services/management/stacks.yml) |
-| [PostgreSQL](https://www.postgresql.org) (×8) | Relational database instances | Per-service |
-| [Redis](https://redis.io) (×3) | In-memory cache instances | Per-service |
-
-### Development
-
-| Service | Purpose | Location |
-|---|---|---|
-| [DPlaneOS](https://github.com/4nonX/DPlaneOS) website | Project landing page (nginx static) | [d-planeos-website.yml](services/development/d-planeos-website.yml) |
-| Dan Portfolio | Personal portfolio site (PHP + Postfix relay) | [dan-portfolio.yml](services/development/dan-portfolio/dan-portfolio.yml) |
-| [Forgejo](https://forgejo.org) | Self-hosted Git forge | [forgejo.yml](services/development/forgejo/forgejo.yml) |
-| Nginx CV | Personal CV/resume web page | [nginx-cv.yml](services/development/nginx-cv/nginx-cv.yml) |
-| Resume Builder | [Next.js](https://nextjs.org) frontend + [FastAPI](https://fastapi.tiangolo.com) backend + AI-powered PDF resume parser | [resume-builder.yml](services/development/resume-builder.yml) |
+Platform services outside Docker: Komodo Core, OpenBao, Samba, sanoid ([platform/](platform/)).
 
 ---
 
-## Storage strategy
+## Storage and data protection
 
-> Full details: [infrastructure/storage/README.md](infrastructure/storage/README.md)
+One ZFS pool on the host, datasets per purpose, shared into the Docker VM over virtiofs. App state lives on the
+Docker VM's data disk, a zvol in the same pool. sanoid snapshots everything that matters (48 hourly, 30 daily,
+6 monthly for important data; shorter for the media library). Restores are a `zfs rollback` or a copy out of
+`.zfs/snapshot`.
 
-**33 TB across four HDDs** - currently BTRFS on mdadm RAID5 (legacy, from ZimaOS). Migrating to ZFS RAID-Z2 via [DPlaneOS](https://github.com/4nonX/DPlaneOS).
-
-### Why ZFS
-
-[ZFS](https://github.com/openzfs/zfs) RAID-Z2 (dual-parity) eliminates the write-hole vulnerability present in BTRFS RAID5, provides end-to-end checksumming at every level of the storage tree, and integrates cleanly with [DPlaneOS](https://github.com/4nonX/DPlaneOS)'s pool and dataset management. `zfs send` replication makes off-site backup straightforward. The 15+ year production track record in enterprise environments makes it the right choice for a long-lived NAS.
-
-### Target pool layout
-
-```
-zpool: mainpool  (RAID-Z2, 4× HDD)
-├── mainpool/appdata     /DATA/AppData - container bind-mount volumes
-├── mainpool/media       /DATA/Media   - media library
-├── mainpool/home        user home directories
-└── mainpool/backups     local snapshot targets
-
-zpool: bootpool  (mirror, NVMe)
-└── NixOS system root
-```
-
-Pool and dataset configuration is managed through [DPlaneOS](https://github.com/4nonX/DPlaneOS). Refer to that repository for NixOS module definitions and dataset property details (`compression=zstd`, `xattr=sa`, `recordsize` tuning per workload).
+Off-site backups are deliberately not built yet: they wait for a dedicated backup NAS. Until then, snapshots are the
+only protection, and the docs say so. Details: [docs/data-protection.md](docs/data-protection.md).
 
 ---
 
 ## Repository structure
 
 ```
-homelab/
-├── infrastructure/
-│   ├── networking/
-│   │   ├── pihole/pihole.yml
-│   │   ├── newt/newt.yml
-│   │   ├── tailscale-derper/tailscale-derper.yml
-│   │   ├── traefik/          # Traefik config notes (VPS-managed)
-│   │   └── pangolin/
-│   │       ├── README.md                    # Tunnel docs + component map
-│   │       └── terraform/                   # Infrastructure as Code
-│   │           ├── main.tf / cloudflare.tf / vps.tf / backend.tf / variables.tf
-│   │           ├── docker-compose.yml        # Pangolin stack (deployed to VPS)
-│   │           ├── config/                   # Pangolin + Traefik configs
-│   │           ├── scripts/backup.sh         # Weekly backup → MinIO
-│   │           ├── scripts/restore.sh        # DR restore from MinIO
-│   │           ├── minio/docker-compose.yml  # MinIO on NAS (Dockge)
-│   │           ├── pangolin-terraform-iac.md # IaC documentation
-│   │           └── DR_RUNBOOK.md             # Disaster recovery procedure
-│   ├── security/
-│   │   ├── vaultwarden/vaultwarden.yml
-│   │   └── crowdsec/         # CrowdSec notes (VPS-managed)
-│   ├── monitoring/
-│   │   ├── beszel/beszel.yml
-│   │   ├── beszel-agent/beszel-agent.yml
-│   │   ├── big-bear-scrutiny/scrutiny.yml
-│   │   ├── big-bear-dockge/dockge.yml
-│   │   ├── big-bear-dockpeek/dockpeek.yml
-│   │   └── glances-dashboard.yml
-│   └── storage/
-│       ├── minio/minio.yml
-│       └── README.md
-├── services/
-│   ├── media/
-│   │   ├── arr-suite.yml              # Emby, Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, qBittorrent, Gluetun, Seerr, Maintainerr
-│   │   ├── books/books.yml            # Audiobookshelf, Grimmory, Bookkeep, Readmeabook
-│   │   ├── immich/immich.yml
-│   │   ├── navidrome/navidrome.yml
-│   │   ├── pinchflat/pinchflat.yml
-│   │   ├── stremio/stremio.yml
-│   │   └── swingmusic/swingmusic.yml
-│   ├── productivity/
-│   │   ├── nextcloud.yml              # Nextcloud, Collabora, Talk HPB, Redis, PostgreSQL
-│   │   ├── bentopdf/bentopdf.yml
-│   │   ├── cryptpad/cryptpad.yml
-│   │   ├── glass-keep/glass-keep.yml
-│   │   ├── librum/librum.yml
-│   │   ├── revolt/revolt.yml
-│   │   ├── trilium/trilium.yml
-│   │   ├── big-bear-joplin/joplin.yml
-│   │   ├── big-bear-linkwarden/linkwarden.yml
-│   │   ├── big-bear-paperless-ngx/paperless.yml
-│   │   ├── big-bear-wallos/wallos.yml
-│   │   └── memos/memos.yml
-│   ├── management/
-│   │   ├── homarr/homarr.yml
-│   │   ├── kasm/kasm.yml
-│   │   ├── heaper/heaper.yml
-│   │   ├── arcane/arcane.yml
-│   │   ├── stacks.yml
-│   │   ├── syncthing/syncthing.yml
-│   │   └── searxng/searxng.yml
-│   └── development/
-│       ├── d-planeos-website.yml
-│       ├── dan-portfolio/dan-portfolio.yml
-│       ├── forgejo/forgejo.yml
-│       ├── nginx-cv/nginx-cv.yml
-│       └── resume-builder.yml
-├── scripts/
-│   └── export-all-compose.sh
-├── docs/
-│   ├── hardware-specs.md
-│   ├── homelab-complete-journey.md
-│   ├── docker-infrastructure.md
-│   ├── network-security.md
-│   ├── network-remote-access.md
-│   ├── media-stack.md
-│   ├── productivity-services.md
-│   ├── nextcloud-optimization-guide.md
-│   ├── nextcloud-update-guide.md
-│   ├── homelab-dashboard-guide.md
-│   ├── pangolin-infrastructure.md
-│   ├── pangolin-deployment-guide.md
-│   ├── pangolin-configurations.md
-│   ├── pangolin-vps-relay-guide.md
-│   ├── pangolin-upgrade-guide.md
-│   ├── pangolin-z-performance-tuning.md
-│   ├── pangolin-traefikdashboard-guide.md
-│   ├── NIXOS-MIGRATION.md
-│   ├── DOCKER-SERVICES.md
-│   ├── INDEX.md
-│   └── *.html               # Interactive architecture diagrams
-├── docker/                  # Legacy source tree - see docker/README.md
-├── .env.example             # All required environment variables
-└── README.md
+stacks/<name>/          compose.yaml + .env.example (+ config) of every running stack, sanitized
+platform/
+  docker-vm/            Komodo hooks (pre/post deploy, compose wrapper, log redaction), OpenBao renderer,
+                        secret watcher, container-to-OpenBao firewall rule, daemon.json
+  komodo/               Komodo Core compose, script that sets the post-deploy hook on all stacks
+  openbao/              config, ACL policies, daily Raft snapshot, nftables, round-trip check
+  aws/                  CloudFormation: KMS key for auto-unseal + alert on every key use
+  proxmox/              sanoid snapshot policy
+  github/               Renovate config, Renovate and Trivy workflows, PR scan script
+infrastructure/         Pangolin (VPS) guides and Terraform, VPS Traefik and CrowdSec notes
+docs/                   architecture, pipeline, security, data protection, service guides
+legacy/                 previous NixOS/ZimaOS-era stacks and docs (no longer deployed)
 ```
 
----
-
-## Tech stack
-
-| Layer | Technology |
-|---|---|
-| Operating system | [NixOS](https://nixos.org) - declarative, reproducible, atomic OTA |
-| NAS management | [DPlaneOS](https://github.com/4nonX/DPlaneOS) *(self-developed)* - ZFS pool management, SMB/NFS, Docker orchestration, web UI |
-| Container orchestration | [Docker Compose](https://docs.docker.com/compose/) |
-| Reverse proxy | [Traefik](https://github.com/traefik/traefik) v3 - TLS 1.3, automatic Let's Encrypt |
-| Tunnel | [Pangolin](https://github.com/fosrl/pangolin) - self-hosted Cloudflare Tunnel |
-| Security | [CrowdSec](https://github.com/crowdsecurity/crowdsec) IDS/IPS |
-| DNS | [Pi-hole](https://github.com/pi-hole/pi-hole) |
-| Storage | [OpenZFS](https://github.com/openzfs/zfs) RAID-Z2 (target) - migrating from BTRFS on mdadm RAID5 - 33 TB |
-| Databases | [PostgreSQL](https://www.postgresql.org) 14 (×8 instances), [Redis](https://redis.io) Alpine (×3 instances) |
-| Hardware | Intel i3-13100 / 32 GB DDR4-3200 / 120 GB NVMe |
-| VPS gateway | [IONOS](https://www.ionos.de) Berlin - 2 vCPU / 2 GB / 80 GB NVMe |
-
----
-
-## Cost analysis
-
-```
-Initial investment
-  Hardware            €1,290
-  VPS (3 yr)            €180
-  Domain (3 yr)          €36
-  ────────────────────────────
-  Total               €1,506
-
-Annual operating cost
-  Electricity           €75    (~30 W average, €0.30/kWh)
-  VPS                   €60
-  Domain                €12
-  ────────────────────────────
-  Total                €147/yr  (€12/month)
-
-Replaced SaaS (annual)
-  Google One            €30
-  Dropbox Plus         €120
-  1Password             €60
-  Spotify              €180
-  Netflix              €156
-  iCloud+               €36
-  ────────────────────────────
-  Total replaced       €582/yr
-
-Net savings: €435/yr → break-even Year 4
-```
+The workflows under `platform/github/` are copies for reference; they are not active in this repository.
 
 ---
 
@@ -360,134 +154,11 @@ Net savings: €435/yr → break-even Year 4
 
 | Document | Description |
 |---|---|
-| [Why DPlaneOS](docs/why-DPlaneOS.md) | ZimaOS limitations, alternatives considered, what DPlaneOS solves |
-| [Complete Journey](docs/homelab-complete-journey.md) | Full build narrative, decisions, and lessons learned |
-| [Hardware Specs](docs/hardware-specs.md) | Component list, benchmarks, power draw |
-| [Docker Infrastructure](docs/docker-infrastructure.md) | Container architecture and patterns |
-| [Network Security](docs/network-security.md) | Security layer detail |
-| [Remote Access](docs/network-remote-access.md) | VPN comparison, [Pangolin](https://github.com/fosrl/pangolin) vs [Tailscale](https://tailscale.com) vs [ZeroTier](https://www.zerotier.com) |
-| [Pangolin Infrastructure](docs/pangolin-infrastructure.md) | Tunnel architecture deep-dive |
-| [Pangolin Deployment Guide](docs/pangolin-deployment-guide.md) | Step-by-step VPS setup |
-| [Pangolin Configurations](docs/pangolin-configurations.md) | Config file reference |
-| [Pangolin VPS Relay](docs/pangolin-vps-relay-guide.md) | Relay server setup |
-| [Pangolin Upgrade Guide](docs/pangolin-upgrade-guide.md) | Version upgrade procedures |
-| [Pangolin Performance Tuning](docs/pangolin-z-performance-tuning.md) | Kernel sysctl optimisations |
-| [Pangolin Traefik Dashboard](docs/pangolin-traefikdashboard-guide.md) | Dashboard configuration |
-| [Pangolin HA Setup](docs/pangolin-ha-setup.md) | Active-passive failover: Litestream B2 replication, Cloudflare DNS flip, ~7-8 min RTO |
-| [Media Stack](docs/media-stack.md) | Arr suite + Emby configuration |
-| [Productivity Services](docs/productivity-services.md) | Nextcloud, Immich, Paperless setup |
-| [Nextcloud Optimisation](docs/nextcloud-optimization-guide.md) | PostgreSQL + Redis + PHP tuning |
-| [Nextcloud Update Guide](docs/nextcloud-update-guide.md) | Post-update occ commands, failure diagnosis, 502 behind Traefik |
-| [Dashboard Guide](docs/homelab-dashboard-guide.md) | Homelab dashboard setup |
-| [NixOS Migration Plan](docs/NIXOS-MIGRATION.md) | ZimaOS → NixOS migration roadmap |
-| [Service Index](docs/DOCKER-SERVICES.md) | Full service inventory |
-
----
-
-## Quick start
-
-```bash
-# Clone
-git clone https://github.com/4nonX/homelab
-
-# Set up environment variables
-cp .env.example .env
-$EDITOR .env   # fill in domains, passwords, IPs
-
-# Deploy a stack - example: Nextcloud
-cd services/productivity
-docker compose -f nextcloud.yml up -d
-
-# Deploy monitoring
-cd infrastructure/monitoring
-docker compose -f glances-dashboard.yml up -d
-```
-
-For the full external access setup ([Pangolin](https://github.com/fosrl/pangolin) tunnel + [Traefik](https://github.com/traefik/traefik) + [CrowdSec](https://github.com/crowdsecurity/crowdsec) on VPS), start with [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md).
-
----
-
-## Built on the shoulders of giants
-
-This homelab would not exist without these projects. Each one is worth knowing about.
-
----
-
-### 🥇 Pangolin - the backbone of external access
-
-> [![Pangolin](https://img.shields.io/badge/fosrl%2Fpangolin-self--hosted_tunnel-FF6B35?style=flat-square&logo=github)](https://github.com/fosrl/pangolin)
-
-The single most impactful piece of infrastructure in this stack. [Pangolin](https://github.com/fosrl/pangolin) is a self-hosted
-tunnelled reverse proxy with identity and access management - think [Cloudflare Tunnel](https://www.cloudflare.com/products/tunnel/), but
-open source and entirely under your control.
-
-Before Pangolin, the realistic options for external access were: open ports on your home
-router (bad), pay for a commercial tunnel (fine but a dependency), or set up [WireGuard](https://www.wireguard.com)
-manually and manage it yourself (works, but significant operational overhead). Pangolin
-wraps [WireGuard](https://www.wireguard.com), [Traefik](https://github.com/traefik/traefik), and an identity layer into something you can actually run on a
-cheap VPS and forget about. Zero port-forwarding. Zero home IP exposure. [Let's Encrypt](https://letsencrypt.org)
-certificates handled automatically. The security architecture of this entire homelab is
-built around what Pangolin makes possible.
-
-Components: [Pangolin](https://github.com/fosrl/pangolin) (control plane) · [Gerbil](https://github.com/fosrl/gerbil) (WireGuard gateway) · [Newt](https://github.com/fosrl/newt) (tunnel client) · [Badger](https://github.com/fosrl/badger) (identity)
-
-If you self-host anything that needs external access, start here.
-
----
-
-### 🗄️ DPlaneOS - the NAS management layer (self-developed)
-
-> [![DPlaneOS](https://img.shields.io/badge/4nonX%2FDPlaneOS-self--developed_NAS_OS-blueviolet?style=flat-square&logo=github)](https://github.com/4nonX/DPlaneOS)
-
-A NAS management layer I built myself - [ZFS](https://github.com/openzfs/zfs) pool management, SMB/NFS shares, [Docker](https://www.docker.com)
-orchestration, and a unified web UI, purpose-built on top of [NixOS](https://nixos.org).
-Developed as a high-performance Go daemon to fill the gap between [CasaOS](https://github.com/IceWhaleTech/CasaOS) (simple but limited) and
-[TrueNAS](https://www.truenas.com) (powerful but container-hostile).
-
----
-
-### 🐳 Core infrastructure
-
-| Project | Role in this stack |
-|---|---|
-| [![NixOS](https://img.shields.io/badge/NixOS-nixos.org-5277C3?style=flat-square&logo=nixos)](https://nixos.org) | The OS everything runs on. Declarative system configuration, atomic rollbacks, reproducible builds - the base that makes the whole stack manageable. [DPlaneOS](https://github.com/4nonX/DPlaneOS) runs on top of it. |
-| [![Traefik](https://img.shields.io/badge/Traefik-traefik.io-24A1C1?style=flat-square&logo=traefikproxy)](https://github.com/traefik/traefik) | Reverse proxy - TLS termination, automatic [Let's Encrypt](https://letsencrypt.org), routing. Runs on the VPS and handles every inbound HTTPS request. |
-| [![CrowdSec](https://img.shields.io/badge/CrowdSec-crowdsec.net-1565C0?style=flat-square)](https://github.com/crowdsecurity/crowdsec) | Collaborative IDS/IPS. Analyses [Traefik](https://github.com/traefik/traefik) logs, bans malicious IPs via bouncer, pulls community threat feeds. The passive security layer that works without any configuration after setup. |
-| [![Pi-hole](https://img.shields.io/badge/Pi--hole-pi--hole.net-CC0000?style=flat-square)](https://github.com/pi-hole/pi-hole) | Network-wide DNS and ad-blocking. Every device on the LAN benefits without any per-device configuration. |
-| [![OpenZFS](https://img.shields.io/badge/OpenZFS-openzfs.org-2A7AE2?style=flat-square)](https://github.com/openzfs/zfs) | The filesystem everything is migrating to. End-to-end checksumming, RAID-Z2, snapshots, `zfs send` replication - the right foundation for a long-lived NAS. |
-
----
-
-### 📦 Services
-
-| Project | What it replaces |
-|---|---|
-| [![Nextcloud](https://img.shields.io/badge/Nextcloud-nextcloud.com-0082C9?style=flat-square&logo=nextcloud)](https://github.com/nextcloud/server) | Google Drive, Google Docs, iCloud |
-| [![Immich](https://img.shields.io/badge/Immich-immich.app-4250AF?style=flat-square)](https://github.com/immich-app/immich) | Google Photos |
-| [![Vaultwarden](https://img.shields.io/badge/Vaultwarden-github.com-175DDC?style=flat-square&logo=bitwarden)](https://github.com/dani-garcia/vaultwarden) | 1Password, LastPass |
-| [![Paperless-NGX](https://img.shields.io/badge/Paperless--NGX-github.com-51CF66?style=flat-square)](https://github.com/paperless-ngx/paperless-ngx) | Manual document filing |
-| [![Emby](https://img.shields.io/badge/Emby-emby.media-52B54B?style=flat-square)](https://emby.media) | Netflix, Plex (self-hosted media server) |
-| [![Sonarr](https://img.shields.io/badge/Sonarr-sonarr.tv-35C5F4?style=flat-square)](https://github.com/Sonarr/Sonarr) [![Radarr](https://img.shields.io/badge/Radarr-radarr.video-FFC230?style=flat-square)](https://github.com/Radarr/Radarr) [![Lidarr](https://img.shields.io/badge/Lidarr-lidarr.audio-1DA0C2?style=flat-square)](https://github.com/Lidarr/Lidarr) | Manual media management |
-| [![Prowlarr](https://img.shields.io/badge/Prowlarr-github.com-FF6600?style=flat-square)](https://github.com/Prowlarr/Prowlarr) | Per-client indexer configuration |
-| [![Bazarr](https://img.shields.io/badge/Bazarr-bazarr.media-F5A623?style=flat-square)](https://github.com/morpheus65535/bazarr) | Manual subtitle hunting |
-| [![Gluetun](https://img.shields.io/badge/Gluetun-github.com-3A3A3A?style=flat-square)](https://github.com/qdm12/gluetun) | Any VPN client - containerised, provider-agnostic [WireGuard](https://www.wireguard.com) gateway |
-| [![Syncthing](https://img.shields.io/badge/Syncthing-syncthing.net-0891D1?style=flat-square&logo=syncthing)](https://github.com/syncthing/syncthing) | Dropbox, rsync scripts |
-| [![Dockge](https://img.shields.io/badge/Dockge-github.com-5E4FCD?style=flat-square)](https://github.com/louislam/dockge) | Manual `docker compose` commands |
-| [![Scrutiny](https://img.shields.io/badge/Scrutiny-github.com-E53935?style=flat-square)](https://github.com/AnalogJ/scrutiny) | Ignoring disk health until something fails |
-| [![SearXNG](https://img.shields.io/badge/SearXNG-github.com-3050FF?style=flat-square)](https://github.com/searxng/searxng) | Google, Bing |
-| [![Audiobookshelf](https://img.shields.io/badge/Audiobookshelf-audiobookshelf.org-E76F51?style=flat-square)](https://github.com/advplyr/audiobookshelf) | Audible, podcast apps |
-| [![Navidrome](https://img.shields.io/badge/Navidrome-navidrome.org-FF7700?style=flat-square)](https://github.com/navidrome/navidrome) | Spotify (self-hosted music streaming) |
-| [![SwingMusic](https://img.shields.io/badge/SwingMusic-github.com-7C3AED?style=flat-square)](https://github.com/swingmx/swingmusic) | Local music player apps |
-| [![Pinchflat](https://img.shields.io/badge/Pinchflat-github.com-FF0000?style=flat-square)](https://github.com/kieraneglin/pinchflat) | YouTube Premium downloads |
-| [![Linkwarden](https://img.shields.io/badge/Linkwarden-linkwarden.app-6B46C1?style=flat-square)](https://github.com/linkwarden/linkwarden) | Browser bookmarks, Pocket |
-| [![Memos](https://img.shields.io/badge/Memos-usememos.com-FFCB47?style=flat-square)](https://github.com/usememos/memos) | Notion, Apple Notes |
-| [![Wallos](https://img.shields.io/badge/Wallos-github.com-4CAF50?style=flat-square)](https://github.com/ellite/Wallos) | Manual subscription tracking |
-| [![Glances](https://img.shields.io/badge/Glances-nicolargo.github.io-00ACD7?style=flat-square)](https://github.com/nicolargo/glances) | Scattered system monitoring tools |
-| [![Joplin](https://img.shields.io/badge/Joplin-joplinapp.org-1071D3?style=flat-square)](https://github.com/laurent22/joplin) | Evernote, Apple Notes (sync backend) |
-
----
-
-[![DPlaneOS](https://img.shields.io/badge/DPlaneOS-open_source_NAS_OS-blueviolet?style=flat-square&logo=github)](https://github.com/4nonX/DPlaneOS)
-[![Pangolin](https://img.shields.io/badge/Pangolin-self--hosted_tunnel-orange?style=flat-square&logo=github)](https://github.com/fosrl/pangolin)
-
-
+| [Architecture](docs/architecture.md) | Host, guests, storage, network and routing |
+| [GitOps pipeline](docs/gitops-pipeline.md) | Komodo, OpenBao rendering, Renovate, Trivy, health checks, adding a stack |
+| [Security](docs/security.md) | Each layer, and the decisions behind what is *not* locked down |
+| [Data protection](docs/data-protection.md) | Datasets, snapshot policy, what is not covered yet |
+| [Remote access](docs/network-remote-access.md) | Pangolin vs Tailscale vs ZeroTier |
+| [Pangolin guides](docs/pangolin-infrastructure.md) | Deployment, configuration, HA, upgrades, tuning |
+| [Nextcloud optimisation](docs/nextcloud-optimization-guide.md), [update guide](docs/nextcloud-update-guide.md) | PostgreSQL, Redis, PHP tuning, post-update steps |
+| [Media stack](docs/media-stack.md), [productivity services](docs/productivity-services.md) | Service configuration notes |

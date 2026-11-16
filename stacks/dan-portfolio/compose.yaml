@@ -1,0 +1,36 @@
+# dan-portfolio - own project, compose file from its repository
+# adapted: pinned images, data paths, host ports (secrets in .env)
+name: dan-portfolio
+services:
+  webserver:
+    # Floating minor tag: the danpage deploy workflow pulls it (weekly + on every deploy)
+    image: php:8.4-apache@sha256:884f64b47174de2c0e813270fe7b24a18605729fcebe201302d98c38805530d0
+    container_name: dan-portfolio
+    restart: always
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /srv/appdata/dan-portfolio/www:/var/www/html:ro
+      - ./php-security.ini:/usr/local/etc/php/conf.d/99-security.ini:ro
+      - ./apache-security.conf:/etc/apache2/conf-enabled/zz-security.conf:ro
+    ports:
+      - "${WEBSERVER_PORT}:80"
+    networks:
+      - internal-mail
+  mail-relay:
+    image: juanluisbaptiste/postfix:1@sha256:7eb4e044a50428b16989946e0fa76acdfb21274fc7eedc9e0774ea92825d09b7
+    container_name: postfix-relay2
+    restart: always
+    environment:
+      MAILNAME: "example.com"
+      MYNETWORKS: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+      SMTP_SERVER: "smtp.protonmail.ch"
+      SMTP_PORT: "587"
+      SMTP_USERNAME: "admin@example.com"
+      SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      SERVER_HOSTNAME: "example.com"
+    networks:
+      - internal-mail
+networks:
+  internal-mail:
+    driver: bridge

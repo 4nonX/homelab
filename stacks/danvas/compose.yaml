@@ -1,0 +1,67 @@
+# danvas - own project, compose file from its repository
+# adapted: pinned images, data paths, host ports (secrets in .env)
+name: danvas
+services:
+  db:
+    image: postgres:16-alpine@sha256:81e77a4833487b8132fe4b00bedd39dc3f74b8641e387f19312a48f7de218c2e
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      POSTGRES_USER: "danvas"
+      POSTGRES_DB: "danvas"
+      POSTGRES_PASSWORD: "${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env (openssl rand -hex 32)}"
+    volumes:
+      - ${DATA_DIR:-/srv/appdata/danvas/data}/pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U danvas -d danvas
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      # The first start creates the database, which takes a while on slow disks.
+      start_period: 60s
+  app:
+    image: ghcr.io/4nonx/danvas:v2.0.0@sha256:91ba5941cd7be3b8435a056c08ba5e799e531ab95277f40b945b1e4188d664c3
+    restart: unless-stopped
+    # Runs directly as PUID:PGID: every earlier start as root already handed storage to that user,
+    # so the entrypoint's root setup (chown, setpriv) is not needed. No capabilities.
+    user: "${PUID:-1000}:${PGID:-1000}"
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      PORT: "8005"
+      NODE_ENV: "production"
+      DB_AUTO_MIGRATE: "true"
+      DATABASE_URL: "postgresql://danvas:${POSTGRES_PASSWORD}@db:5432/danvas?schema=public"
+      REDIS_URL: ""
+      STORAGE_DRIVER: "local"
+      LOCAL_STORAGE_PATH: "/app/.data/storage"
+      JWT_SECRET: "${JWT_SECRET:?set JWT_SECRET in .env (openssl rand -hex 32)}"
+      AI_SECRET: "${AI_SECRET:?set AI_SECRET in .env (openssl rand -hex 32)}"
+      APP_URL: "${APP_URL:-http://localhost:8005}"
+      COOKIE_SECURE: "${COOKIE_SECURE:-false}"
+      TZ: "${TZ:-UTC}"
+      PUID: "${PUID:-1000}"
+      PGID: "${PGID:-1000}"
+      INSTANCE_NAME: "${INSTANCE_NAME:-}"
+      INSTANCE_ACCENT: "${INSTANCE_ACCENT:-}"
+      INSTANCE_LOCALE: "${INSTANCE_LOCALE:-}"
+      BUILTIN_TEMPLATES: "${BUILTIN_TEMPLATES:-}"
+      BRAND_STARTER_KIT: "${BRAND_STARTER_KIT:-}"
+      ASSET_QUOTA_BYTES: "${ASSET_QUOTA_BYTES:-}"
+      AUTH_PASSWORD_SIGNUP_ENABLED: "${AUTH_PASSWORD_SIGNUP_ENABLED:-}"
+      AUTH_MAGICLINK_LOGIN_ENABLED: "${AUTH_MAGICLINK_LOGIN_ENABLED:-false}"
+    volumes:
+      - ${DATA_DIR:-/srv/appdata/danvas/data}/storage:/app/.data/storage
+    ports:
+      - "${BIND_ADDR:-127.0.0.1}:${APP_PORT}:8005"

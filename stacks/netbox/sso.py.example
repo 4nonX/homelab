@@ -1,0 +1,10 @@
+# authentik OIDC (added by SSO setup)
+REMOTE_AUTH_ENABLED = True
+REMOTE_AUTH_BACKEND = "<set in AppData/netbox/sso.py>"
+REMOTE_AUTH_AUTO_CREATE_USER = True
+SOCIAL_AUTH_OIDC_OIDC_ENDPOINT = "<set in AppData/netbox/sso.py>"
+SOCIAL_AUTH_OIDC_KEY = "<set in AppData/netbox/sso.py>"
+SOCIAL_AUTH_OIDC_SECRET = "<set in AppData/netbox/sso.py>"
+SOCIAL_AUTH_OIDC_SCOPE = ["openid", "profile", "email"]
+LOGOUT_REDIRECT_URL = "<set in AppData/netbox/sso.py>"
+

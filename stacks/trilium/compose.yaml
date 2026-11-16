@@ -1,0 +1,21 @@
+# trilium - based on the official compose file (TriliumNext docker-compose.yml)
+# adapted: pinned image, host port 8088, data path, authentik OIDC (secrets in .env)
+name: trilium
+services:
+  trilium:
+    image: triliumnext/trilium:v0.107.0@sha256:ac72ce66f562a1d6d1baedf7d5c1672f19c3ba1b048603e50c8fc8114c80c502
+    container_name: trilium
+    restart: unless-stopped
+    environment:
+      TRILIUM_DATA_DIR: /home/node/trilium-data
+      TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHBASEURL: https://notes.example.com
+      TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHISSUERBASEURL: https://auth.example.com/application/o/trilium/
+      TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHISSUERNAME: authentik
+      TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHCLIENTID: ${TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHCLIENTID}
+      TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHCLIENTSECRET: ${TRILIUM_MULTIFACTORAUTHENTICATION_OAUTHCLIENTSECRET}
+    ports:
+      - "${TRILIUM_PORT}:8080"
+    volumes:
+      - /srv/appdata/trilium:/home/node/trilium-data
+      - /etc/timezone:/etc/timezone:ro
+      - /etc/localtime:/etc/localtime:ro

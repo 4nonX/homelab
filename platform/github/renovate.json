@@ -1,0 +1,74 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":dependencyDashboard",
+    ":disableRateLimiting"
+  ],
+  "timezone": "Europe/Berlin",
+  "labels": [
+    "renovate"
+  ],
+  "ignoreDeps": [
+    "calendar-ce"
+  ],
+  "packageRules": [
+    {
+      "description": "Database major versions need a dump and upgrade, never a plain image bump",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchDepNames": [
+        "postgres",
+        "library/postgres",
+        "docker.io/library/postgres",
+        "mariadb",
+        "lscr.io/linuxserver/mariadb",
+        "redis",
+        "docker.io/library/redis",
+        "valkey/valkey",
+        "docker.io/valkey/valkey",
+        "mongo",
+        "ghcr.io/immich-app/postgres"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "One PR for all digest-only refreshes (same tag, rebuilt image)",
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "groupName": "image digests"
+    },
+    {
+      "description": "Immich server, machine learning and database are released together",
+      "matchDepNames": [
+        "ghcr.io/immich-app/**"
+      ],
+      "groupName": "immich"
+    },
+    {
+      "description": "authentik 2025.2.4 is published for arm64 only (breaks this amd64 host)",
+      "matchDepNames": [
+        "ghcr.io/goauthentik/server"
+      ],
+      "allowedVersions": "!/^2025\\.2\\.4$/"
+    },
+    {
+      "description": "Komodo Core runs on VM komodo and cannot redeploy itself: own PR, deploy by hand",
+      "matchFileNames": [
+        "platform/komodo/**"
+      ],
+      "addLabels": [
+        "manual deploy: VM komodo"
+      ],
+      "groupName": "komodo core (manual deploy)"
+    }
+  ],
+  "major": {
+    "dependencyDashboardApproval": true
+  }
+}

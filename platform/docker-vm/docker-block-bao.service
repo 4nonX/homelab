@@ -1,0 +1,15 @@
+[Unit]
+# Example addresses: bao.lan / docker.lan / komodo.lan stand for the OpenBao LXC, the Docker VM and the Komodo VM;
+# 192.0.2.x is the documentation range (RFC 5737), replace with your own.
+Description=Block containers from reaching OpenBao (192.0.2.17:8200); host processes are unaffected
+After=docker.service
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/bin/sh -c "iptables -C DOCKER-USER -d 192.0.2.17/32 -p tcp --dport 8200 -j REJECT --reject-with tcp-reset 2>/dev/null || iptables -I DOCKER-USER -d 192.0.2.17/32 -p tcp --dport 8200 -j REJECT --reject-with tcp-reset"
+ExecStop=/bin/sh -c "iptables -D DOCKER-USER -d 192.0.2.17/32 -p tcp --dport 8200 -j REJECT --reject-with tcp-reset 2>/dev/null || true"
+
+[Install]
+WantedBy=docker.service

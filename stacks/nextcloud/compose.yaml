@@ -1,0 +1,206 @@
+# nextcloud - built from the official images and their compose examples (nextcloud/docker, notify_push, whiteboard, euro-office documentserver, nextcloud-spreed-signaling)
+# adapted: pinned images, data paths, host ports (secrets in .env)
+name: nextcloud
+services:
+  # --------------------------------------------------------------------------
+  #  DATABASE - PostgreSQL with Performance Tuning
+  # --------------------------------------------------------------------------
+  db:
+    image: postgres:14@sha256:c0e9c0e9bac7e4c1834b698217a03ee5c708de30d313c84a506972de0e24b059
+    container_name: db-nextcloud
+    restart: unless-stopped
+    command:
+      - postgres
+      - -c
+      - listen_addresses=*
+      # Performance optimizations
+      - -c
+      - shared_buffers=256MB
+      - -c
+      - max_connections=200
+      - -c
+      - effective_cache_size=1GB
+      - -c
+      - maintenance_work_mem=128MB
+      - -c
+      - random_page_cost=1.1
+      - -c
+      - effective_io_concurrency=200
+      - -c
+      - work_mem=5242kB
+    environment:
+      POSTGRES_DB: "nextcloud"
+      POSTGRES_USER: "nextcloud"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+    volumes:
+      - nextcloud-db:/var/lib/postgresql/data
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  CACHE - Redis for Performance Boost
+  # --------------------------------------------------------------------------
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U nextcloud
+      interval: 5s
+      timeout: 3s
+      retries: 10
+      start_period: 10s
+  redis:
+    image: redis:alpine@sha256:7958cfbb9d152f87dadfbc89f1b0b15938f0b81ff8982feb327476f4911935c3
+    container_name: redis-nextcloud
+    restart: unless-stopped
+    command:
+      - redis-server
+      - --maxmemory
+      - 512mb
+      - --maxmemory-policy
+      - allkeys-lru
+      - --save
+      - '60'
+      - '1'
+      - --appendonly
+      - no
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  NEXTCLOUD - Main Application
+  # --------------------------------------------------------------------------
+  nextcloud:
+    image: nextcloud:35.0.3@sha256:8a7a65b8bae82a79568fec2ed9cf3e374a1944eda2a22ebe130d79463336fee3
+    container_name: nextcloud
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      POSTGRES_DB: "nextcloud"
+      POSTGRES_USER: "nextcloud"
+      POSTGRES_PASSWORD: "${DB_PASSWORD}"
+      POSTGRES_HOST: "db"
+      NEXTCLOUD_ADMIN_USER: "${ADMIN_USER:-admin}"
+      NEXTCLOUD_ADMIN_PASSWORD: "${ADMIN_PASSWORD}"
+      NEXTCLOUD_TRUSTED_DOMAINS: "${NEXTCLOUD_DOMAIN} ${NEXTCLOUD_LOCAL_IP} ${NEXTCLOUD_LOCAL_IP}:${NEXTCLOUD_PORT} localhost"
+      NEXTCLOUD_TRUSTED_PROXIES: "${PROXY_IP}"
+      OVERWRITEPROTOCOL: "https"
+      OVERWRITECLIURL: "https://${NEXTCLOUD_DOMAIN}"
+      REDIS_HOST: "redis"
+      REDIS_HOST_PORT: "6379"
+      PHP_MEMORY_LIMIT: "2048M"
+      PHP_UPLOAD_LIMIT: "10G"
+      PHP_MAX_EXECUTION_TIME: "3600"
+      APACHE_DISABLE_REWRITE_IP: "1"
+      NC_default_phone_region: "DE"
+    volumes:
+      - /media/mainpool/nextcloud-data:/var/www/html
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /srv/appdata/nextcloud-apache/hsts.conf:/etc/apache2/conf-enabled/hsts.conf:ro
+      - /srv/appdata/nextcloud-apache/proxy.conf:/etc/apache2/conf-enabled/zz-proxy.conf:ro
+    ports:
+      - "${NEXTCLOUD_PORT}:80"
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  CRON - Background Job Execution
+  # --------------------------------------------------------------------------
+  nextcloud-cron:
+    image: nextcloud:35.0.3@sha256:8a7a65b8bae82a79568fec2ed9cf3e374a1944eda2a22ebe130d79463336fee3
+    container_name: nextcloud-cron
+    restart: unless-stopped
+    depends_on:
+      - db
+      - redis
+    entrypoint: /cron.sh
+    volumes:
+      - /media/mainpool/nextcloud-data:/var/www/html
+    networks:
+      - nextcloud-net
+  whiteboard:
+    image: ghcr.io/nextcloud-releases/whiteboard:release@sha256:4bcd45436d60ed485d01551a92536b95c84237efdd46af8b36d666f1f51c6442
+    container_name: nextcloud-whiteboard
+    restart: unless-stopped
+    environment:
+      NEXTCLOUD_URL: "https://${NEXTCLOUD_DOMAIN}"
+      JWT_SECRET_KEY: "${WHITEBOARD_JWT}"
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  NOTIFY_PUSH - Client Push (proxied at /push/)
+  # --------------------------------------------------------------------------
+  notify-push:
+    image: nextcloud:35.0.3@sha256:8a7a65b8bae82a79568fec2ed9cf3e374a1944eda2a22ebe130d79463336fee3
+    container_name: nextcloud-notify-push
+    restart: unless-stopped
+    depends_on:
+      - nextcloud
+    user: www-data
+    command: /var/www/html/config/config.php
+    entrypoint: /var/www/html/custom_apps/notify_push/bin/x86_64/notify_push
+    environment:
+      PORT: "7867"
+      NEXTCLOUD_URL: "http://nextcloud"
+    volumes:
+      - /media/mainpool/nextcloud-data:/var/www/html
+    networks:
+      - nextcloud-net
+  # --------------------------------------------------------------------------
+  #  EURO-OFFICE - Online Office Suite (Document Server)
+  # --------------------------------------------------------------------------
+  euro-office:
+    image: ghcr.io/euro-office/documentserver:latest@sha256:0f19cb676d48f85b826e199ac9e773ea12130f7d32bfc9a45e86aea320441b8a
+    container_name: euro-office
+    restart: unless-stopped
+    environment:
+      JWT_SECRET: "${EUROOFFICE_JWT_SECRET}"
+      TZ: "${TIMEZONE:-Europe/Berlin}"
+    ports:
+      - "${EURO_OFFICE_PORT}:80"
+    networks:
+      - nextcloud-net
+    stop_grace_period: 60s
+    volumes:
+      - /srv/appdata/euro-office/data:/var/www/euro-office/Data
+      - /srv/appdata/euro-office/lib:/var/lib/euro-office
+      - /srv/appdata/euro-office/db:/var/lib/postgresql
+  nats:
+    image: nats:alpine@sha256:558394a23dd3c36f2d3a64b51865fd09908010e80a542cea5e75c2af543ed62a
+    container_name: nats-nextcloud
+    restart: unless-stopped
+    command:
+      - -p
+      - '4222'
+      - -m
+      - '8222'
+    ports:
+      - "${NATS_PORT_4222}:4222"
+      - "${NATS_PORT_8222}:8222"
+    networks:
+      - nextcloud-net
+  talk-signaling:
+    image: strukturag/nextcloud-spreed-signaling:2.2.0@sha256:8eca17b14d6291ca35cb9dceb03da5579e57396827eafcf945e142c2ae2fbfb2
+    container_name: talk-signaling
+    restart: unless-stopped
+    depends_on:
+      - nats
+    environment:
+      TZ: "${TIMEZONE:-Europe/Berlin}"
+    volumes:
+      - ${SIGNALING_CONFIG_PATH:-/srv/appdata/talk-signaling/server.conf}:/config/server.conf:ro
+    ports:
+      - "${TALK_SIGNALING_PORT}:8188"
+    networks:
+      - nextcloud-net
+networks:
+  nextcloud-net:
+    driver: bridge
+volumes:
+  nextcloud-db:
+    driver: local
+  collabora-data:
+    driver: local
+# ========================================================================
+#  NETWORKS - Internal Communication
+# ========================================================================

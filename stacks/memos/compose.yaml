@@ -1,0 +1,14 @@
+# memos - based on the official compose file (usememos/memos scripts/compose.yaml, v0.28.0)
+# adapted: pinned image, restart policy, time zone, data path
+name: memos
+services:
+  memos:
+    image: neosmemo/memos:0.31.0@sha256:8596928c21551afc7d4e100051510bc134fd0caae51ad1d26cf899845d719321
+    container_name: memos
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Berlin
+    volumes:
+      - /srv/appdata/memos:/var/opt/memos
+    ports:
+      - "${MEMOS_PORT}:5230"

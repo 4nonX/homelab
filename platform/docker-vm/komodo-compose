@@ -1,0 +1,11 @@
+#!/bin/bash
+# komodo-compose: Komodo compose_cmd_wrapper ("komodo-compose [[COMPOSE_COMMAND]]").
+# Runs the compose command and masks secret values from ./.env in stdout and stderr, so rendered
+# secrets never reach Komodo's update logs or its stored "deployed config". Exit code is compose's.
+set -u
+R=/usr/local/lib/komodo-redact.py
+err=$(mktemp); trap 'rm -f "$err"' EXIT
+"$@" 2>"$err" | python3 "$R" .env
+rc=${PIPESTATUS[0]}
+python3 "$R" .env < "$err" >&2
+exit "$rc"

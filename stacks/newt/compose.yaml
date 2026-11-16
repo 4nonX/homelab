@@ -1,0 +1,12 @@
+# newt - based on the official compose example (fosrl/newt)
+# adapted: pinned image (secrets in .env)
+name: newt
+services:
+  newt:
+    image: fosrl/newt:1.20.0@sha256:2170e673c4c72d905764fa22e83d0ae0aa3239fb1ab3b9fcaefb2b00fffb2d6e
+    container_name: newt
+    restart: always
+    environment:
+      PANGOLIN_ENDPOINT: "https://pangolin.example.com"
+      NEWT_ID: "${NEWT_ID}"
+      NEWT_SECRET: "${NEWT_SECRET}"

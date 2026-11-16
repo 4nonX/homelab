@@ -1,0 +1,15 @@
+# wallos - based on the official compose file (ellite/Wallos docker-compose.yaml)
+# adapted: pinned image, data paths, time zone
+name: wallos
+services:
+  wallos:
+    image: bellamy/wallos:4.9.6@sha256:3b2cdc843b4b1920220ce26a5804208eab8c236c60d4c777c6223c181f837be1
+    container_name: wallos
+    restart: unless-stopped
+    ports:
+      - "${WALLOS_PORT}:80/tcp"
+    environment:
+      TZ: Europe/Berlin
+    volumes:
+      - /srv/appdata/wallos/db:/var/www/html/db
+      - /srv/appdata/wallos/logos:/var/www/html/images/uploads/logos

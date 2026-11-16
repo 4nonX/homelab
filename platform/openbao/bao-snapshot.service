@@ -1,0 +1,7 @@
+[Unit]
+Description=OpenBao Raft snapshot to the ZFS pool
+After=openbao.service
+RequiresMountsFor=/var/backups/openbao
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/bao-snapshot

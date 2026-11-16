@@ -1,0 +1,19 @@
+# haven - based on the official compose example (ancsemi/haven)
+# adapted: pinned image, host ports, data path
+name: haven
+services:
+  haven:
+    image: ghcr.io/ancsemi/haven:4.29.0@sha256:160a9113281d6509a104b9d22687068481245bfbd959c51a584fdc35c09c2c11
+    container_name: haven
+    restart: unless-stopped
+    environment:
+      NODE_ENV: "production"
+      ADMIN_USERNAME: "admin"
+      FORCE_HTTP: "true"
+      PUBLIC_URL: "https://haven.example.com"
+    volumes:
+      - /srv/appdata/haven/data:/data
+    ports:
+      - "${HAVEN_PORT_3000}:3000"
+      - "${HAVEN_PORT_40000}:40000/udp"
+      - "${HAVEN_PORT_40000}:40000/tcp"

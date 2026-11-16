@@ -1,0 +1,48 @@
+# bookstack - based on the official LinuxServer.io compose example (linuxserver/docker-bookstack)
+# adapted: official mariadb image (existing data), only the upload folders persisted (as before),
+# host port 8331, authentik OIDC (secrets in .env)
+name: bookstack
+services:
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:v26.05.1-ls269@sha256:c5a0776c82447503112acaa9fab254c76705d2b0fd2a588ca9070eb8e177cf54
+    container_name: bookstack
+    environment:
+      TZ: Europe/Berlin
+      APP_URL: https://bookstack.example.com
+      APP_KEY: ${APP_KEY}
+      DB_HOST: bookstack_db
+      DB_PORT: 3306
+      DB_USERNAME: bookstack
+      DB_PASSWORD: ${DB_PASSWORD}
+      DB_DATABASE: bookstack
+      AUTH_METHOD: oidc
+      AUTH_AUTO_INITIATE: "false"
+      OIDC_NAME: authentik
+      OIDC_DISPLAY_NAME_CLAIMS: name
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+      OIDC_ISSUER: https://auth.example.com/application/o/bookstack/
+      OIDC_ISSUER_DISCOVER: "true"
+      OIDC_USER_TO_GROUPS: "true"
+      OIDC_GROUPS_CLAIM: groups
+      OIDC_REMOVE_FROM_GROUPS: "false"
+    volumes:
+      - /srv/appdata/bookstack/bookstack_uploads:/config/www/public/uploads
+      - /srv/appdata/bookstack/bookstack_storage:/config/www/storage/uploads
+    ports:
+      - "${BOOKSTACK_PORT}:80"
+    restart: unless-stopped
+    depends_on:
+      - bookstack_db
+  bookstack_db:
+    image: mariadb:10-jammy@sha256:7d829180b5b2a9ba74f6242876ab401a0d7dd338a807e522ef92bc9698760f20
+    container_name: bookstack_db
+    environment:
+      TZ: Europe/Berlin
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: bookstack
+      MYSQL_USER: bookstack
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    volumes:
+      - /srv/appdata/bookstack/mysql_data:/var/lib/mysql
+    restart: unless-stopped

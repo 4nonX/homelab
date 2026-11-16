@@ -1,0 +1,13 @@
+# swingmusic - based on the official compose file (swingmx/swingmusic docker-compose.yaml)
+# adapted: pinned image, data paths
+name: swingmusic
+services:
+  swingmusic:
+    image: ghcr.io/swingmx/swingmusic:v2.1.13@sha256:26b6832d2d800f9685418758a3eac9b5472317d380a7e21dc7ee0f999a4d8e87
+    container_name: swingmusic
+    restart: unless-stopped
+    volumes:
+      - /media/mainpool/media/music:/music
+      - /srv/appdata/swingmusic/config:/config
+    ports:
+      - "${SWINGMUSIC_PORT}:1970"

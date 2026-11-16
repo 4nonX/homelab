@@ -1,0 +1,18 @@
+# stremio - based on the official compose file (tsaridas/stremio-docker)
+# adapted: pinned image, host port 8100 for the web UI, data path; HW accel env kept for the iGPU (VT-d pending)
+name: stremio
+services:
+  stremio:
+    image: tsaridas/stremio-docker:v1.3.15@sha256:99959fb5b00bd4267d01824fa98d791f119ba04ca3d70fb84f8cb714168d566e
+    container_name: stremio
+    restart: unless-stopped
+    environment:
+      NO_CORS: 1
+      FFMPEG_HWACCEL: "true"
+      HWACCEL: vaapi
+      LIBVA_DRIVER_NAME: iHD
+    ports:
+      - "${STREMIO_PORT_8080}:8080"
+      - "${STREMIO_PORT_11470}:11470"
+    volumes:
+      - /srv/appdata/stremio/config:/root/.stremio-server

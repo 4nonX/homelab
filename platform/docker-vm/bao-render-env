@@ -1,0 +1,49 @@
+#!/bin/bash
+# bao-render-env: render /opt/stacks/<stack>/.env from OpenBao (kv/stacks/<stack>).
+#
+#   bao-render-env [--out DIR] [--check] [stack ...]
+#     no stacks given  -> all stacks stored in Bao
+#     --out DIR        -> write DIR/<stack>/.env instead of /opt/stacks (for tests)
+#     --check          -> only report what would change, write nothing
+#
+# Exit codes: 0 = nothing changed, 10 = at least one .env changed, other = error.
+# Auth: AppRole docker-host (/etc/bao-render/role_id, secret_id; only valid from docker.lan).
+# Values are written single-quoted, i.e. literally: compose interpolates nothing inside them.
+set -euo pipefail
+BAO_ADDR=${BAO_ADDR:-https://bao.lan:8200}
+OUT=/opt/stacks; CHECK=0; STACKS=()
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --out) OUT=$2; shift 2 ;;
+    --check) CHECK=1; shift ;;
+    -h|--help) sed -n '2,12p' "$0"; exit 0 ;;
+    *) STACKS+=("$1"); shift ;;
+  esac
+done
+
+TOKEN=$(jq -n --rawfile r /etc/bao-render/role_id --rawfile s /etc/bao-render/secret_id '{role_id: $r, secret_id: $s}' |
+        curl -fsS -X POST "$BAO_ADDR/v1/auth/approle/login" -d @- | jq -r .auth.client_token)
+trap 'curl -fsS -o /dev/null -X POST -H "X-Vault-Token: $TOKEN" "$BAO_ADDR/v1/auth/token/revoke-self" || true' EXIT
+api() { curl -fsS -H "X-Vault-Token: $TOKEN" "$@"; }
+
+[ ${#STACKS[@]} -gt 0 ] || mapfile -t STACKS < <(api -X LIST "$BAO_ADDR/v1/kv/metadata/stacks" | jq -r '.data.keys[]')
+
+changed=0
+for p in "${STACKS[@]}"; do
+  [[ "$p" =~ ^[A-Za-z0-9._-]+$ ]] || { echo "invalid stack name: $p" >&2; exit 2; }
+  json=$(api "$BAO_ADDR/v1/kv/data/stacks/$p")
+  ver=$(jq -r .data.metadata.version <<<"$json")
+  if jq -e --arg q "'" '.data.data | to_entries | any(.value | tostring | (contains($q) or contains("\n")))' <<<"$json" >/dev/null; then
+    echo "$p: a value contains a single quote or newline; cannot render literally" >&2; exit 3
+  fi
+  new=$( { printf '# managed by OpenBao: kv/stacks/%s (version %s). Do not edit here; change the secret in Bao.\n' "$p" "$ver"
+           jq -r --arg q "'" '.data.data | to_entries[] | .key + "=" + $q + (.value | tostring) + $q' <<<"$json"; } )
+  dst="$OUT/$p/.env"
+  # compare without the header line (its version number is informational)
+  if [ -f "$dst" ] && [ "$(tail -n +2 "$dst")" = "$(tail -n +2 <<<"$new")" ]; then echo "$p: unchanged"; continue; fi
+  echo "$p: $([ -f "$dst" ] && echo changed || echo new) (Bao version $ver)"; changed=1
+  [ "$CHECK" = 1 ] && continue
+  mkdir -p "$OUT/$p"; tmp=$(mktemp "$OUT/$p/.env.XXXXXX"); chmod 600 "$tmp"
+  printf '%s\n' "$new" > "$tmp"; mv -f "$tmp" "$dst"
+done
+[ "$changed" = 1 ] && exit 10 || exit 0

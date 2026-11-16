@@ -1,0 +1,49 @@
+# dockpeek - based on the official compose file (dockpeek/dockpeek README)
+# adapted: pinned image (secrets in .env)
+# Docker access only through a read-only socket proxy (README "socket proxy" example without POST):
+# dockpeek lists containers, images and networks but cannot start, stop or update anything.
+# Updates come from Renovate PRs and Komodo anyway.
+name: dockpeek
+services:
+  dockpeek:
+    image: ghcr.io/dockpeek/dockpeek:v1.7.3@sha256:eb3f6ebf64a1775f22873e01cd25d2543da94a2743bbf7b005cf13e9bc171360
+    container_name: dockpeek
+    restart: unless-stopped
+    environment:
+      SECRET_KEY: ${SECRET_KEY}
+      USERNAME: admin
+      PASSWORD: ${PASSWORD}
+      DOCKER_HOST: tcp://socket-proxy:2375
+    ports:
+      - "${DOCKPEEK_PORT}:8000"
+    depends_on:
+      - socket-proxy
+    networks:
+      - default
+      - docker-api
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7@sha256:18289eeb306e8e3b70901ffec23eafbb318d73b4514d0bd737dbfc7c5b4fe506
+    container_name: dockpeek-socket-proxy
+    restart: unless-stopped
+    environment:
+      # read only: GET on these endpoints, every write (POST/DELETE) refused
+      CONTAINERS: "1"
+      IMAGES: "1"
+      NETWORKS: "1"
+      INFO: "1"
+      VERSION: "1"
+      PING: "1"
+      POST: "0"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    read_only: true
+    tmpfs:
+      - /run
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - docker-api
+networks:
+  # internal: no route out and no published port; only dockpeek reaches the proxy
+  docker-api:
+    internal: true

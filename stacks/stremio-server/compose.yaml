@@ -1,0 +1,7 @@
+# stremio-server - official image (stremio/server); internal only, no published port (as before)
+name: stremio-server
+services:
+  stremio-server:
+    image: stremio/server:v4.22.5@sha256:d74f18a71f934c23ff137beefbeaea760e51a204a38cae078d0d1366a8a8b63a
+    container_name: stremio-server
+    restart: unless-stopped

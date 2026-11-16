@@ -1,0 +1,19 @@
+{
+  "log-driver": "json-file",
+  "log-opts": {
+    "max-size": "10m",
+    "max-file": "3"
+  },
+  "default-address-pools": [
+    {
+      "base": "10.10.0.0/16",
+      "size": 24
+    }
+  ],
+  "data-root": "/srv/local/docker",
+  "features": {
+    "containerd-snapshotter": false
+  },
+  "storage-driver": "overlay2",
+  "shutdown-timeout": 60
+}

@@ -1,0 +1,58 @@
+# paperless-ngx - based on the official compose file (docker-compose.postgres-tika.yml)
+# adapted: pinned images, host port 3333, data paths, URLs/hosts, authentik OIDC (secrets in .env)
+name: paperless-ngx
+services:
+  broker:
+    image: docker.io/library/redis:8.10.3@sha256:1f88291b4c57bdf249f02eb085a8669889b2d2954e91d4de5118a5da6b78dd53
+    restart: unless-stopped
+    volumes:
+      - /srv/appdata/paperless-ngx/redis:/data
+  db:
+    image: library/postgres:16@sha256:dd2bf3ce2dc83a81674cf7f217fcfd8a5009a4b325dda5b843bfee82a06cff6f
+    restart: unless-stopped
+    volumes:
+      - /srv/appdata/paperless-ngx/postgres:/var/lib/postgresql/data
+    environment:
+      POSTGRES_DB: paperless
+      POSTGRES_USER: paperless
+      POSTGRES_PASSWORD: ${PAPERLESS_DBPASS}
+  webserver:
+    image: ghcr.io/paperless-ngx/paperless-ngx:3.4.2@sha256:d704e84f88300eb6ab001ab15720a2330ff99169cf9f94d6b8fcc44b63a84c84
+    restart: unless-stopped
+    depends_on:
+      - db
+      - broker
+      - gotenberg
+      - tika
+    ports:
+      - "${WEBSERVER_PORT}:8000"
+    volumes:
+      - /srv/appdata/paperless-ngx/paperless_data:/usr/src/paperless/data
+      - /srv/appdata/paperless-ngx/paperless_media:/usr/src/paperless/media
+      - /srv/appdata/paperless-ngx/paperless_export:/usr/src/paperless/export
+      - /srv/appdata/paperless-ngx/paperless_consume:/usr/src/paperless/consume
+    env_file: .env
+    environment:
+      PAPERLESS_REDIS: redis://broker:6379
+      PAPERLESS_DBHOST: db
+      PAPERLESS_DBUSER: paperless
+      PAPERLESS_TIKA_ENABLED: 1
+      PAPERLESS_TIKA_GOTENBERG_ENDPOINT: http://gotenberg:3000
+      PAPERLESS_TIKA_ENDPOINT: http://tika:9998
+      PAPERLESS_URL: https://paperless.example.com
+      PAPERLESS_ALLOWED_HOSTS: paperless.example.com,${DOCKER_HOST_IP},localhost
+      PAPERLESS_CSRF_TRUSTED_ORIGINS: https://paperless.example.com,http://${DOCKER_HOST_IP}:${WEBSERVER_PORT}
+      PAPERLESS_APPS: allauth.socialaccount.providers.openid_connect
+      PAPERLESS_SOCIAL_AUTO_SIGNUP: "false"
+      PAPERLESS_TIME_ZONE: Europe/Berlin
+      OMP_THREAD_LIMIT: 4
+  gotenberg:
+    image: gotenberg/gotenberg:8.40.0@sha256:53073e798c8ef39ea2187e44cb67bab77894ea2509100b94c4fe3b461f7b2996
+    restart: unless-stopped
+    command:
+      - gotenberg
+      - --chromium-disable-javascript=true
+      - --chromium-allow-list=file:///tmp/.*
+  tika:
+    image: docker.io/apache/tika:4.2.0@sha256:b99f19c4fd76237dafe7d22f719b9bddfa9a449da687c597a41e2f6d9a595418
+    restart: unless-stopped

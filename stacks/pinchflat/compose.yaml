@@ -1,0 +1,15 @@
+# pinchflat - based on the official compose file (kieraneglin/pinchflat README)
+# adapted: pinned image, data paths, time zone
+name: pinchflat
+services:
+  pinchflat:
+    image: ghcr.io/kieraneglin/pinchflat:latest@sha256:01b4f98aabaf3f5fe394213f7a32578c9e84e42080f52e2f8334021a4473b202
+    container_name: pinchflat
+    restart: unless-stopped
+    environment:
+      TZ: Europe/Berlin
+    ports:
+      - "${PINCHFLAT_PORT}:8945"
+    volumes:
+      - /srv/appdata/pinchflat/config:/config
+      - /media/mainpool/media/downloads/pinchflat:/downloads

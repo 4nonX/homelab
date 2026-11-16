@@ -1,0 +1,12 @@
+#!/bin/bash
+# komodo-predeploy <stack>: Komodo pre_deploy hook. Renders the stack's .env from OpenBao (kv/stacks/<stack>)
+# into Komodo's clone. Komodo runs it in the stack's run directory (<clone>/stacks/<stack>).
+set -u
+stack=${1:?usage: komodo-predeploy <stack>}
+[ "$(basename "$PWD")" = "$stack" ] || { echo "run directory $PWD does not belong to stack $stack" >&2; exit 1; }
+bao-render-env --out "$(dirname "$PWD")" "$stack" >/dev/null; rc=$?
+case $rc in
+  0)  echo "$stack: .env already current" ;;
+  10) echo "$stack: .env rendered from OpenBao" ;;
+  *)  echo "$stack: bao-render-env failed (exit $rc)" >&2; exit "$rc" ;;
+esac

@@ -1,0 +1,51 @@
+#!/bin/bash
+# komodo-postdeploy <stack> [seconds]: Komodo post_deploy hook. Waits until every container of the compose
+# project <stack> is running (healthy where it has a health check) and stays that way, then exits 0.
+# Exits 1 when that is not reached within [seconds] (default 180): Komodo then marks the deploy as failed.
+# One-shot containers that exited with code 0 count as fine. No rollback: revert the commit in git instead.
+# Not installed on the host: Komodo runs it straight from its clone, post_deploy =
+# "bash ../../platform/docker-vm/komodo-postdeploy <stack>" (run directory is stacks/<stack>), so changes arrive with git.
+set -u
+stack=${1:?usage: komodo-postdeploy <stack> [seconds]}
+limit=${2:-180}
+end=$((SECONDS + limit))
+
+# one line per container: name state exitcode health restarts
+state() {
+  local ids
+  ids=$(docker ps -aq --filter "label=com.docker.compose.project=$stack")
+  [ -n "$ids" ] || return 0
+  # shellcheck disable=SC2086
+  docker inspect -f '{{.Name}} {{.State.Status}} {{.State.ExitCode}} {{if .State.Health}}{{.State.Health.Status}}{{else}}none{{end}} {{.RestartCount}}' $ids |
+    sed 's#^/##' | sort
+}
+
+# prints the containers that are not (yet) fine; empty output = all fine
+problems() {
+  awk '!(($2 == "running" && ($4 == "healthy" || $4 == "none")) || ($2 == "exited" && $3 == 0)) {
+         printf "%s: %s", $1, $2; if ($2 == "exited") printf " (code %s)", $3
+         if ($4 != "none") printf ", health %s", $4; print "" }' <<<"$1"
+}
+
+prev=""
+while :; do
+  now=$(state)
+  if [ -z "$now" ]; then
+    msg="no containers found for project $stack"
+  else
+    msg=$(problems "$now")
+    # fine twice in a row, with no restart in between: stable
+    if [ -z "$msg" ] && [ -n "$prev" ] && [ "$(awk '{print $1, $5}' <<<"$prev")" = "$(awk '{print $1, $5}' <<<"$now")" ]; then
+      echo "$stack: $(wc -l <<<"$now") container(s) up and stable"
+      exit 0
+    fi
+    [ -z "$msg" ] && prev=$now || prev=""
+  fi
+  if [ "$SECONDS" -ge "$end" ]; then
+    echo "$stack: not healthy after ${limit}s" >&2
+    [ -n "$msg" ] && echo "$msg" >&2
+    [ -n "$now" ] && awk '$5 > 0 {print $1 ": restarted " $5 " times"}' <<<"$now" >&2
+    exit 1
+  fi
+  sleep 10
+done

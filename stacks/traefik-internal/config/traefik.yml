@@ -1,0 +1,32 @@
+# Internal reverse proxy for *.example.com on the LAN (static config)
+entryPoints:
+  websecure:
+    address: ":443"
+    forwardedHeaders:
+      # Pangolin traffic arrives via the newt container (Docker range): keep the real client IP it forwards
+      trustedIPs: ["10.10.0.0/16"]
+    http:
+      # drop headers that alias another name (X_authentik_username for X-authentik-username)
+      aliasHeadersStrategy: delete
+      tls:
+        certResolver: cf
+        domains:
+          - main: example.com
+            sans: ["*.example.com"]
+certificatesResolvers:
+  cf:
+    acme:
+      email: admin@example.com
+      storage: /letsencrypt/acme.json
+      dnsChallenge:
+        provider: cloudflare
+        resolvers: ["1.1.1.1:53", "1.0.0.1:53"]
+providers:
+  file:
+    directory: /etc/traefik/dynamic
+    watch: true
+serversTransport:
+  insecureSkipVerify: true
+log:
+  level: INFO
+accessLog: {}

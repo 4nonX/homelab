@@ -1,0 +1,204 @@
+# emby-arr - built from the official and LinuxServer.io images and their compose examples (gluetun, qbittorrent, emby, seerr, *arr, flaresolverr, recyclarr, maintainerr)
+# adapted: pinned images, data paths, host ports (secrets in .env)
+name: emby-arr
+services:
+  gluetun:
+    image: qmcgaw/gluetun:latest@sha256:cbafe0945d0fe5a3c55ca64d43a85c5db270458f4c645ee65797b527f6f57a64
+    container_name: gluetun
+    restart: unless-stopped
+    environment:
+      VPN_SERVICE_PROVIDER: "protonvpn"
+      VPN_TYPE: "wireguard"
+      WIREGUARD_PRIVATE_KEY: "${WIREGUARD_PRIVATE_KEY}"
+      WIREGUARD_ADDRESSES: "${WIREGUARD_ADDRESSES}"
+      SERVER_COUNTRIES: "Germany"
+      VPN_PORT_FORWARDING: "on"
+      VPN_PORT_FORWARDING_PROVIDER: "protonvpn"
+      VPN_PORT_FORWARDING_UP_COMMAND: "/bin/sh -c 'wget -O- --retry-connrefused --tries=30 --waitretry=2 --post-data \"json={\\\"listen_port\\\":{{PORTS}},\\\"current_network_interface\\\":\\\"{{VPN_INTERFACE}}\\\",\\\"random_port\\\":false,\\\"upnp\\\":false}\" http://127.0.0.1:8080/api/v2/app/setPreferences 2>&1'"
+    volumes:
+      - /srv/appdata/gluetun:/gluetun
+    ports:
+      - "${GLUETUN_PORT}:8080"
+    networks:
+      - mediastack
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    cap_add:
+      - NET_ADMIN
+    healthcheck:
+      test: [CMD, /gluetun-entrypoint, healthcheck]
+      interval: 30s
+      timeout: 10s
+      start_period: 30s
+      retries: 3
+  qbittorrent:
+    image: linuxserver/qbittorrent:5.2.3_v2.0.13-ls467@sha256:2e074403c7b72e6d89cee3d0d41a47f7b5708c6a9e5316f3958c90765cbe12ce
+    container_name: qbittorrent
+    restart: unless-stopped
+    depends_on:
+      gluetun:
+        condition: service_healthy
+        restart: true
+    network_mode: service:gluetun
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+      WEBUI_PORT: "8080"
+    volumes:
+      - /srv/appdata/qbittorrent:/config
+      - /media/mainpool/media/downloads/torrents:/mainpool/Downloads/qBittorrent/downloads
+  emby:
+    image: emby/embyserver:latest@sha256:7082c63b10a2fcb3805a7eaebba407d5723bc57c085c9f0b29b7d0a702765cc1
+    container_name: emby
+    restart: unless-stopped
+    environment:
+      UID: "1000"
+      GID: "1000"
+    volumes:
+      - /srv/appdata/emby/config:/config
+      - /media/mainpool/media/series:/data/tvshows
+      - /media/mainpool/media/movies:/data/movies
+      - /media/mainpool/media/anime:/data/anime
+      - /media/mainpool/media/music:/data/music
+      - /media/mainpool/media/emby-userdata:/data/user
+    ports:
+      - "${EMBY_PORT_8096}:8096"
+      - "${EMBY_PORT_8920}:8920"
+    networks:
+      - mediastack
+  seerr:
+    image: seerr/seerr:v3.5.2@sha256:aadee014b40e28cf9aa4928bc9d1183a6eb08f8c44d543cddc9efdcb16549be2
+    container_name: seerr
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/seerr:/app/config
+    ports:
+      - "${SEERR_PORT}:5055"
+    networks:
+      - mediastack
+  sonarr:
+    image: linuxserver/sonarr:4.0.19.2979-ls319@sha256:4b025354d338999e03bf6dbdadcdde94815d39d4a5aba5de3cdc86a56d7d6c51
+    container_name: sonarr
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/sonarr:/config
+      - /media/mainpool/media/series:/tv
+      - /media/mainpool/media/anime:/anime
+      - /media/mainpool/media/downloads/torrents:/downloads
+    ports:
+      - "${SONARR_PORT}:8989"
+    networks:
+      - mediastack
+  radarr:
+    image: linuxserver/radarr:6.2.1.10461-ls309@sha256:28852d0eacababc206762af48fe86d78594a4f434cc46b358f9764a857098662
+    container_name: radarr
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/radarr:/config
+      - /media/mainpool/media/movies:/movies
+      - /media/mainpool/media/downloads/torrents:/downloads
+    ports:
+      - "${RADARR_PORT}:7878"
+    networks:
+      - mediastack
+  lidarr:
+    image: linuxserver/lidarr:3.1.0.4875-ls34@sha256:94a876d1581f2ae5af5b846320d5f6f7a102a4755939ce0b43b01c60f9f86056
+    container_name: lidarr
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/lidarr:/config
+      - /media/mainpool/media/music:/music
+      - /media/mainpool/media/downloads/torrents:/downloads
+    ports:
+      - "${LIDARR_PORT}:8686"
+    networks:
+      - mediastack
+  bazarr:
+    image: linuxserver/bazarr:v1.6.0-ls354@sha256:5d916d07404296ec35ee726e13e0e558f05952724cf494a7f009d913fb2b12f3
+    container_name: bazarr
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/bazarr:/config
+      - /media/mainpool/media/movies:/movies
+      - /media/mainpool/media/series:/tv
+      - /media/mainpool/media/anime:/anime
+    ports:
+      - "${BAZARR_PORT}:6767"
+    networks:
+      - mediastack
+  prowlarr:
+    image: linuxserver/prowlarr:2.4.0.5397-ls153@sha256:536036aeb2c740d1a660ccf143b58a8bd6222f09010258fdfc10a538af7bec78
+    container_name: prowlarr
+    restart: unless-stopped
+    environment:
+      PUID: "1000"
+      PGID: "1000"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/prowlarr:/config
+    ports:
+      - "${PROWLARR_PORT}:9696"
+    networks:
+      - mediastack
+  flaresolverr:
+    image: ghcr.io/flaresolverr/flaresolverr:v3.5.2@sha256:c80ae007ce2ccdcd217a12426e4f039ef763ff90738c808d38810c3e59323767
+    container_name: flaresolverr
+    restart: unless-stopped
+    environment:
+      LOG_LEVEL: "info"
+      LOG_HTML: "false"
+      CAPTCHA_SOLVER: "none"
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/flaresolverr:/config
+    ports:
+      - "${FLARESOLVERR_PORT}:8191"
+    networks:
+      - mediastack
+  recyclarr:
+    image: ghcr.io/recyclarr/recyclarr:8.8.1@sha256:3e9c41b9ec29bbf65fe846864058730d321a21f7695d8c0d9437b73e34d50ad9
+    container_name: recyclarr
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/recyclarr:/config
+    networks:
+      - mediastack
+  maintainerr:
+    image: ghcr.io/jorenn92/maintainerr:latest@sha256:bee84707edaf589cda3d18b6813cbfe3a137b52786210c3a28190e10910c1240
+    container_name: maintainerr
+    restart: unless-stopped
+    environment:
+      TZ: "Europe/Berlin"
+    volumes:
+      - /srv/appdata/maintainerr:/opt/data
+    ports:
+      - "${MAINTAINERR_PORT}:6246"
+    networks:
+      - mediastack
+networks:
+  mediastack:
+    name: mediastack
+    driver: bridge

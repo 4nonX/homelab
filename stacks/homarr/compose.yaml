@@ -1,0 +1,58 @@
+# homarr v1 - based on the official compose file (homarr-labs/homarr)
+# adapted: pinned images, data path, authentik OIDC (secrets in .env), host port 7575 (the Traefik route)
+# v0 (ajnart/homarr 0.16.1) was retired on 2026-11-16 without migration; its data is still in /srv/appdata/homarr
+# until deleted. Login: authentik ("authentik" button) plus local credentials as a fallback when authentik is down.
+# Admin rights come from homarr groups: create a group named like the authentik group (e.g. "authentik Admins")
+# with admin permission; members are assigned at every OIDC login (groups claim).
+# Docker access only through a read-only socket proxy: container list, stats and logs work,
+# start/stop/remove from homarr do not.
+name: homarr
+services:
+  homarr:
+    image: ghcr.io/homarr-labs/homarr:v1.77.2@sha256:d60120a04536ded5d8c3a478192dca549c3f16cae2f809ab094f95f011bb74e6
+    container_name: homarr
+    restart: unless-stopped
+    environment:
+      SECRET_ENCRYPTION_KEY: ${SECRET_ENCRYPTION_KEY}
+      AUTH_PROVIDERS: oidc,credentials
+      AUTH_OIDC_ISSUER: https://auth.example.com/application/o/homarr/
+      AUTH_OIDC_CLIENT_ID: ${AUTH_OIDC_CLIENT_ID}
+      AUTH_OIDC_CLIENT_SECRET: ${AUTH_OIDC_CLIENT_SECRET}
+      AUTH_OIDC_CLIENT_NAME: authentik
+      AUTH_OIDC_GROUPS_ATTRIBUTE: groups
+      DOCKER_HOSTNAMES: socket-proxy
+      DOCKER_PORTS: "2375"
+    volumes:
+      - /srv/appdata/homarr-v1:/appdata
+    ports:
+      - "${HOMARR_PORT}:7575"
+    depends_on:
+      - socket-proxy
+    networks:
+      - default
+      - docker-api
+  socket-proxy:
+    image: lscr.io/linuxserver/socket-proxy:3.4.7@sha256:18289eeb306e8e3b70901ffec23eafbb318d73b4514d0bd737dbfc7c5b4fe506
+    container_name: homarr-socket-proxy
+    restart: unless-stopped
+    environment:
+      # read only: GET on these endpoints, every write (POST/DELETE) refused
+      CONTAINERS: "1"
+      IMAGES: "1"
+      INFO: "1"
+      VERSION: "1"
+      PING: "1"
+      POST: "0"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    read_only: true
+    tmpfs:
+      - /run
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - docker-api
+networks:
+  # internal: no route out and no published port; only homarr reaches the proxy
+  docker-api:
+    internal: true

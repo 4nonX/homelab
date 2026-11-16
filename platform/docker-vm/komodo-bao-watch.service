@@ -1,0 +1,8 @@
+[Unit]
+Description=Redeploy Komodo stacks whose secrets changed in OpenBao
+After=network-online.target periphery.service
+Wants=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/komodo-bao-watch

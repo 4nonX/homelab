@@ -1,0 +1,21 @@
+# tailscale
+# upstream container setup (tailscale.com/kb/1282/docker); existing state kept, node identity unchanged
+name: tailscale
+services:
+  tailscale:
+    image: tailscale/tailscale:v1.104.7
+    container_name: tailscale
+    restart: unless-stopped
+    network_mode: host
+    cap_add:
+      - NET_ADMIN
+      - NET_RAW
+    devices:
+      - /dev/net/tun:/dev/net/tun
+    environment:
+      TS_STATE_DIR: "/var/lib/tailscale"
+      TS_USERSPACE: "false"
+      TS_AUTH_ONCE: "true"
+      TS_ACCEPT_DNS: "true"
+    volumes:
+      - /srv/appdata/tailscale:/var/lib/tailscale

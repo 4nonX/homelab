@@ -1,0 +1,22 @@
+#!/bin/bash
+# komodo-bao-watch: redeploy stacks whose secrets in OpenBao differ from the .env in Komodo's clone.
+# Run by komodo-bao-watch.timer. Komodo service user bao-watch (Execute on stacks), API key in
+# /etc/komodo/bao-watch.env (root 600): KOMODO_URL, KOMODO_API_KEY, KOMODO_API_SECRET.
+set -u
+. /etc/komodo/bao-watch.env
+C=/srv/local/komodo/repos/gitops/stacks
+rc_all=0
+for d in "$C"/*/; do
+  s=$(basename "$d"); [ -f "$d/.env" ] || continue      # only stacks Komodo renders from OpenBao
+  bao-render-env --check --out "$C" "$s" >/dev/null 2>&1; rc=$?
+  case $rc in
+    0)  ;;
+    10) if curl -sS -f -o /dev/null -X POST -H "Content-Type: application/json" \
+             -H "X-Api-Key: $KOMODO_API_KEY" -H "X-Api-Secret: $KOMODO_API_SECRET" \
+             -d "{\"stack\":\"$s\"}" "$KOMODO_URL/execute/DeployStack"; then
+          echo "$s: secrets changed in OpenBao, redeploy requested"
+        else echo "$s: redeploy request to Komodo failed" >&2; rc_all=1; fi ;;
+    *)  echo "$s: bao-render-env --check failed (exit $rc)" >&2; rc_all=1 ;;
+  esac
+done
+exit $rc_all

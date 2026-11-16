@@ -1,0 +1,82 @@
+# sure - based on the official compose file (we-promise/sure compose.example.yml)
+# adapted: pinned images, host port 23000, data paths, authentik OIDC (secrets in .env)
+name: sure
+x-db-env: &db_env
+  POSTGRES_USER: sure_user
+  POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+  POSTGRES_DB: sure_production
+x-rails-env: &rails_env
+  <<: *db_env
+  SECRET_KEY_BASE: ${SECRET_KEY_BASE}
+  SELF_HOSTED: "true"
+  RAILS_FORCE_SSL: "false"
+  RAILS_ASSUME_SSL: "false"
+  DB_HOST: db
+  DB_PORT: 5432
+  REDIS_URL: redis://redis:6379/1
+  OPENAI_ACCESS_TOKEN: ${OPENAI_ACCESS_TOKEN:-}
+  POSTHOG_FEEDBACK_ENABLED: 'false'
+services:
+  web:
+    image: ghcr.io/we-promise/sure:0.7.6-hotfix.1@sha256:950209a9c52dec8d8ec5bcd6e46d39b65de07b9205d2877e6d5e1b94d851b220
+    volumes:
+      - /srv/appdata/sure/app/storage:/rails/storage
+    ports:
+      - "${WEB_PORT}:3000"
+    restart: unless-stopped
+    environment:
+      <<: *rails_env
+      APP_DOMAIN: sure.example.com
+      OIDC_ISSUER: https://auth.example.com/application/o/sure/
+      OIDC_REDIRECT_URI: https://sure.example.com/auth/openid_connect/callback
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET}
+    depends_on:
+      db:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - sure_net
+  worker:
+    image: ghcr.io/we-promise/sure:0.7.6-hotfix.1@sha256:950209a9c52dec8d8ec5bcd6e46d39b65de07b9205d2877e6d5e1b94d851b220
+    command: bundle exec sidekiq
+    volumes:
+      - /srv/appdata/sure/app/storage:/rails/storage
+    restart: unless-stopped
+    depends_on:
+      redis:
+        condition: service_healthy
+    environment:
+      <<: *rails_env
+    networks:
+      - sure_net
+  db:
+    image: postgres:16@sha256:2d5c77ae9b0e0944ffb92f8d8fc2fa2edb215cb0976da8bac34df917af417e87
+    restart: unless-stopped
+    volumes:
+      - /srv/appdata/sure/pgdata:/var/lib/postgresql/data
+    environment:
+      <<: *db_env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sure_net
+  redis:
+    image: redis:8.4.8-alpine3.22@sha256:35b3979c49e47dd206645bf8416fad4f93dd7527f925a6426a2594cf16bf6e63
+    restart: unless-stopped
+    volumes:
+      - /srv/appdata/sure/redis/data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sure_net
+networks:
+  sure_net:
+    driver: bridge

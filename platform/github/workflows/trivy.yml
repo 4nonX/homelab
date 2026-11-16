@@ -1,0 +1,56 @@
+# Trivy: compares every image a pull request changes with the image it replaces and marks the PR's head commit
+# with the status "trivy / critical": red only when the PR brings in a CRITICAL CVE with a fix that the running
+# image does not have. Nothing merges on its own; red means look before merging.
+# Renovate opens its PRs with the workflow's GITHUB_TOKEN, and such PRs never start pull_request runs.
+# So after every Renovate run all open renovate PRs are scanned; PRs from people are scanned directly.
+name: Trivy
+
+on:
+  pull_request:
+    paths:
+      - "stacks/*/compose.yaml"
+      - "platform/*/compose.yaml"
+  workflow_run:
+    workflows: [Renovate]
+    types: [completed]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pull-requests: read
+  statuses: write
+
+concurrency:
+  group: trivy-${{ github.event.pull_request.number || 'renovate' }}
+  cancel-in-progress: true
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+
+      # Straight from the GitHub release, checksum pinned here (not taken from the release itself).
+      - name: Install Trivy
+        run: |
+          V=0.74.0
+          SUM=2ae6fe3ee734b7fdf11335663e18c75ea12dccc76062f09f164a3b0f8be4371a
+          D="$HOME/trivy-bin"; mkdir -p "$D"; cd "$D"
+          curl -fsSL --retry 3 -o trivy.tar.gz "https://github.com/aquasecurity/trivy/releases/download/v$V/trivy_${V}_Linux-64bit.tar.gz"
+          echo "$SUM  trivy.tar.gz" | sha256sum -c -
+          tar -xzf trivy.tar.gz trivy
+          "$D/trivy" --version
+          echo "$D" >> "$GITHUB_PATH"
+
+      - name: Scan changed images
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR: ${{ github.event.pull_request.number }}
+        run: |
+          if [ -n "$PR" ]; then prs=$PR
+          else prs=$(gh pr list --label renovate --state open --json number -q '.[].number' | tr '\n' ' '); fi
+          [ -n "$prs" ] || { echo "no open renovate PRs"; exit 0; }
+          bash .github/scripts/scan-pr-images.sh $prs

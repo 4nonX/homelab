@@ -1,0 +1,19 @@
+# navidrome - based on the official compose file (navidrome.org/docs/installation/docker)
+# adapted: pinned image, data paths, time zone
+name: navidrome
+services:
+  navidrome:
+    image: deluan/navidrome:0.64.2@sha256:59ce76e6e06193fbfbb1736a93b8468227e1ea663fc7b25b1da13fbb97f5197b
+    container_name: navidrome
+    restart: unless-stopped
+    ports:
+      - "${NAVIDROME_PORT}:4533"
+    environment:
+      ND_SCANSCHEDULE: 1h
+      ND_LOGLEVEL: info
+      ND_SESSIONTIMEOUT: 24h
+      ND_BASEURL: ""
+      TZ: Europe/Berlin
+    volumes:
+      - /srv/appdata/navidrome/data:/data
+      - /media/mainpool/media/music:/music:ro

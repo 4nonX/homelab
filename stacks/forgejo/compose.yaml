@@ -1,0 +1,60 @@
+# forgejo - based on the official compose example (forgejo.org/docs/latest/admin/installation/docker, MariaDB)
+# adapted: pinned images, host ports 3131/222, data paths, postfix relay for mail (secrets in .env)
+name: forgejo
+services:
+  forgejo:
+    image: codeberg.org/forgejo/forgejo:14@sha256:a39d4e644a7b0169a03a9d990a973f76f99425f98b3722174f4ae02a74c74105
+    container_name: forgejo
+    restart: always
+    depends_on:
+      - forgejo-db
+      - mail-relay
+    environment:
+      USER_UID: "1000"
+      USER_GID: "1000"
+      GITEA__database__DB_TYPE: "mysql"
+      GITEA__database__HOST: "forgejo-db:3306"
+      GITEA__database__NAME: "forgejo"
+      GITEA__database__USER: "forgejo"
+      GITEA__database__PASSWD: "${GITEA__database__PASSWD}"
+      GITEA__server__ROOT_URL: "https://forge.example.com/"
+      GITEA__server__DOMAIN: "forge.example.com"
+      GITEA__server__PROTOCOL: "http"
+      GITEA__server__SSH_PORT: "222"
+    volumes:
+      - /srv/appdata/forgejo/data:/data
+    ports:
+      - "${FORGEJO_PORT_3000}:3000"
+      - "${FORGEJO_PORT_22}:22"
+    networks:
+      - forgejo-net
+  forgejo-db:
+    image: mariadb:11@sha256:d36f18d65a0459510b8b0f643b226a6d299e3206486e2b64ff20754a6d291707
+    container_name: forgejo-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: "${MYSQL_ROOT_PASSWORD}"
+      MYSQL_DATABASE: "forgejo"
+      MYSQL_USER: "forgejo"
+      MYSQL_PASSWORD: "${MYSQL_PASSWORD}"
+    volumes:
+      - /srv/appdata/forgejo/mariadb:/var/lib/mysql
+    networks:
+      - forgejo-net
+  mail-relay:
+    image: juanluisbaptiste/postfix:1@sha256:7eb4e044a50428b16989946e0fa76acdfb21274fc7eedc9e0774ea92825d09b7
+    container_name: postfix-relay
+    restart: always
+    environment:
+      MAILNAME: "example.com"
+      MYNETWORKS: "127.0.0.0/8,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+      SMTP_SERVER: "smtp.protonmail.ch"
+      SMTP_PORT: "587"
+      SMTP_USERNAME: "admin@example.com"
+      SMTP_PASSWORD: "${SMTP_PASSWORD}"
+      SERVER_HOSTNAME: "example.com"
+    networks:
+      - forgejo-net
+networks:
+  forgejo-net:
+    driver: bridge

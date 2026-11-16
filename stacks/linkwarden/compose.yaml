@@ -1,0 +1,30 @@
+# linkwarden - based on the official compose file (linkwarden/linkwarden docker-compose.yml)
+# adapted: pinned images, host port 3335, data paths, database name linkwarden, authentik OIDC (secrets in .env)
+name: linkwarden
+services:
+  postgres:
+    image: postgres:16@sha256:2d5c77ae9b0e0944ffb92f8d8fc2fa2edb215cb0976da8bac34df917af417e87
+    env_file: .env
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: linkwarden
+    volumes:
+      - /srv/appdata/linkwarden/data/postgres:/var/lib/postgresql/data
+  linkwarden:
+    image: ghcr.io/linkwarden/linkwarden:v2.17.0@sha256:7c11fde57d1a0c819b6de0079966eba3a33584d718464af7dacde22bd470ae46
+    env_file: .env
+    environment:
+      DATABASE_URL: postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/linkwarden
+      NEXTAUTH_URL: https://linkwarden.example.com/api/v1/auth
+      NEXT_PUBLIC_DISABLE_REGISTRATION: "true"
+      NEXT_PUBLIC_AUTHENTIK_ENABLED: "true"
+      AUTHENTIK_CUSTOM_NAME: authentik
+      AUTHENTIK_ISSUER: https://auth.example.com/application/o/linkwarden
+    restart: unless-stopped
+    ports:
+      - "${LINKWARDEN_PORT}:3000"
+    volumes:
+      - /srv/appdata/linkwarden/data/linkwarden:/data/data
+    depends_on:
+      - postgres

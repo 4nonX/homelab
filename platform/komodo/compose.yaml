@@ -1,0 +1,33 @@
+# Komodo Core + MongoDB (pinned). Secrets in .env.
+name: komodo
+services:
+  mongo:
+    image: mongo@sha256:1444adda2e4b8d6a0d7f242a625d834a78d6e3aa6e4ed1b0b4c2dab2318c5e3d   # mongo 8.0.38
+    command: --quiet --wiredTigerCacheSizeGB 0.25
+    restart: unless-stopped
+    labels:
+      komodo.skip: ""   # keep running when Komodo stops all containers
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${KOMODO_DATABASE_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${KOMODO_DATABASE_PASSWORD}
+    volumes:
+      - mongo-data:/data/db
+      - mongo-config:/data/configdb
+  core:
+    image: ghcr.io/moghtech/komodo-core@sha256:a1cceb4f971443b1e9f2a767788f663d0afb6244ee2135f7fe3fd1036af37ade   # komodo-core 2.3.4
+    init: true
+    restart: unless-stopped
+    depends_on: [mongo]
+    env_file: .env
+    environment:
+      KOMODO_DATABASE_ADDRESS: mongo:27017
+      GIT_CONFIG_GLOBAL: /git-ssh/gitconfig
+    ports:
+      - "9120:9120"
+    volumes:
+      - /opt/komodo/keys:/config/keys
+      - /opt/komodo/backups:/backups
+      - /opt/komodo/github:/git-ssh:ro   # read-only GitHub deploy key + scoped gitconfig
+volumes:
+  mongo-data:
+  mongo-config:

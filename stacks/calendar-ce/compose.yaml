@@ -1,0 +1,33 @@
+# calendar-ce - own project, compose file from its repository
+# adapted: image built locally from the repository (pull_policy: build), data paths, host port (secrets in .env)
+name: calendar-ce
+services:
+  calendar:
+    image: calendar-ce:local
+    build:
+      context: https://github.com/sysoppl/Calendar-CE.git#v1.14.0
+    container_name: calendar-ce
+    restart: unless-stopped
+    environment:
+      VITE_APP_URL: "https://calendar.example.com"
+      CALENDAR_PROXY_ALLOW: "nextcloud.example.com"
+      CALENDAR_PROXY_PRIVATE_HOSTS: "nextcloud.example.com"
+      CALENDAR_PROXY_OPEN: "false"
+      CALENDAR_PROXY_ALLOW_PRIVATE: "false"
+      CALENDAR_PROXY_DISABLED: "false"
+      CALENDAR_TRUST_PROXY: "1"
+    ports:
+      - "${CALENDAR_PORT}:8787"
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: '3'
+    pull_policy: build
+    mem_limit: 512m
+    stop_grace_period: 15s
+    read_only: true
