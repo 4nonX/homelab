@@ -10,7 +10,7 @@ others along.
 
 | Guest | Type | Role |
 |---|---|---|
-| `docker` | VM | Docker Engine and the Komodo Periphery agent. Runs all 34 stacks. |
+| `docker` | VM | Docker Engine and the Komodo Periphery agent. Runs all 33 stacks. |
 | `komodo` | VM | Komodo Core (+ MongoDB). Decides what to deploy, talks to Periphery outbound-only from the Docker VM. |
 | `bao` | LXC | OpenBao with Raft storage. Holds every stack secret. Firewalled to SSH and the API from the LAN. |
 | `samba` | LXC | SMB3 shares on ZFS datasets; ZFS snapshots show up as Windows "Previous Versions". |

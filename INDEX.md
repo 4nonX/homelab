@@ -67,7 +67,6 @@ Each folder: `compose.yaml` (sanitized, pinned images) and `.env.example` (keys 
 | [newt](stacks/newt/) | [.env.example](stacks/newt/.env.example), [compose.yaml](stacks/newt/compose.yaml) |
 | [nextcloud](stacks/nextcloud/) | [.env.example](stacks/nextcloud/.env.example), [compose.yaml](stacks/nextcloud/compose.yaml) |
 | [paperless-ngx](stacks/paperless-ngx/) | [.env.example](stacks/paperless-ngx/.env.example), [compose.yaml](stacks/paperless-ngx/compose.yaml) |
-| [pihole](stacks/pihole/) | [.env.example](stacks/pihole/.env.example), [compose.yaml](stacks/pihole/compose.yaml) |
 | [pinchflat](stacks/pinchflat/) | [compose.yaml](stacks/pinchflat/compose.yaml) |
 | [searxng](stacks/searxng/) | [compose.yaml](stacks/searxng/compose.yaml) |
 | [stremio](stacks/stremio/) | [compose.yaml](stacks/stremio/compose.yaml) |

@@ -1,13 +1,13 @@
 ﻿# Homelab Infrastructure
 
 [![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
-[![Stacks](https://img.shields.io/badge/stacks-34-blue?style=flat-square)](stacks/)
-[![Containers](https://img.shields.io/badge/containers-85-blue?style=flat-square)](stacks/)
+[![Stacks](https://img.shields.io/badge/stacks-33-blue?style=flat-square)](stacks/)
+[![Containers](https://img.shields.io/badge/containers-84-blue?style=flat-square)](stacks/)
 [![Hypervisor](https://img.shields.io/badge/Proxmox_VE-9-E57000?style=flat-square&logo=proxmox)](https://www.proxmox.com)
 [![Storage](https://img.shields.io/badge/storage-ZFS-orange?style=flat-square)](docs/data-protection.md)
 [![GitOps](https://img.shields.io/badge/deploy-GitOps_(Komodo)-6E40C9?style=flat-square)](docs/gitops-pipeline.md)
 
-A self-hosted home infrastructure: 34 Docker Compose stacks (85 containers) on a single Proxmox VE host, deployed
+A self-hosted home infrastructure: 33 Docker Compose stacks (84 containers) on a single Proxmox VE host, deployed
 by GitOps from a git repository, secrets in OpenBao, public access through a Pangolin tunnel with zero
 port-forwarding.
 
@@ -39,11 +39,11 @@ VPS: Pangolin (Traefik + Gerbil), TLS, identity-aware access
   │   WireGuard tunnel, outbound from home; no open ports at home
   ▼
 Proxmox VE host  ─ ZFS pool "mainpool" (sanoid snapshots)
-  ├─ VM  docker     Docker + Komodo Periphery, all 34 stacks
+  ├─ VM  docker     Docker + Komodo Periphery, all 33 stacks
   │     ├─ newt                tunnel client (Pangolin site)
   │     ├─ traefik-internal    one router for LAN and internet, authentik forward-auth
   │     ├─ authentik           SSO for every app that supports OIDC
-  │     └─ 31 app stacks       media, documents, notes, photos, dev, dashboards
+  │     └─ 30 app stacks       media, documents, notes, photos, dev, dashboards
   ├─ VM  komodo     Komodo Core: pulls the git repo, deploys changed stacks
   ├─ LXC bao        OpenBao: all stack secrets, auto-unseal via AWS KMS
   └─ LXC samba      SMB shares on ZFS datasets, snapshots as "Previous Versions"
@@ -104,7 +104,7 @@ gated. Details: [docs/security.md](docs/security.md).
 
 | Area | Stacks |
 |---|---|
-| Edge, routing, identity | [newt](stacks/newt/), [traefik-internal](stacks/traefik-internal/), [authentik](stacks/authentik/), [pihole](stacks/pihole/), [tailscale](stacks/tailscale/) |
+| Edge, routing, identity | [newt](stacks/newt/), [traefik-internal](stacks/traefik-internal/), [authentik](stacks/authentik/), [tailscale](stacks/tailscale/) |
 | Media | [emby-arr](stacks/emby-arr/) (Emby, Sonarr, Radarr, Lidarr, Prowlarr, Bazarr, Seerr, qBittorrent behind Gluetun, FlareSolverr, Recyclarr, Maintainerr), [navidrome](stacks/navidrome/), [swingmusic](stacks/swingmusic/), [pinchflat](stacks/pinchflat/), [stremio](stacks/stremio/), [stremio-server](stacks/stremio-server/) |
 | Books | [boox](stacks/boox/) (Audiobookshelf, Grimmory, Bookkeep, ReadMeABook) |
 | Files, photos, office | [nextcloud](stacks/nextcloud/) (+ Talk HPB, office, whiteboard), [immich](stacks/immich/), [paperless-ngx](stacks/paperless-ngx/), [bentopdf](stacks/bentopdf/) |
