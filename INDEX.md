@@ -20,7 +20,7 @@ Map of every file in this repository. Stacks and legacy files are grouped by fol
 | File | Description |
 |---|---|
 | [docs/architecture.md](docs/architecture.md) | Host, guests, storage, network and routing |
-| [docs/data-protection.md](docs/data-protection.md) | Datasets, snapshot policy, restores, what is not covered yet |
+| [docs/data-protection.md](docs/data-protection.md) | Datasets, snapshot policy, off-site backup, restores, what is not covered yet |
 | [docs/gitops-pipeline.md](docs/gitops-pipeline.md) | Komodo, OpenBao rendering, Renovate, Trivy, health checks, adding a stack |
 | [docs/media-stack.md](docs/media-stack.md) | Arr suite + Emby notes |
 | [docs/network-remote-access.md](docs/network-remote-access.md) | Pangolin vs Tailscale vs ZeroTier |
@@ -114,6 +114,13 @@ Route generator: [stacks/traefik-internal/gen.py](stacks/traefik-internal/gen.py
 | [platform/openbao/policies/raft-snapshot.hcl](platform/openbao/policies/raft-snapshot.hcl) |  |
 | [platform/openbao/policies/stacks-read.hcl](platform/openbao/policies/stacks-read.hcl) |  |
 | [platform/proxmox/sanoid.conf](platform/proxmox/sanoid.conf) | ZFS snapshot policy |
+| [platform/proxmox/backup/homelab-backup](platform/proxmox/backup/homelab-backup) | Off-site backup: consistent ZFS snapshots, read-only zvol clone, restic upload, retention, check |
+| [platform/proxmox/backup/env.example](platform/proxmox/backup/env.example) | Backup settings; the target is one line |
+| [platform/proxmox/backup/homelab-backup.service](platform/proxmox/backup/homelab-backup.service) |  |
+| [platform/proxmox/backup/homelab-backup.timer](platform/proxmox/backup/homelab-backup.timer) | Nightly |
+| [platform/proxmox/backup/homelab-backup-check.service](platform/proxmox/backup/homelab-backup-check.service) |  |
+| [platform/proxmox/backup/homelab-backup-check.timer](platform/proxmox/backup/homelab-backup-check.timer) | Weekly |
+| [platform/proxmox/backup/homelab-backup-failed.service](platform/proxmox/backup/homelab-backup-failed.service) | Mail on failure only |
 
 ---
 

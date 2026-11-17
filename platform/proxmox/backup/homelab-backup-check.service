@@ -1,0 +1,10 @@
+[Unit]
+Description=Verify the off-site backup (restic check, reads a sample of the stored data)
+After=network-online.target
+Wants=network-online.target
+OnFailure=homelab-backup-failed.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/homelab-backup check
+Nice=10

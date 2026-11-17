@@ -1,0 +1,7 @@
+[Unit]
+Description=Mail root when the off-site backup or its check fails
+
+[Service]
+Type=oneshot
+# root is aliased to the admin mailbox through the host mail relay; only failures send mail
+ExecStart=/bin/sh -c 'journalctl -u homelab-backup.service -u homelab-backup-check.service -n 60 --no-pager | mail -s "[pve] off-site backup FAILED" root'

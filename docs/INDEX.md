@@ -7,7 +7,7 @@
 | [architecture.md](architecture.md) | Host, guests, storage, network and routing |
 | [gitops-pipeline.md](gitops-pipeline.md) | Komodo, OpenBao rendering, Renovate, Trivy, health checks, adding a stack |
 | [security.md](security.md) | Security layers and the deliberate non-decisions |
-| [data-protection.md](data-protection.md) | Datasets, snapshot policy, restores, what is not covered yet |
+| [data-protection.md](data-protection.md) | Datasets, snapshot policy, off-site backup, restores, what is not covered yet |
 
 ## Guides
 

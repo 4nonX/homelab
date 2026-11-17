@@ -124,8 +124,9 @@ Docker VM's data disk, a zvol in the same pool. sanoid snapshots everything that
 6 monthly for important data; shorter for the media library). Restores are a `zfs rollback` or a copy out of
 `.zfs/snapshot`.
 
-Off-site backups are deliberately not built yet: they wait for a dedicated backup NAS. Until then, snapshots are the
-only protection, and the docs say so. Details: [docs/data-protection.md](docs/data-protection.md).
+Off-site: a nightly restic backup from ZFS snapshots on the host to a European storage box over SFTP, encrypted
+before it leaves, with retention, a weekly integrity check of a data sample and mail only on failure. Local backup
+jobs wait for a dedicated backup NAS. Details: [docs/data-protection.md](docs/data-protection.md).
 
 ---
 
@@ -139,7 +140,7 @@ platform/
   komodo/               Komodo Core compose, script that sets the post-deploy hook on all stacks
   openbao/              config, ACL policies, daily Raft snapshot, nftables, round-trip check
   aws/                  CloudFormation: KMS key for auto-unseal + alert on every key use
-  proxmox/              sanoid snapshot policy
+  proxmox/              sanoid snapshot policy, off-site backup (restic script, systemd units)
   github/               Renovate config, Renovate and Trivy workflows, PR scan script
 infrastructure/         Pangolin (VPS) guides and Terraform, VPS Traefik and CrowdSec notes
 docs/                   architecture, pipeline, security, data protection, service guides
@@ -157,7 +158,7 @@ The workflows under `platform/github/` are copies for reference; they are not ac
 | [Architecture](docs/architecture.md) | Host, guests, storage, network and routing |
 | [GitOps pipeline](docs/gitops-pipeline.md) | Komodo, OpenBao rendering, Renovate, Trivy, health checks, adding a stack |
 | [Security](docs/security.md) | Each layer, and the decisions behind what is *not* locked down |
-| [Data protection](docs/data-protection.md) | Datasets, snapshot policy, what is not covered yet |
+| [Data protection](docs/data-protection.md) | Datasets, snapshot policy, off-site backup, what is not covered yet |
 | [Remote access](docs/network-remote-access.md) | Pangolin vs Tailscale vs ZeroTier |
 | [Pangolin guides](docs/pangolin-infrastructure.md) | Deployment, configuration, HA, upgrades, tuning |
 | [Nextcloud optimisation](docs/nextcloud-optimization-guide.md), [update guide](docs/nextcloud-update-guide.md) | PostgreSQL, Redis, PHP tuning, post-update steps |

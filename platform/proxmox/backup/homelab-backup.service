@@ -1,0 +1,13 @@
+[Unit]
+Description=Off-site backup of the irreplaceable data (restic, from ZFS snapshots)
+After=network-online.target zfs-mount.service
+Wants=network-online.target
+OnFailure=homelab-backup-failed.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/homelab-backup
+Nice=10
+IOSchedulingClass=idle
+# the first upload of ~80 GB can take many hours
+TimeoutStartSec=infinity
