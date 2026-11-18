@@ -1,4 +1,4 @@
-﻿# Why DPlaneOS - From ZimaOS to a Custom NAS Layer
+# Why DPlaneOS - From ZimaOS to a Custom NAS Layer
 
 > [DPlaneOS](https://github.com/4nonX/DPlaneOS) is a self-developed NAS management layer
 > built on Debian + ZFS + Docker. This document explains what drove the switch from ZimaOS

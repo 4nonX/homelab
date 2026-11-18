@@ -1,0 +1,7 @@
+[Unit]
+Description=Mail root when the Pangolin backup or its check fails
+
+[Service]
+Type=oneshot
+# root is aliased to the admin mailbox through postfix (mail-relay-setup.sh); only failures send mail
+ExecStart=/bin/sh -c 'journalctl -u pangolin-backup.service -u pangolin-backup-check.service -n 60 --no-pager | mail -s "[vps] Pangolin backup FAILED" root'

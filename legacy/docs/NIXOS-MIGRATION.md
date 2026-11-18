@@ -1,4 +1,4 @@
-﻿# 🚀 NixOS Migration Project
+# 🚀 NixOS Migration Project
 
 ## Executive Summary
 
@@ -7,7 +7,7 @@ Complete production infrastructure migration from ZimaOS (Debian-based) to NixOS
 **Timeline:** Q1-Q2 2026  
 **Current Phase:** Planning & Testing  
 **Complexity:** High (Production environment, 2+ years uptime, ~95% SLA)  
-**Public Documentation:** [github.com/4nonX/homelab](https://github.com/4nonX/homelab)
+**Public Documentation:** [github.com/4nonX/homelab](../../README.md)
 
 ---
 

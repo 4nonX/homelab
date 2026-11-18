@@ -1,4 +1,4 @@
-﻿# Building a Personal Cloud: From Hardware to Production
+# Building a Personal Cloud: From Hardware to Production
 
 ## Executive Summary
 

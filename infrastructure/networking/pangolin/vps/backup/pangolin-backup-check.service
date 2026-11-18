@@ -1,0 +1,10 @@
+[Unit]
+Description=Verify the Pangolin off-site backup (restic check, reads all stored data)
+After=network-online.target
+Wants=network-online.target
+OnFailure=pangolin-backup-failed.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pangolin-backup check
+Nice=10

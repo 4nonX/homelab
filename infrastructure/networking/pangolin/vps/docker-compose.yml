@@ -1,0 +1,91 @@
+# Snapshot of /opt/pangolin/docker-compose.yml on the VPS (2026-11-17). Reference, not deployed by Komodo.
+# Changes against the original install: pangolin's ports 3000-3002 no longer published (as in the official
+# installer; Traefik and Gerbil reach Pangolin over the docker network), crowdsec service added (stage 1:
+# engine only, bouncer in config/traefik/dynamic_config.yml still enabled: false).
+name: pangolin
+services:
+  pangolin:
+    image: docker.io/fosrl/pangolin:ee-1.26.0
+    container_name: pangolin
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          memory: 1g
+        reservations:
+          memory: 256m
+    volumes:
+      - ./config:/app/config
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/api/v1/"]
+      interval: "10s"
+      timeout: "10s"
+      retries: 15
+
+  gerbil:
+    image: docker.io/fosrl/gerbil:1.5.2
+    container_name: gerbil
+    restart: unless-stopped
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --reachableAt=http://gerbil:3004
+      - --generateAndSaveKeyTo=/var/config/key
+      - --remoteConfig=http://pangolin:3001/api/v1/
+    volumes:
+      - ./config/:/var/config
+    cap_add:
+      - NET_ADMIN
+      - SYS_MODULE
+    ports:
+      - 51820:51820/udp
+      - 21820:21820/udp
+      - 443:443
+      - 443:443/udp # For http3 QUIC if desired
+      - 80:80
+
+  traefik:
+    image: docker.io/traefik:v3.7
+    container_name: traefik
+    restart: unless-stopped
+    network_mode: service:gerbil # Ports appear on the gerbil service
+    depends_on:
+      pangolin:
+        condition: service_healthy
+    command:
+      - --configFile=/etc/traefik/traefik_config.yml
+    volumes:
+      - ./config/traefik:/etc/traefik:ro # Volume to store the Traefik configuration
+      - ./config/letsencrypt:/letsencrypt # Volume to store the Let's Encrypt certificates
+      - ./config/traefik/logs:/var/log/traefik # Volume to store Traefik logs
+
+  crowdsec:
+    # CrowdSec engine (Pangolin installer template, adapted: pinned image, no published ports,
+    # memory limit, Traefik + http collections only; AppSec later). LAPI only on the pangolin network.
+    image: docker.io/crowdsecurity/crowdsec:v1.8.2@sha256:65b74942f7e7ed5c60fde4ac15fc4ba715904c398c8b16dd451f4907d90347d4
+    container_name: crowdsec
+    restart: unless-stopped
+    environment:
+      GID: "1000"
+      COLLECTIONS: crowdsecurity/traefik crowdsecurity/http-cve
+      PARSERS: crowdsecurity/whitelists
+    deploy:
+      resources:
+        limits:
+          memory: 384m
+    healthcheck:
+      test: ["CMD", "cscli", "lapi", "status"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 60s
+    volumes:
+      - ./config/crowdsec:/etc/crowdsec
+      - ./config/crowdsec/db:/var/lib/crowdsec/data
+      - ./config/traefik/logs:/var/log/traefik:ro
+
+networks:
+  default:
+    driver: bridge
+    name: pangolin

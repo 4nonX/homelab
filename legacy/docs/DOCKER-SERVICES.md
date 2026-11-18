@@ -15,7 +15,7 @@ Complete inventory of all containerized services with links to their compose fil
 | Pi-hole | [pihole.yml](../infrastructure/networking/pihole/pihole.yml) | DNS server with network-wide ad-blocking |
 | Newt | [newt.yml](../infrastructure/networking/newt/newt.yml) | Pangolin tunnel client - WireGuard-based reverse proxy to VPS |
 | Tailscale DERP | [tailscale-derper.yml](../infrastructure/networking/tailscale-derper/tailscale-derper.yml) | Self-hosted Tailscale relay server |
-| Pangolin (VPS) | [docker-compose.yml](../infrastructure/networking/pangolin/terraform/docker-compose.yml) | Pangolin server, Traefik, CrowdSec on VPS |
+| Pangolin (VPS) | [docker-compose.yml](../infrastructure/pangolin-terraform/docker-compose.yml) | Pangolin server, Traefik, CrowdSec on VPS |
 
 ### Monitoring
 
@@ -123,6 +123,6 @@ Complete inventory of all containerized services with links to their compose fil
 |----------|-------------|
 | [docker-infrastructure.md](docker-infrastructure.md) | Container architecture, network design, update procedures |
 | [nextcloud-optimization-guide.md](nextcloud-optimization-guide.md) | Nextcloud stack deep-dive |
-| [nextcloud-update-guide.md](nextcloud-update-guide.md) | Nextcloud update procedure and occ command sequence |
-| [media-stack.md](media-stack.md) | Arr suite and VPN-gated download setup |
-| [productivity-services.md](productivity-services.md) | Productivity service overview |
+| [nextcloud-update-guide.md](../../docs/nextcloud-update-guide.md) | Nextcloud update procedure and occ command sequence |
+| [media-stack.md](../../docs/media-stack.md) | Arr suite and VPN-gated download setup |
+| [productivity-services.md](../../docs/productivity-services.md) | Productivity service overview |

@@ -7,14 +7,14 @@
     
     <meta property="og:title" content="Dan Dreßen – Translation, Design & Infrastructure">
     <meta property="og:description" content="Staatlich geprüfter Übersetzer, UI/UX Designer & Infrastructure Specialist aus München.">
-    <meta property="og:image" content="https://dandressen.d-net.me/og-preview.png">
-    <meta property="og:url" content="https://dandressen.d-net.me">
+    <meta property="og:image" content="https://dandressen.example.com/og-preview.png">
+    <meta property="og:url" content="https://dandressen.example.com">
     <meta property="og:type" content="website">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Dan Dreßen – Translation, Design & Infrastructure">
     <meta name="twitter:description" content="Staatlich geprüfter Übersetzer, UI/UX Designer & Infrastructure Specialist aus München.">
-    <meta name="twitter:image" content="https://dandressen.d-net.me/og-preview.png">
+    <meta name="twitter:image" content="https://dandressen.example.com/og-preview.png">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
@@ -43,7 +43,7 @@
     <nav class="fixed top-0 w-full z-[100] px-6 py-6 md:px-12 md:py-10 flex justify-between items-center bg-black/50 backdrop-blur-2xl border-b border-white/10">
         <span class="text-xl md:text-2xl font-bold font-tech uppercase tracking-tighter">Dan <span class="text-blue-600">Dreßen</span></span>
         <div class="flex items-center gap-4 md:gap-10 text-[10px] md:text-sm font-bold uppercase font-tech tracking-widest">
-            <a href="https://dandressen.d-net.me" class="hover:text-blue-500 transition-colors" x-text="lang === 'de' ? 'Über mich' : 'About Me'"></a>
+            <a href="https://dandressen.example.com" class="hover:text-blue-500 transition-colors" x-text="lang === 'de' ? 'Über mich' : 'About Me'"></a>
             <button @click="showPortfolio = true" class="hover:text-blue-500 transition-colors" x-text="lang === 'de' ? 'Projekte' : 'Projects'"></button>
             <div class="flex gap-3 md:gap-4 border-l border-white/20 pl-4 md:pl-8">
                 <button @click="lang = 'de'" :class="lang === 'de' ? 'text-blue-500' : 'text-white/30'" class="hover:text-white transition-colors">DE</button>
@@ -150,7 +150,7 @@
                                 <span x-show="lang === 'en'" x-cloak>Production-grade storage management with ZFS, Docker, native encryption, and a web dashboard. Simple NAS Management Built for Homelabbers.</span>
                             </p>
                             <div class="flex gap-6">
-                                <a href="https://dplaneos.d-net.me" target="_blank" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest hover:underline">Live Demo →</a>
+                                <a href="https://dplaneos.example.com" target="_blank" class="text-[10px] font-bold text-blue-500 uppercase tracking-widest hover:underline">Live Demo →</a>
                                 <a href="https://github.com/4nonX/DPlaneOS" target="_blank" class="text-[10px] font-bold text-white/20 uppercase tracking-widest hover:text-white">GitHub</a>
                             </div>
                         </div>
@@ -168,7 +168,7 @@
                 
                 <div x-show="lang === 'de'">
                     <h2 class="text-4xl font-tech font-bold text-white uppercase mb-8">Impressum</h2>
-                    <p class="text-gray-300"><strong>Angaben gemäß § 5 TMG:</strong><br>Dan Dreßen<br>Ammergauer Str. 13<br>86989 Steingaden<br><br><strong>Kontakt:</strong><br>E-Mail: dan@d-net.me</p>
+                    <p class="text-gray-300"><strong>Angaben gemäß § 5 TMG:</strong><br>Dan Dreßen<br>Ammergauer Str. 13<br>86989 Steingaden<br><br><strong>Kontakt:</strong><br>E-Mail: dan@example.com</p>
                     
                     <div class="mt-8 text-sm text-gray-400 border-t border-white/5 pt-8 space-y-6">
                         <div>
@@ -192,7 +192,7 @@
 
                 <div x-show="lang === 'en'" x-cloak>
                     <h2 class="text-4xl font-tech font-bold text-white uppercase mb-8">Legal Notice</h2>
-                    <p class="text-gray-300"><strong>Information pursuant to Section 5 TMG:</strong><br>Dan Dreßen<br>Ammergauer Str. 13<br>86989 Steingaden, Germany<br><br><strong>Contact:</strong><br>Email: dan@d-net.me</p>
+                    <p class="text-gray-300"><strong>Information pursuant to Section 5 TMG:</strong><br>Dan Dreßen<br>Ammergauer Str. 13<br>86989 Steingaden, Germany<br><br><strong>Contact:</strong><br>Email: dan@example.com</p>
                     
                     <div class="mt-8 text-sm text-gray-400 border-t border-white/5 pt-8 space-y-6">
                         <div>

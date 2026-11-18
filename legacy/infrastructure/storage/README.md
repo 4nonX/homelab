@@ -1,4 +1,4 @@
-﻿# Storage
+# Storage
 
 ## Current state (in migration)
 
@@ -27,13 +27,13 @@ ZFS (RAID-Z2) handles this much better. It guarantees consistency even during po
 
 ```
 zpool: mainpool  (RAID-Z2, 4Ã- HDD)
-â”œâ”€â”€ mainpool/appdata       # /DATA/AppData - container volumes
-â”œâ”€â”€ mainpool/media         # /DATA/Media   - media library
-â”œâ”€â”€ mainpool/home          # user home directories
-â””â”€â”€ mainpool/backups       # local snapshot targets
+├── mainpool/appdata       # /DATA/AppData - container volumes
+├── mainpool/media         # /DATA/Media   - media library
+├── mainpool/home          # user home directories
+└── mainpool/backups       # local snapshot targets
 
 zpool: bootpool  (mirror, NVMe)
-â””â”€â”€ NixOS system root
+└── NixOS system root
 ```
 
 Datasets use:

@@ -48,7 +48,7 @@
                 
                 <div class="flex flex-wrap gap-x-6 gap-y-2 text-[10px] font-bold uppercase tracking-widest text-gray-400">
                     <span>München, DE</span>
-                    <span>dan.dressen@pm.me</span>
+                    <span>admin@example.com</span>
                     <a href="https://linkedin.com/in/dandressen" class="hover:text-blue-500 underline decoration-blue-500/30">LinkedIn</a>
                     <a href="https://github.com/dandressen" class="hover:text-blue-500 underline decoration-blue-500/30">GitHub</a>
                 </div>
@@ -181,7 +181,7 @@
     </main>
 
     <footer class="no-print border-t border-white/5 py-10 text-center opacity-20 text-[8px] font-bold uppercase tracking-[0.5em]">
-        d-net.me systems engine • 2026
+        example.com systems engine • 2026
     </footer>
 
 </body>

@@ -1,0 +1,21 @@
+# crowdsec middleware block in /opt/pangolin/config/traefik/dynamic_config.yml (http.middlewares), live since 2026-11-18.
+# The LAPI key is not in git: bouncer "pangolin-traefik" (cscli bouncers add pangolin-traefik -o raw, written straight
+# into the file). Plugin version v1.4.4 (static config); a key change needs `docker restart traefik`, a reload keeps the
+# old plugin instance polling with the old key.
+    crowdsec:
+      plugin:
+        crowdsec:
+          enabled: true
+          logLevel: INFO
+          crowdsecMode: stream
+          updateIntervalSeconds: 30
+          updateMaxFailure: -1
+          crowdsecLapiScheme: http
+          crowdsecLapiHost: crowdsec:8080
+          crowdsecLapiKey: <in the file on the VPS only>
+          crowdsecAppsecEnabled: false
+          clientTrustedIPs:
+            - 10.0.0.0/8
+            - 172.16.0.0/12
+            - 192.168.0.0/16
+            - 100.64.0.0/10

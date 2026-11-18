@@ -1,4 +1,4 @@
-﻿# Homelab Infrastructure Portfolio
+# Homelab Infrastructure Portfolio
 
 > **Self-hosted infrastructure demonstrating Docker orchestration, network security, and system administration expertise**
 
@@ -235,11 +235,11 @@ Comprehensive documentation covering all aspects of the infrastructure:
 - **[EXECUTIVE_SUMMARY.md](EXECUTIVE_SUMMARY.md)** - Quick reference guide
 - **[NIXOS-MIGRATION.md](NIXOS-MIGRATION.md)** - Migration project plan
 - **[PORTFOLIO.md](PORTFOLIO.md)** - Portfolio showcase
-- **[README.md](README.md)** - Project overview
+- **[README.md](../../README.md)** - Project overview
 - **[hardware-specs.md](hardware-specs.md)** - Detailed hardware configuration
 - **[docker-infrastructure.md](docker-infrastructure.md)** - Docker deployment and best practices
-- **[media-stack.md](media-stack.md)** - Media management pipeline
-- **[productivity-services.md](productivity-services.md)** - Self-hosted productivity tools
+- **[media-stack.md](../../docs/media-stack.md)** - Media management pipeline
+- **[productivity-services.md](../../docs/productivity-services.md)** - Self-hosted productivity tools
 - **[network-security.md](network-security.md)** - Network architecture and security
 - **[network-remote-access.md](network-remote-access.md)** - Remote VPN architecture
 - **[pangolin-infrastructure.md](pangolin-infrastructure.md)** - Complete Pangolin architecture
@@ -257,7 +257,7 @@ This portfolio demonstrates practical DevOps and infrastructure skills. For prof
 
 - **GitHub:** [https://github.com/4nonX/](https://github.com/4nonX/)
 - **LinkedIn:** [https://www.linkedin.com/in/dan-dreßen-b83b1839a/](https://www.linkedin.com/in/dan-dreßen-b83b1839a/)
-- **Email:** [dan.dressen@d-net.me](mailto:dan.dressen@d-net.me)
+- **Email:** [admin@example.com](mailto:admin@example.com)
 
 ## 📄 License
 

@@ -18,7 +18,7 @@
    - Technical implementation
    - GitHub-optimized presentation
 
-4. **[README.md](README.md)** - Project overview
+4. **[README.md](../../README.md)** - Project overview
    - Infrastructure highlights
    - Service categories
    - Repository structure
@@ -76,7 +76,7 @@
     - Failure modes & recovery
     - FAQ
 
-11. **[nextcloud-update-guide.md](nextcloud-update-guide.md)** - Updating Nextcloud in Docker
+11. **[nextcloud-update-guide.md](../../docs/nextcloud-update-guide.md)** - Updating Nextcloud in Docker
     - Pre-update backup and maintenance mode
     - Ordered post-update occ command sequence
     - Diagnosing container failures
@@ -87,13 +87,13 @@
 
 ### 📺 Service Categories
 
-12. **[media-stack.md](media-stack.md)** - Media automation
+12. **[media-stack.md](../../docs/media-stack.md)** - Media automation
     - Arr Suite integration
     - VPN-secured downloads
     - Streaming services
     - Quality profiles
 
-13. **[productivity-services.md](productivity-services.md)** - Productivity apps
+13. **[productivity-services.md](../../docs/productivity-services.md)** - Productivity apps
     - Nextcloud setup
     - Immich photo management
     - Paperless-NGX documents

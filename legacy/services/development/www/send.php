@@ -21,8 +21,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $mail->Port       = 25;
 
         // Empfänger & Absender
-        $mail->setFrom('dan@d-net.me', 'Portfolio Contact'); // Muss deine Proton-Domain sein
-        $mail->addAddress('dan.dressen@pm.me'); 
+        $mail->setFrom('dan@example.com', 'Portfolio Contact'); // Muss deine Proton-Domain sein
+        $mail->addAddress('admin@example.com'); 
         $mail->addReplyTo($email, $name);
 
         // Inhalt

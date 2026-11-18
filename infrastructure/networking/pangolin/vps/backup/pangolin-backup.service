@@ -1,0 +1,13 @@
+[Unit]
+Description=Off-site backup of the Pangolin VPS state (restic, hourly)
+After=network-online.target
+Wants=network-online.target
+OnFailure=pangolin-backup-failed.service
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/pangolin-backup
+Nice=10
+IOSchedulingClass=idle
+# first upload is a few hundred MB; later runs a few MB
+TimeoutStartSec=2h

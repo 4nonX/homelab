@@ -1,4 +1,4 @@
-﻿# Homelab Infrastructure
+# Homelab Infrastructure
 
 [![Status](https://img.shields.io/badge/status-production-success?style=flat-square)](https://github.com/4nonX/homelab)
 [![Stacks](https://img.shields.io/badge/stacks-33-blue?style=flat-square)](stacks/)
@@ -85,7 +85,8 @@ Details and all scripts: [docs/gitops-pipeline.md](docs/gitops-pipeline.md), [pl
 ## Security model
 
 ```
-Edge          Pangolin on a VPS: TLS, SSO + 2FA in front of admin UIs, no inbound ports at home
+Edge          Pangolin on a VPS: TLS, SSO + 2FA in front of admin UIs, no inbound ports at home;
+              CrowdSec bans scanners at the VPS (fail-open), Fail2Ban on the VPS's SSH
 Routing       one internal Traefik for LAN and internet; authentik forward-auth for apps without own login
 Identity      authentik (OIDC) for every app that supports it, local accounts only as fallback
 Secrets       OpenBao: per-stack paths, AppRoles bound to their host, short-lived tokens, audit log,
@@ -126,7 +127,8 @@ Docker VM's data disk, a zvol in the same pool. sanoid snapshots everything that
 
 Off-site: a nightly restic backup from ZFS snapshots on the host to a European storage box over SFTP, encrypted
 before it leaves, with retention, a weekly integrity check of a data sample and mail only on failure. Local backup
-jobs wait for a dedicated backup NAS. Details: [docs/data-protection.md](docs/data-protection.md).
+jobs wait for a dedicated backup NAS. The Pangolin VPS backs up its own state every hour the same way, to a separate
+account on the same box. Details: [docs/data-protection.md](docs/data-protection.md).
 
 ---
 
@@ -142,9 +144,9 @@ platform/
   aws/                  CloudFormation: KMS key for auto-unseal + alert on every key use
   proxmox/              sanoid snapshot policy, off-site backup (restic script, systemd units)
   github/               Renovate config, Renovate and Trivy workflows, PR scan script
-infrastructure/         Pangolin (VPS) guides and Terraform, VPS Traefik and CrowdSec notes
+infrastructure/         the Pangolin edge on the VPS: docs, sanitized config, CrowdSec, Fail2Ban, backup
 docs/                   architecture, pipeline, security, data protection, service guides
-legacy/                 previous NixOS/ZimaOS-era stacks and docs (no longer deployed)
+legacy/                 previous NixOS/ZimaOS-era stacks and docs, earlier edge designs (not deployed)
 ```
 
 The workflows under `platform/github/` are copies for reference; they are not active in this repository.
@@ -159,7 +161,8 @@ The workflows under `platform/github/` are copies for reference; they are not ac
 | [GitOps pipeline](docs/gitops-pipeline.md) | Komodo, OpenBao rendering, Renovate, Trivy, health checks, adding a stack |
 | [Security](docs/security.md) | Each layer, and the decisions behind what is *not* locked down |
 | [Data protection](docs/data-protection.md) | Datasets, snapshot policy, off-site backup, what is not covered yet |
-| [Remote access](docs/network-remote-access.md) | Pangolin vs Tailscale vs ZeroTier |
-| [Pangolin guides](docs/pangolin-infrastructure.md) | Deployment, configuration, HA, upgrades, tuning |
-| [Nextcloud optimisation](docs/nextcloud-optimization-guide.md), [update guide](docs/nextcloud-update-guide.md) | PostgreSQL, Redis, PHP tuning, post-update steps |
+| [Pangolin edge](infrastructure/networking/pangolin/README.md) | The VPS: components, traffic flow, hardening, backup, lessons |
+| [Traefik](infrastructure/networking/traefik/README.md) | The two proxy layers and why there are two |
+| [CrowdSec](infrastructure/security/crowdsec/README.md) | Fail-open bouncer, CGNAT home allowlist, how it was rolled out |
+| [Nextcloud update guide](docs/nextcloud-update-guide.md) | Post-update steps, failure diagnosis |
 | [Media stack](docs/media-stack.md), [productivity services](docs/productivity-services.md) | Service configuration notes |

@@ -11,14 +11,14 @@
 
 ## Table of Contents
 
-- [Overview](#-overview)
-- [Before You Update](#-before-you-update)
-- [Running the Update](#-running-the-update)
-- [Post-Update Command Sequence](#-post-update-command-sequence)
-- [Diagnosing Failures](#-diagnosing-failures)
-- [Traefik 502 / 504 Errors](#️-traefik-502--504-errors)
-- [Command Reference](#-command-reference)
-- [Verification Checklist](#-verification-checklist)
+- [Overview](#overview)
+- [Before You Update](#before-you-update)
+- [Running the Update](#running-the-update)
+- [Post-Update Command Sequence](#post-update-command-sequence)
+- [Diagnosing Failures](#diagnosing-failures)
+- [Traefik 502 / 504 Errors](#traefik-502--504-errors)
+- [Command Reference](#command-reference)
+- [Verification Checklist](#verification-checklist)
 - [Related Documentation](#related-documentation)
 
 ---
@@ -27,7 +27,7 @@
 
 Nextcloud requires a specific sequence of maintenance commands after every container image update. Skipping or reordering these steps leads to database inconsistencies, broken sessions, or a container that starts but returns errors.
 
-This guide is written for the setup documented in [nextcloud-optimization-guide.md](nextcloud-optimization-guide.md): Nextcloud running in Docker, exposed through Traefik via a Pangolin/Newt tunnel, with PostgreSQL and Redis as backing services.
+This guide is written for the setup documented in [nextcloud-optimization-guide.md](../legacy/docs/nextcloud-optimization-guide.md): Nextcloud running in Docker, exposed through Traefik via a Pangolin/Newt tunnel, with PostgreSQL and Redis as backing services.
 
 ---
 
@@ -82,7 +82,7 @@ Run these commands **in order** after every Nextcloud image update. Each step de
 docker exec -u www-data nextcloud php occ upgrade
 ```
 
-This applies any database schema migrations bundled with the new image. If this command fails, stop here and check [Diagnosing Failures](#-diagnosing-failures).
+This applies any database schema migrations bundled with the new image. If this command fails, stop here and check [Diagnosing Failures](#diagnosing-failures).
 
 ### 2. Disable maintenance mode
 
@@ -290,7 +290,7 @@ After completing the post-update sequence, confirm the following:
 
 | Document | Description |
 |----------|-------------|
-| [nextcloud-optimization-guide.md](nextcloud-optimization-guide.md) | Full stack setup: PostgreSQL, Redis, Collabora, Talk HPB |
-| [pangolin-upgrade-guide.md](pangolin-upgrade-guide.md) | Updating the Pangolin tunnel stack |
-| [docker-infrastructure.md](docker-infrastructure.md) | Docker Compose patterns and update procedures |
+| [nextcloud-optimization-guide.md](../legacy/docs/nextcloud-optimization-guide.md) | Full stack setup: PostgreSQL, Redis, Collabora, Talk HPB |
+| [pangolin-upgrade-guide.md](../legacy/docs/pangolin-upgrade-guide.md) | Updating the Pangolin tunnel stack |
+| [docker-infrastructure.md](../legacy/docs/docker-infrastructure.md) | Docker Compose patterns and update procedures |
 | [productivity-services.md](productivity-services.md) | Overview of all productivity services |

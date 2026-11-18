@@ -19,23 +19,14 @@ Map of every file in this repository. Stacks and legacy files are grouped by fol
 
 | File | Description |
 |---|---|
+| [docs/INDEX.md](docs/INDEX.md) | Overview of the documents in this folder |
 | [docs/architecture.md](docs/architecture.md) | Host, guests, storage, network and routing |
-| [docs/data-protection.md](docs/data-protection.md) | Datasets, snapshot policy, off-site backup, restores, what is not covered yet |
+| [docs/data-protection.md](docs/data-protection.md) | Datasets, snapshot policy, off-site backups (homelab and VPS), restores, what is not covered yet |
 | [docs/gitops-pipeline.md](docs/gitops-pipeline.md) | Komodo, OpenBao rendering, Renovate, Trivy, health checks, adding a stack |
-| [docs/media-stack.md](docs/media-stack.md) | Arr suite + Emby notes |
-| [docs/network-remote-access.md](docs/network-remote-access.md) | Pangolin vs Tailscale vs ZeroTier |
-| [docs/nextcloud-optimization-guide.md](docs/nextcloud-optimization-guide.md) | PostgreSQL, Redis, PHP tuning |
-| [docs/nextcloud-update-guide.md](docs/nextcloud-update-guide.md) | Post-update steps, failure diagnosis |
-| [docs/pangolin-configurations.md](docs/pangolin-configurations.md) | Config file reference |
-| [docs/pangolin-deployment-guide.md](docs/pangolin-deployment-guide.md) | VPS setup step by step |
-| [docs/pangolin-ha-setup.md](docs/pangolin-ha-setup.md) | Active-passive failover across two VPS providers |
-| [docs/pangolin-infrastructure.md](docs/pangolin-infrastructure.md) | Tunnel architecture |
-| [docs/pangolin-traefikdashboard-guide.md](docs/pangolin-traefikdashboard-guide.md) | Traefik dashboard on the VPS |
-| [docs/pangolin-upgrade-guide.md](docs/pangolin-upgrade-guide.md) | Upgrade procedures |
-| [docs/pangolin-vps-relay-guide.md](docs/pangolin-vps-relay-guide.md) | Relay server setup |
-| [docs/pangolin-z-performance-tuning.md](docs/pangolin-z-performance-tuning.md) | Kernel and network tuning |
-| [docs/productivity-services.md](docs/productivity-services.md) | Nextcloud, Immich, Paperless notes |
 | [docs/security.md](docs/security.md) | Security layers and deliberate non-decisions |
+| [docs/media-stack.md](docs/media-stack.md) | Arr suite + Emby notes |
+| [docs/productivity-services.md](docs/productivity-services.md) | Nextcloud, Immich, Paperless notes |
+| [docs/nextcloud-update-guide.md](docs/nextcloud-update-guide.md) | Post-update steps, failure diagnosis |
 
 ---
 
@@ -92,8 +83,8 @@ Route generator: [stacks/traefik-internal/gen.py](stacks/traefik-internal/gen.py
 | [platform/docker-vm/daemon.json](platform/docker-vm/daemon.json) | Docker daemon: log rotation, address pools off the LAN range |
 | [platform/docker-vm/docker-block-bao.service](platform/docker-vm/docker-block-bao.service) | Firewall rule: containers cannot reach OpenBao |
 | [platform/docker-vm/komodo-bao-watch](platform/docker-vm/komodo-bao-watch) | Redeploy stacks whose secrets changed in OpenBao |
-| [platform/docker-vm/komodo-bao-watch.service](platform/docker-vm/komodo-bao-watch.service) |  |
-| [platform/docker-vm/komodo-bao-watch.timer](platform/docker-vm/komodo-bao-watch.timer) |  |
+| [platform/docker-vm/komodo-bao-watch.service](platform/docker-vm/komodo-bao-watch.service) | Runs komodo-bao-watch |
+| [platform/docker-vm/komodo-bao-watch.timer](platform/docker-vm/komodo-bao-watch.timer) | Every 5 minutes |
 | [platform/docker-vm/komodo-compose](platform/docker-vm/komodo-compose) | Compose wrapper that masks secret values in Komodo's logs |
 | [platform/docker-vm/komodo-postdeploy](platform/docker-vm/komodo-postdeploy) | Komodo post_deploy: wait until all containers are running, healthy, stable |
 | [platform/docker-vm/komodo-predeploy](platform/docker-vm/komodo-predeploy) | Komodo pre_deploy: render the stack's .env from OpenBao |
@@ -106,19 +97,19 @@ Route generator: [stacks/traefik-internal/gen.py](stacks/traefik-internal/gen.py
 | [platform/komodo/set-postdeploy.sh](platform/komodo/set-postdeploy.sh) | Add the post-deploy hook to every Komodo stack that lacks it |
 | [platform/openbao/bao-roundtrip-check.sh](platform/openbao/bao-roundtrip-check.sh) | Verify rendered .env files match OpenBao |
 | [platform/openbao/bao-snapshot](platform/openbao/bao-snapshot) | Daily Raft snapshot with a snapshot-only AppRole |
-| [platform/openbao/bao-snapshot.service](platform/openbao/bao-snapshot.service) |  |
-| [platform/openbao/bao-snapshot.timer](platform/openbao/bao-snapshot.timer) |  |
+| [platform/openbao/bao-snapshot.service](platform/openbao/bao-snapshot.service) | Runs bao-snapshot |
+| [platform/openbao/bao-snapshot.timer](platform/openbao/bao-snapshot.timer) | Daily |
 | [platform/openbao/nftables.conf](platform/openbao/nftables.conf) | OpenBao LXC firewall |
 | [platform/openbao/openbao.hcl](platform/openbao/openbao.hcl) | OpenBao config: Raft, TLS, AWS KMS auto-unseal, audit device |
-| [platform/openbao/policies/admin.hcl](platform/openbao/policies/admin.hcl) |  |
-| [platform/openbao/policies/raft-snapshot.hcl](platform/openbao/policies/raft-snapshot.hcl) |  |
-| [platform/openbao/policies/stacks-read.hcl](platform/openbao/policies/stacks-read.hcl) |  |
+| [platform/openbao/policies/admin.hcl](platform/openbao/policies/admin.hcl) | Policy for the admin user |
+| [platform/openbao/policies/raft-snapshot.hcl](platform/openbao/policies/raft-snapshot.hcl) | Policy for the snapshot AppRole: Raft snapshots only |
+| [platform/openbao/policies/stacks-read.hcl](platform/openbao/policies/stacks-read.hcl) | Policy for the Docker host: read stack secrets only |
 | [platform/proxmox/sanoid.conf](platform/proxmox/sanoid.conf) | ZFS snapshot policy |
 | [platform/proxmox/backup/homelab-backup](platform/proxmox/backup/homelab-backup) | Off-site backup: consistent ZFS snapshots, read-only zvol clone, restic upload, retention, check |
 | [platform/proxmox/backup/env.example](platform/proxmox/backup/env.example) | Backup settings; the target is one line |
-| [platform/proxmox/backup/homelab-backup.service](platform/proxmox/backup/homelab-backup.service) |  |
+| [platform/proxmox/backup/homelab-backup.service](platform/proxmox/backup/homelab-backup.service) | Backup run, mails on failure |
 | [platform/proxmox/backup/homelab-backup.timer](platform/proxmox/backup/homelab-backup.timer) | Nightly |
-| [platform/proxmox/backup/homelab-backup-check.service](platform/proxmox/backup/homelab-backup-check.service) |  |
+| [platform/proxmox/backup/homelab-backup-check.service](platform/proxmox/backup/homelab-backup-check.service) | restic check reading a sample of the stored data |
 | [platform/proxmox/backup/homelab-backup-check.timer](platform/proxmox/backup/homelab-backup-check.timer) | Weekly |
 | [platform/proxmox/backup/homelab-backup-failed.service](platform/proxmox/backup/homelab-backup-failed.service) | Mail on failure only |
 
@@ -128,33 +119,24 @@ Route generator: [stacks/traefik-internal/gen.py](stacks/traefik-internal/gen.py
 
 | File | Description |
 |---|---|
-| [infrastructure/networking/pangolin/README.md](infrastructure/networking/pangolin/README.md) |  |
-| [infrastructure/networking/pangolin/pangolin-configurations.md](infrastructure/networking/pangolin/pangolin-configurations.md) |  |
-| [infrastructure/networking/pangolin/pangolin-deployment-guide.md](infrastructure/networking/pangolin/pangolin-deployment-guide.md) |  |
-| [infrastructure/networking/pangolin/pangolin-ha-setup.md](infrastructure/networking/pangolin/pangolin-ha-setup.md) |  |
-| [infrastructure/networking/pangolin/pangolin-terraform-iac.md](infrastructure/networking/pangolin/pangolin-terraform-iac.md) |  |
-| [infrastructure/networking/pangolin/pangolin-traefikdashboard-guide.md](infrastructure/networking/pangolin/pangolin-traefikdashboard-guide.md) |  |
-| [infrastructure/networking/pangolin/pangolin-upgrade-guide.md](infrastructure/networking/pangolin/pangolin-upgrade-guide.md) |  |
-| [infrastructure/networking/pangolin/pangolin-vps-relay-guide.md](infrastructure/networking/pangolin/pangolin-vps-relay-guide.md) |  |
-| [infrastructure/networking/pangolin/pangolin-z-performance-tuning.md](infrastructure/networking/pangolin/pangolin-z-performance-tuning.md) |  |
-| [infrastructure/networking/pangolin/terraform/.gitignore](infrastructure/networking/pangolin/terraform/.gitignore) |  |
-| [infrastructure/networking/pangolin/terraform/DR_RUNBOOK.md](infrastructure/networking/pangolin/terraform/DR_RUNBOOK.md) |  |
-| [infrastructure/networking/pangolin/terraform/backend.tf](infrastructure/networking/pangolin/terraform/backend.tf) |  |
-| [infrastructure/networking/pangolin/terraform/cloudflare.tf](infrastructure/networking/pangolin/terraform/cloudflare.tf) |  |
-| [infrastructure/networking/pangolin/terraform/config/config.yml](infrastructure/networking/pangolin/terraform/config/config.yml) |  |
-| [infrastructure/networking/pangolin/terraform/config/traefik/dynamic_config.yml](infrastructure/networking/pangolin/terraform/config/traefik/dynamic_config.yml) |  |
-| [infrastructure/networking/pangolin/terraform/config/traefik/traefik_config.yml](infrastructure/networking/pangolin/terraform/config/traefik/traefik_config.yml) |  |
-| [infrastructure/networking/pangolin/terraform/docker-compose.yml](infrastructure/networking/pangolin/terraform/docker-compose.yml) |  |
-| [infrastructure/networking/pangolin/terraform/main.tf](infrastructure/networking/pangolin/terraform/main.tf) |  |
-| [infrastructure/networking/pangolin/terraform/minio/docker-compose.yml](infrastructure/networking/pangolin/terraform/minio/docker-compose.yml) |  |
-| [infrastructure/networking/pangolin/terraform/run.ps1](infrastructure/networking/pangolin/terraform/run.ps1) |  |
-| [infrastructure/networking/pangolin/terraform/run.sh](infrastructure/networking/pangolin/terraform/run.sh) |  |
-| [infrastructure/networking/pangolin/terraform/scripts/backup.sh](infrastructure/networking/pangolin/terraform/scripts/backup.sh) |  |
-| [infrastructure/networking/pangolin/terraform/scripts/restore.sh](infrastructure/networking/pangolin/terraform/scripts/restore.sh) |  |
-| [infrastructure/networking/pangolin/terraform/variables.tf](infrastructure/networking/pangolin/terraform/variables.tf) |  |
-| [infrastructure/networking/pangolin/terraform/vps.tf](infrastructure/networking/pangolin/terraform/vps.tf) |  |
-| [infrastructure/networking/traefik/README.md](infrastructure/networking/traefik/README.md) |  |
-| [infrastructure/security/crowdsec/README.md](infrastructure/security/crowdsec/README.md) |  |
+| [infrastructure/networking/pangolin/README.md](infrastructure/networking/pangolin/README.md) | The Pangolin edge: components, traffic flow, hardening, backup, lessons |
+| [infrastructure/networking/traefik/README.md](infrastructure/networking/traefik/README.md) | The two Traefik layers (VPS edge and internal) and why there are two |
+| [infrastructure/security/crowdsec/README.md](infrastructure/security/crowdsec/README.md) | CrowdSec on the VPS: engine, fail-open bouncer, CGNAT home allowlist, rollout |
+| [infrastructure/networking/pangolin/vps/docker-compose.yml](infrastructure/networking/pangolin/vps/docker-compose.yml) | Compose file of the VPS: Pangolin, Gerbil, Traefik, CrowdSec |
+| [infrastructure/networking/pangolin/vps/traefik-dynamic-crowdsec.yml](infrastructure/networking/pangolin/vps/traefik-dynamic-crowdsec.yml) | Bouncer middleware: stream mode, fail-open, no trusted forwarded headers |
+| [infrastructure/networking/pangolin/vps/crowdsec-profiles.yaml](infrastructure/networking/pangolin/vps/crowdsec-profiles.yaml) | CrowdSec profiles: ban only, 4 hours |
+| [infrastructure/networking/pangolin/vps/crowdsec-home.sh](infrastructure/networking/pangolin/vps/crowdsec-home.sh) | Keeps the home line (newt endpoint from Pangolin's DB) on the CrowdSec allowlist |
+| [infrastructure/networking/pangolin/vps/fail2ban-10-local.conf](infrastructure/networking/pangolin/vps/fail2ban-10-local.conf) | Fail2Ban sshd jail with escalating ban times, Tailscale range exempt |
+| [infrastructure/networking/pangolin/vps/sshd-10-hardening.conf](infrastructure/networking/pangolin/vps/sshd-10-hardening.conf) | SSH limits: auth tries, login grace time |
+| [infrastructure/networking/pangolin/vps/logrotate-pangolin-traefik](infrastructure/networking/pangolin/vps/logrotate-pangolin-traefik) | Daily rotation of the Traefik access log |
+| [infrastructure/networking/pangolin/vps/backup/pangolin-backup](infrastructure/networking/pangolin/vps/backup/pangolin-backup) | Hourly restic backup: consistent SQLite copy, quick_check, upload, retention, check |
+| [infrastructure/networking/pangolin/vps/backup/env.example](infrastructure/networking/pangolin/vps/backup/env.example) | Backup settings; the target is one line |
+| [infrastructure/networking/pangolin/vps/backup/pangolin-backup.service](infrastructure/networking/pangolin/vps/backup/pangolin-backup.service) | Backup run, mails on failure |
+| [infrastructure/networking/pangolin/vps/backup/pangolin-backup.timer](infrastructure/networking/pangolin/vps/backup/pangolin-backup.timer) | Hourly |
+| [infrastructure/networking/pangolin/vps/backup/pangolin-backup-check.service](infrastructure/networking/pangolin/vps/backup/pangolin-backup-check.service) | restic check reading all stored data |
+| [infrastructure/networking/pangolin/vps/backup/pangolin-backup-check.timer](infrastructure/networking/pangolin/vps/backup/pangolin-backup-check.timer) | Weekly |
+| [infrastructure/networking/pangolin/vps/backup/pangolin-backup-failed.service](infrastructure/networking/pangolin/vps/backup/pangolin-backup-failed.service) | Mails the journal excerpt when the backup or check fails |
+| [infrastructure/networking/pangolin/vps/backup/mail-relay-setup.sh](infrastructure/networking/pangolin/vps/backup/mail-relay-setup.sh) | Local postfix relay (loopback only, TLS required) for failure mails |
 
 ---
 
@@ -168,7 +150,8 @@ Route generator: [stacks/traefik-internal/gen.py](stacks/traefik-internal/gen.py
 
 ## Legacy - `legacy/`
 
-Previous NixOS/ZimaOS-era setup, not deployed. See [legacy/README.md](legacy/README.md).
+Previous setups and designs, not deployed. See [legacy/README.md](legacy/README.md), which also lists the earlier
+Pangolin and remote-access guides with a note on each.
 
 - [legacy/.env.example](legacy/.env.example)
 - [legacy/README.md](legacy/README.md)
@@ -183,15 +166,23 @@ Previous NixOS/ZimaOS-era setup, not deployed. See [legacy/README.md](legacy/REA
 - [legacy/docs/hardware-specs.md](legacy/docs/hardware-specs.md)
 - [legacy/docs/homelab-complete-journey.md](legacy/docs/homelab-complete-journey.md)
 - [legacy/docs/homelab-dashboard-guide.md](legacy/docs/homelab-dashboard-guide.md)
+- [legacy/docs/network-remote-access.md](legacy/docs/network-remote-access.md)
 - [legacy/docs/network-security.md](legacy/docs/network-security.md)
+- [legacy/docs/nextcloud-optimization-guide.md](legacy/docs/nextcloud-optimization-guide.md)
+- [legacy/docs/pangolin-configurations.md](legacy/docs/pangolin-configurations.md)
+- [legacy/docs/pangolin-deployment-guide.md](legacy/docs/pangolin-deployment-guide.md)
+- [legacy/docs/pangolin-ha-setup.md](legacy/docs/pangolin-ha-setup.md)
+- [legacy/docs/pangolin-infrastructure.md](legacy/docs/pangolin-infrastructure.md)
+- [legacy/docs/pangolin-traefikdashboard-guide.md](legacy/docs/pangolin-traefikdashboard-guide.md)
+- [legacy/docs/pangolin-upgrade-guide.md](legacy/docs/pangolin-upgrade-guide.md)
+- [legacy/docs/pangolin-vps-relay-guide.md](legacy/docs/pangolin-vps-relay-guide.md)
+- [legacy/docs/pangolin-z-performance-tuning.md](legacy/docs/pangolin-z-performance-tuning.md)
 - [legacy/docs/security-diagram.html](legacy/docs/security-diagram.html)
 - [legacy/docs/why-dplaneos.md](legacy/docs/why-dplaneos.md)
 - [legacy/infrastructure/monitoring](legacy/infrastructure/monitoring)
 - [legacy/infrastructure/networking](legacy/infrastructure/networking)
+- [legacy/infrastructure/pangolin-terraform](legacy/infrastructure/pangolin-terraform)
 - [legacy/infrastructure/security](legacy/infrastructure/security)
 - [legacy/infrastructure/storage](legacy/infrastructure/storage)
-- [legacy/scripts/export-all-compose.sh](legacy/scripts/export-all-compose.sh)
-- [legacy/services/development](legacy/services/development)
-- [legacy/services/management](legacy/services/management)
-- [legacy/services/media](legacy/services/media)
-- [legacy/services/productivity](legacy/services/productivity)
+- [legacy/scripts](legacy/scripts)
+- [legacy/services](legacy/services)

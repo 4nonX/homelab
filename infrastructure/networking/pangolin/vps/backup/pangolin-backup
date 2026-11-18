@@ -1,0 +1,73 @@
+#!/bin/bash
+# pangolin-backup: off-site backup of the Pangolin VPS state with restic, to an off-site storage box (own SFTP sub-account).
+# Installed as /usr/local/sbin/pangolin-backup, started hourly by pangolin-backup.timer. Config: /etc/pangolin-backup/env.
+#
+#   pangolin-backup             consistent DB copy -> restic backup -> forget (prune only on PRUNE_WEEKDAY at PRUNE_HOUR)
+#   pangolin-backup --dry-run   make the DB copy, list what would be backed up, upload nothing
+#   pangolin-backup check       restic check, reads READ_SUBSET of the stored data (weekly timer)
+#
+# The live SQLite files are never read by restic: sqlite3 .backup makes a consistent copy while Pangolin runs,
+# quick_check verifies the copy, and only the copy is backed up. Not backed up: Traefik access logs, Litestream's
+# local staging folder.
+set -euo pipefail
+
+ENV=/etc/pangolin-backup/env
+[ -r "$ENV" ] || { echo "missing $ENV" >&2; exit 1; }
+set -a; . "$ENV"; set +a
+: "${RESTIC_REPOSITORY:?}" "${RESTIC_PASSWORD_FILE:?}"
+
+PANGOLIN_DIR=${PANGOLIN_DIR:-/opt/pangolin}
+DB=${DB:-$PANGOLIN_DIR/config/db/db.sqlite}
+EXTRA_PATHS=${EXTRA_PATHS:-}                          # host config outside Pangolin, e.g. /etc/crowdsec
+KEEP=${KEEP:-"--keep-hourly 24 --keep-daily 7 --keep-weekly 4 --keep-monthly 6"}
+PRUNE_WEEKDAY=${PRUNE_WEEKDAY:-7}                      # 1 = Monday ... 7 = Sunday
+PRUNE_HOUR=${PRUNE_HOUR:-04}                           # prune once a week, not every hour
+READ_SUBSET=${READ_SUBSET:-100%}                       # the repository is small: read all of it
+STAGE=/var/lib/pangolin-backup
+LOCK=/run/pangolin-backup.lock
+log() { printf '[%s] %s\n' "$(date +%T)" "$*"; }
+
+exec 9>"$LOCK"; flock -n 9 || { echo "another pangolin-backup is running" >&2; exit 1; }
+
+if [ "${1:-}" = check ]; then
+  restic check --read-data-subset="$READ_SUBSET"
+  exit 0
+fi
+DRY=0; [ "${1:-}" = --dry-run ] && DRY=1
+
+# 1. consistent copy of the live database (online backup API, Pangolin keeps running), then verify it
+install -d -m 700 "$STAGE"
+rm -f "$STAGE/db.sqlite"
+sqlite3 -readonly "$DB" ".backup '$STAGE/db.sqlite'"
+res=$(sqlite3 -readonly "$STAGE/db.sqlite" "PRAGMA quick_check;")
+[ "$res" = ok ] || { echo "database copy failed quick_check: $res" >&2; exit 1; }
+log "database copied and checked ($(du -h "$STAGE/db.sqlite" | cut -f1))"
+
+# 2. paths: the Pangolin folder without live DB files, logs and Litestream's staging; the DB copy; host extras
+PATHS=("$PANGOLIN_DIR" "$STAGE")
+for p in $EXTRA_PATHS; do PATHS+=("$p"); done
+for p in "${PATHS[@]}"; do
+  [ -e "$p" ] || { echo "path to back up is missing: $p" >&2; exit 1; }
+done
+EXCLUDES=(
+  --exclude "$DB" --exclude "$DB-wal" --exclude "$DB-shm" --exclude "$DB-journal"   # live files: the copy is used
+  --exclude "$PANGOLIN_DIR/config/db/.db.sqlite-litestream"                         # Litestream staging
+  --exclude "$PANGOLIN_DIR/config/traefik/logs"                                     # access logs
+  --exclude "$PANGOLIN_DIR/config/logs"
+  --exclude-caches
+)
+
+if [ "$DRY" = 1 ]; then
+  restic backup --dry-run -v --host pangolin --tag hourly "${EXCLUDES[@]}" "${PATHS[@]}"
+  exit 0
+fi
+
+log "uploading changes"
+restic backup --host pangolin --tag hourly "${EXCLUDES[@]}" "${PATHS[@]}"
+log "upload done, applying retention"
+if [ "$(date +%u)" = "$PRUNE_WEEKDAY" ] && [ "$(date +%H)" = "$PRUNE_HOUR" ]; then
+  restic forget --host pangolin --tag hourly $KEEP --prune
+else
+  restic forget --host pangolin --tag hourly $KEEP
+fi
+log "backup finished"

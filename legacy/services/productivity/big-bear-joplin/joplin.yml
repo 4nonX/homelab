@@ -14,7 +14,7 @@ services:
                     memory: "33416249344"
                 reservations: {}
         environment:
-            APP_BASE_URL: https://joplin.d-net.me
+            APP_BASE_URL: https://joplin.example.com
             APP_PORT: "22300"
             DB_CLIENT: pg
             MAX_TIME_DRIFT: "0"
@@ -119,7 +119,7 @@ x-casaos:
     description:
         en_us: Note taking and to-do application with synchronisation
     developer: joplin
-    hostname: joplin.d-net.me
+    hostname: joplin.example.com
     icon: https://cdn.jsdelivr.net/gh/selfhst/icons/png/joplin.png
     index: /
     is_uncontrolled: false

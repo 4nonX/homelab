@@ -47,6 +47,14 @@ irreplaceable to a storage box at a European provider, outside the house and out
 A first attempt used a consumer cloud drive through an unofficial API; it failed on upload drafts, server errors and
 hung requests within a day. A plain SFTP target has none of those moving parts.
 
+### The Pangolin VPS
+
+The VPS outside the house backs up its own state (Pangolin's database, config, certificates, CrowdSec config) every
+hour with restic to its own account on the same storage box: its own key, folder and repository password, so the VPS
+cannot reach the homelab's repository. The SQLite database is copied through SQLite's online backup API and checked
+with `quick_check` before upload; a weekly `restic check` reads all stored data. Details and files:
+[infrastructure/networking/pangolin/](../infrastructure/networking/pangolin/README.md#backup).
+
 ## Restoring
 
 - **A file on a dataset:** copy it out of `/<dataset>/.zfs/snapshot/<name>/` on the host, or use "Previous Versions"
