@@ -1,0 +1,8 @@
+#!/bin/sh
+# hide the Proxmox "No valid subscription" dialog; apt runs this after every package change
+F=${NOSUB_FILE:-/usr/share/javascript/proxmox-widget-toolkit/proxmoxlib.js}
+grep -q "// nosub" "$F" && exit 0
+[ "$(grep -c "checked_command: function (orig_cmd) {\$" "$F")" = 1 ] || { echo "pve-nosub: code changed, left unpatched" >&2; exit 0; }
+cp -p "$F" "$F.orig"
+sed -i "s|checked_command: function (orig_cmd) {\$|checked_command: function (orig_cmd) { orig_cmd(); return; // nosub|" "$F"
+echo "pve-nosub: patched"

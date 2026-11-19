@@ -105,6 +105,14 @@ Route generator: [stacks/traefik-internal/gen.py](stacks/traefik-internal/gen.py
 | [platform/openbao/policies/raft-snapshot.hcl](platform/openbao/policies/raft-snapshot.hcl) | Policy for the snapshot AppRole: Raft snapshots only |
 | [platform/openbao/policies/stacks-read.hcl](platform/openbao/policies/stacks-read.hcl) | Policy for the Docker host: read stack secrets only |
 | [platform/proxmox/sanoid.conf](platform/proxmox/sanoid.conf) | ZFS snapshot policy |
+| [platform/proxmox/README.md](platform/proxmox/README.md) | Host settings: thin-pool autoextend, subscription notice, graphical VM consoles |
+| [platform/proxmox/pve-nosub](platform/proxmox/pve-nosub) | Removes the subscription dialog; leaves the file alone if the code changed |
+| [platform/proxmox/99pve-nosub](platform/proxmox/99pve-nosub) | apt hook: re-applies pve-nosub after package updates |
+| [platform/access/README.md](platform/access/README.md) | Access LXC: second newt as fallback way in, design and lessons |
+| [platform/access/create-access-lxc.sh](platform/access/create-access-lxc.sh) | Creates the LXC on the host (refuses taken IDs and addresses) |
+| [platform/access/setup-inside.sh](platform/access/setup-inside.sh) | Installs newt (checksum-verified), firewall, automatic updates; reachability checks |
+| [platform/access/nftables.conf](platform/access/nftables.conf) | Nothing in; out only DNS, the two admin UIs and the internet |
+| [platform/access/newt.service](platform/access/newt.service) | Sandboxed newt, starts only with the firewall active |
 | [platform/proxmox/backup/homelab-backup](platform/proxmox/backup/homelab-backup) | Off-site backup: consistent ZFS snapshots, read-only zvol clone, restic upload, retention, check |
 | [platform/proxmox/backup/env.example](platform/proxmox/backup/env.example) | Backup settings; the target is one line |
 | [platform/proxmox/backup/homelab-backup.service](platform/proxmox/backup/homelab-backup.service) | Backup run, mails on failure |

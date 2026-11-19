@@ -42,7 +42,8 @@ few admin resources (hypervisor UI, deployment UI, design tool). Apps with nativ
 (Nextcloud, Immich, Emby, Audiobookshelf, ...) stay without Pangolin SSO on purpose: those clients cannot complete a
 browser login, and the apps have their own (OIDC) login.
 
-**newt** runs as the stack [newt](../../../stacks/newt/) on the Docker VM. Because the home line is behind CGNAT, its
+**newt** runs as the stack [newt](../../../stacks/newt/) on the Docker VM. A second newt in LXC `access` is a site of its
+own and carries only a fallback resource for the Proxmox UI ([platform/access/](../../../platform/access/README.md)). Because the home line is behind CGNAT, its
 public address is shared and changes without notice; nothing depends on it except the CrowdSec allowlist, which reads
 newt's current endpoint from Pangolin's database ([CrowdSec](../../security/crowdsec/README.md#the-home-line)).
 

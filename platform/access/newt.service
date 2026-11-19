@@ -1,0 +1,28 @@
+[Unit]
+Description=Pangolin site connector (admin access path, independent of VM docker)
+Wants=network-online.target
+After=network-online.target nftables.service
+Requires=nftables.service
+ConditionPathExists=/etc/newt/newt.env
+
+[Service]
+User=newt
+Group=newt
+EnvironmentFile=/etc/newt/newt.env
+# newt saves its credentials here, with mode 0644: the state directory itself is 0700
+Environment=CONFIG_FILE=/var/lib/newt/config.json
+Environment=HOME=/var/lib/newt
+StateDirectory=newt
+StateDirectoryMode=0700
+ExecStart=/usr/local/bin/newt
+Restart=always
+RestartSec=5
+NoNewPrivileges=yes
+ProtectSystem=strict
+ProtectHome=yes
+PrivateTmp=yes
+CapabilityBoundingSet=
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX AF_NETLINK
+
+[Install]
+WantedBy=multi-user.target

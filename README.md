@@ -46,7 +46,8 @@ Proxmox VE host  ─ ZFS pool "mainpool" (sanoid snapshots)
   │     └─ 30 app stacks       media, documents, notes, photos, dev, dashboards
   ├─ VM  komodo     Komodo Core: pulls the git repo, deploys changed stacks
   ├─ LXC bao        OpenBao: all stack secrets, auto-unseal via AWS KMS
-  └─ LXC samba      SMB shares on ZFS datasets, snapshots as "Previous Versions"
+  ├─ LXC samba      SMB shares on ZFS datasets, snapshots as "Previous Versions"
+  └─ LXC access     second newt: a way into the admin UIs that survives a broken Docker VM
 ```
 
 - **Outside = inside.** Every public route ends at the internal Traefik on the Docker VM, the same router the LAN uses.
@@ -114,7 +115,7 @@ gated. Details: [docs/security.md](docs/security.md).
 | Development and own projects | [forgejo](stacks/forgejo/), [danvas](stacks/danvas/), [typehaus](stacks/typehaus/), [haven](stacks/haven/), [dan-portfolio](stacks/dan-portfolio/), [dplaneos-website2](stacks/dplaneos-website2/) |
 | Operations | [homarr](stacks/homarr/) (dashboard), [dockpeek](stacks/dockpeek/) (container overview), [netbox](stacks/netbox/) (inventory), [searxng](stacks/searxng/) |
 
-Platform services outside Docker: Komodo Core, OpenBao, Samba, sanoid ([platform/](platform/)).
+Platform services outside Docker: Komodo Core, OpenBao, Samba, sanoid, the access LXC ([platform/](platform/)).
 
 ---
 
@@ -142,7 +143,9 @@ platform/
   komodo/               Komodo Core compose, script that sets the post-deploy hook on all stacks
   openbao/              config, ACL policies, daily Raft snapshot, nftables, round-trip check
   aws/                  CloudFormation: KMS key for auto-unseal + alert on every key use
-  proxmox/              sanoid snapshot policy, off-site backup (restic script, systemd units)
+  proxmox/              host settings (thin-pool autoextend, subscription notice, graphical VM consoles),
+                        sanoid snapshot policy, off-site backup (restic script, systemd units)
+  access/               LXC with a second newt: setup script, egress firewall, sandboxed service
   github/               Renovate config, Renovate and Trivy workflows, PR scan script
 infrastructure/         the Pangolin edge on the VPS: docs, sanitized config, CrowdSec, Fail2Ban, backup
 docs/                   architecture, pipeline, security, data protection, service guides

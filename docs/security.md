@@ -11,6 +11,9 @@ every extra lock is also a way to lock yourself out, and a homelab with one admi
   Pangolin's own SSO, and the Pangolin account has 2FA. That is the single gate for remote administration.
 - Temporary admin access (for example to Komodo) is a Pangolin resource with an IP-bypass rule for the one client
   address that needs it, plus "deny everyone else", deleted after use.
+- A second, independent way in: LXC `access` runs its own newt with a fallback Proxmox resource (Pangolin SSO always
+  on). Its firewall lets it reach only the two admin UIs, DNS and the internet, so a compromised newt there cannot
+  reach the Docker VM, OpenBao or the rest of the LAN. Details: [platform/access/](../platform/access/README.md).
 - CrowdSec on the VPS reads Traefik's access log and bans scanners at the edge; the bouncer fails open, so a CrowdSec
   outage never takes the sites down. The home line (behind carrier-grade NAT) is allowlisted from Pangolin's own
   record of the tunnel endpoint. Details: [CrowdSec](../infrastructure/security/crowdsec/README.md).
